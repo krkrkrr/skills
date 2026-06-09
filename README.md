@@ -120,3 +120,4 @@ Skills that operate on other skills or on Claude Code itself.
 | [optimizing-descriptions](./meta/optimizing-descriptions/) | Audit and rewrite `SKILL.md` description fields per the agentskills.io framework and mizchi's two-track trigger policy. | [mizchi/skills](https://github.com/mizchi/skills) |
 | [retrospective-codify](./meta/retrospective-codify/) | Codify trial-and-error lessons into ast-grep rules, skills, or CLAUDE.md rules after a fix lands. | [mizchi/skills](https://github.com/mizchi/skills) |
 | [prompt-review](./meta/prompt-review/) | プロンプトレビュー・対話履歴分析・理解度診断。 | [tokoroten/prompt-review](https://github.com/tokoroten/prompt-review) |
+| [ddd-bdd-tdd-flow](./meta/ddd-bdd-tdd-flow/) | New application/feature creation flow — DDD SUDO modeling → BDD Gherkin features → property-based tests → t_wada TDD implementation. | original |
