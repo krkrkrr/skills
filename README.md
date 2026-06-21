@@ -106,6 +106,8 @@ A suite of skills for systematic frontend code reviews. `frontend-review-weekly`
 | [tech-article-reproducibility](./docs/tech-article-reproducibility/) | Evaluate reproducibility of technical articles — simulate a first-time reader and surface missing steps before publication. | [mizchi/skills](https://github.com/mizchi/skills) |
 | [tech-trend-watch](./docs/tech-trend-watch/) | Long-term stack review using State of JS/CSS and Thoughtworks Technology Radar — ADOPT/TRIAL/ASSESS/HOLD mapping. | [mizchi/skills](https://github.com/mizchi/skills) |
 | [utels-project-bootstrap](./docs/utels-project-bootstrap/) | Register a utels.dev project and write the ingest token into a Cloudflare Worker wrangler secret. | [mizchi/skills](https://github.com/mizchi/skills) |
+| [japanese-tech-writing](./docs/japanese-tech-writing/) | Guidelines for writing and editing Japanese technical documentation with clear structure, rigorous reasoning, consistent formatting, and concise, readable prose. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d#file-skill-md) |
+| [argument-gap-edit](./docs/argument-gap-edit/) | Detects and fixes weak arguments, structural gaps, and disruptive content in Japanese technical manuscripts. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d?permalink_comment_id=6201959#gistcomment-6201959) |
 
 ---
 
