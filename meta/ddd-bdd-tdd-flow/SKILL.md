@@ -17,16 +17,16 @@ Follow these phases strictly in order. **Never advance to the next phase without
 
 ---
 
-## Phase 1: Requirements Interview (ヒアリング)
+## Phase 1: Requirements Interview
 
 Conduct a structured interview. Ask all questions before proceeding.
 
 ### Domain & Context
-- What problem does this application/feature solve? (解決したい課題)
-- Who are the primary users (actors)? (利用者・アクター)
-- What is the core domain? Are there supporting or generic subdomains? (コアドメイン・サブドメイン)
-- What are the key business rules and constraints? (ビジネスルール・制約)
-- What are the acceptance criteria for success? (完了条件)
+- What problem does this application/feature solve?
+- Who are the primary users (actors)?
+- What is the core domain? Are there supporting or generic subdomains?
+- What are the key business rules and constraints?
+- What are the acceptance criteria for success?
 
 ### Technical Context
 - What technology stack will be used? (language, framework, DB, etc.)
@@ -42,10 +42,10 @@ Save the collected answers to `doc/requirements.md`.
 Create four Mermaid diagrams. Save all to `doc/sudo-model.md`.
 
 SUDO stands for:
-- **S**ituation (状況・文脈): bounded contexts, subdomains, and their relationships
-- **U**secase (ユースケース): actors and their use cases
-- **D**omain model (ドメインモデル): aggregates, entities, value objects, domain events
-- **O**bject interaction (オブジェクト相互作用): key sequence/collaboration for each core use case
+- **S**ituation: bounded contexts, subdomains, and their relationships
+- **U**secase: actors and their use cases
+- **D**omain model: aggregates, entities, value objects, domain events
+- **O**bject interaction: key sequence/collaboration for each core use case
 
 ### S — Situation
 
@@ -120,11 +120,11 @@ From the approved SUDO model, derive Gherkin feature files. One `.feature` file 
 
 ### Coverage Checklist (mandatory for every use case)
 
-- [ ] Happy path (正常系)
-- [ ] Boundary values (境界値)
-- [ ] Error / rejection cases (異常系)
-- [ ] Business rule violations (ビジネスルール違反)
-- [ ] Concurrent or idempotency edge cases (競合・冪等性)
+- [ ] Happy path
+- [ ] Boundary values
+- [ ] Error / rejection cases
+- [ ] Business rule violations
+- [ ] Concurrent or idempotency edge cases
 
 ### Feature File Template
 
@@ -289,6 +289,44 @@ After all unit tests pass:
 
 ---
 
+## Architecture Decision Records (ADR)
+
+Whenever a significant architectural or design decision is made during any phase, record it as an ADR.
+
+**When to create an ADR:**
+- A technology or framework is chosen (e.g., "use PostgreSQL over SQLite")
+- A design pattern or architectural style is adopted (e.g., "CQRS for the Order aggregate")
+- A trade-off is accepted with known consequences
+- A rejected alternative is worth preserving for future readers
+
+**File:** `doc/ADR/NNNN-<kebab-case-title>.md` (zero-padded four-digit number, e.g. `doc/ADR/0001-use-event-sourcing.md`)
+
+**Format (Nygard):**
+
+```markdown
+# ADR-NNNN: <title>
+
+## Status
+
+Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
+
+## Context
+
+<Describe the situation, forces, and constraints that led to this decision.>
+
+## Decision
+
+<State the decision in active voice: "We will…">
+
+## Consequences
+
+<List positive and negative consequences of this decision.>
+```
+
+Create the ADR immediately when the decision is made — do not batch them at the end of a phase. If the user later changes a decision, update the old ADR's `Status` to `Superseded by ADR-NNNN` and create a new one.
+
+---
+
 ## File Structure
 
 ```
@@ -299,6 +337,8 @@ doc/
     <use-case>.feature      # Phase 3
   properties.md             # Phase 4a
   test-list.md              # Phase 5a
+  ADR/
+    0001-<decision>.md      # Any phase — created when a decision is made
 
 test/
   unit/
@@ -322,6 +362,7 @@ src/
 - **Small steps in TDD.** Each Red-Green-Refactor cycle should take minutes.
 - **Property tests catch what example tests miss.** They are not optional.
 - **All diagrams use Mermaid** — keeps documentation as plain text alongside code.
+- **Decisions get an ADR immediately.** Every significant architectural choice is recorded in `doc/ADR/` in Nygard format at the moment it is made, not after the phase ends.
 
 ## Common Failures to Avoid
 
