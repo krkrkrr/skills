@@ -4,17 +4,18 @@ Personal Claude Code agent skills library.
 
 ## Overview
 
-Skills are organized into category subdirectories. Each skill lives at `<category>/<skill-name>/` and is installed individually into `~/.claude/skills/<skill-name>/`.
+Skills are organized into category subdirectories. Each skill lives at `skills/<category>/<skill-name>/` and is installed individually into `~/.claude/skills/<skill-name>/`.
 
-Categories: `frontend/`, `deps/`, `testing/`, `security/`, `env/`, `lang/`, `docs/`, `meta/`
+Categories: `skills/frontend/`, `skills/deps/`, `skills/testing/`, `skills/security/`, `skills/env/`, `skills/lang/`, `skills/docs/`, `skills/meta/`
 
 ## Repository Structure
 
 ```
-<category>/
-  <skill-name>/
-    SKILL.md          # Required. Frontmatter + body.
-    references/       # Optional. Static reference files loaded on demand.
+skills/
+  <category>/
+    <skill-name>/
+      SKILL.md          # Required. Frontmatter + body.
+      references/       # Optional. Static reference files loaded on demand.
 ```
 
 ## Naming Convention
@@ -24,7 +25,7 @@ Categories: `frontend/`, `deps/`, `testing/`, `security/`, `env/`, `lang/`, `doc
 Verify with:
 
 ```bash
-for d in */*/; do
+for d in skills/*/*/; do
   name=$(basename "$d")
   fm=$(grep '^name:' "$d/SKILL.md" 2>/dev/null | head -1 | sed 's/name: //')
   [ "$name" != "$fm" ] && echo "MISMATCH: $name -> $fm"
@@ -57,13 +58,13 @@ disable-model-invocation: true      # Prevent sub-model calls
 When editing a skill in this repo, mirror the change immediately so the current session picks it up:
 
 ```bash
-cp -r <category>/<skill-name>/ ~/.claude/skills/<skill-name>/
+cp -r skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 Or sync all skills at once:
 
 ```bash
-for d in */*/; do
+for d in skills/*/*/; do
   name=$(basename "$d")
   cp -r "$d" ~/.claude/skills/"$name"/
 done
@@ -77,13 +78,13 @@ done
 ## Install
 
 ```bash
-cp -r <category>/<skill-name>/ ~/.claude/skills/<skill-name>/
+cp -r skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 全スキルを一括同期:
 
 ```bash
-for d in */*/; do
+for d in skills/*/*/; do
   name=$(basename "$d")
   cp -r "$d" ~/.claude/skills/"$name"/
 done
