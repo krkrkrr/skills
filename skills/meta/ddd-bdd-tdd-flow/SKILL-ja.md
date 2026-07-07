@@ -35,6 +35,18 @@ description: >
 
 収集した回答を `doc/requirements.md` に保存する。
 
+**ブランチ作成 & 初回コミット**
+
+フェーズ 1 の回答からフィーチャー名を kebab-case で導出する（例: 「ユーザー認証」 → `user-authentication`）。ブランチを作成してから要件をコミットする:
+
+```bash
+git checkout -b feature/<new-feature-name>
+git add doc/requirements.md
+git commit -m "docs(phase1): add requirements for <new-feature-name>"
+```
+
+以降のすべての作業はこのブランチで行う。
+
 ---
 
 ## フェーズ 2: SUDO モデリング（DDD）
@@ -112,6 +124,13 @@ sequenceDiagram
 
 ユーザーが明示的に承認するまでイテレーションを繰り返す。各フィードバックラウンドを `## レビューノート` セクションに追記する。
 
+**承認後にコミット**
+
+```bash
+git add doc/sudo-model.md doc/ADR/
+git commit -m "docs(phase2): add SUDO domain model"
+```
+
 ---
 
 ## フェーズ 3: BDD フィーチャー記述
@@ -163,6 +182,13 @@ Feature: <Use case name>
 「これらのシナリオは期待される振る舞いを完全に捉えていますか？不足しているケースはありますか？」と確認する。
 
 ユーザーが明示的に承認するまでイテレーションを繰り返す。
+
+**承認後にコミット**
+
+```bash
+git add doc/features/
+git commit -m "docs(phase3): add BDD feature files"
+```
 
 ---
 
@@ -223,6 +249,13 @@ test("balance invariant: never negative after valid deposit", () => {
 1. **フルスタック**（API/UI → DB）を駆動する — システム境界でのモックなし
 2. 多様かつ有効な入力にプロパティベース生成を使用する
 3. システムレベルの不変量をアサートする: データ整合性・API コントラクト・冪等性
+
+**フェーズ 4 完了後にコミット**
+
+```bash
+git add doc/properties.md test/integration/ test/e2e/
+git commit -m "test(phase4): add property-based integration and e2e tests"
+```
 
 ---
 
@@ -287,6 +320,13 @@ test("balance invariant: never negative after valid deposit", () => {
 2. フェーズ 4c の E2E テストを実行する
 3. 失敗があれば追加の TDD サイクルで修正する（リストにテストを追加してループ）
 
+**インテグレーションゲート通過後にコミット**
+
+```bash
+git add src/ test/unit/ doc/test-list.md
+git commit -m "feat(<scope>): implement <new-feature-name>"
+```
+
 ---
 
 ## アーキテクチャ決定記録（ADR）
@@ -324,6 +364,25 @@ Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
 ```
 
 ADR はフェーズの終わりにまとめて作成するのではなく、決定が行われたその場で即座に作成する。ユーザーが後で決定を変更した場合は、古い ADR の `Status` を `Superseded by ADR-NNNN` に更新し、新しい ADR を作成する。
+
+---
+
+## Git ワークフロー
+
+すべての開発はフェーズ 1 終了時に作成した `feature/<new-feature-name>` ブランチで行う。フェーズの区切りごとにコミットし、履歴がフローを正確に反映するようにする。
+
+| フェーズ | コミットのタイミング | コミットメッセージ |
+|---|---|---|
+| 1 — 要件ヒアリング | `doc/requirements.md` 保存後 | `docs(phase1): add requirements for <name>` |
+| 2 — SUDO モデル | ユーザーが明示的に承認後 | `docs(phase2): add SUDO domain model` |
+| 3 — BDD フィーチャー | ユーザーが明示的に承認後 | `docs(phase3): add BDD feature files` |
+| 4 — プロパティテスト | 4b + 4c のテストファイル生成後 | `test(phase4): add property-based integration and e2e tests` |
+| 5 — 実装 | インテグレーションゲート通過後（5d） | `feat(<scope>): implement <name>` |
+
+**ルール:**
+- モデリング中に ADR を作成した場合は、フェーズ 2 のコミットに `doc/ADR/` を含める。
+- Red-Green-Refactor サイクルの途中でコミットしない。テストリストの最後の項目の Refactor ステップが完了してからコミットする。
+- ユーザーから指示があるまでプッシュしない。ブランチはそれまでローカルに留める。
 
 ---
 

@@ -35,6 +35,18 @@ Conduct a structured interview. Ask all questions before proceeding.
 
 Save the collected answers to `doc/requirements.md`.
 
+**Branch Creation & First Commit**
+
+Derive a kebab-case feature name from the Phase 1 answers (e.g., "User Authentication" → `user-authentication`). Then create the working branch and commit the requirements:
+
+```bash
+git checkout -b feature/<new-feature-name>
+git add doc/requirements.md
+git commit -m "docs(phase1): add requirements for <new-feature-name>"
+```
+
+All subsequent work happens on this branch.
+
 ---
 
 ## Phase 2: SUDO Modeling (DDD)
@@ -112,6 +124,13 @@ Ask: "Does this model accurately represent the domain? What is missing or wrong?
 
 Iterate until the user explicitly approves. Append a `## Review Notes` section with each round of feedback.
 
+**Commit after approval**
+
+```bash
+git add doc/sudo-model.md doc/ADR/
+git commit -m "docs(phase2): add SUDO domain model"
+```
+
 ---
 
 ## Phase 3: BDD Feature Writing
@@ -163,6 +182,13 @@ Save to `doc/features/<use-case-name>.feature`.
 Ask: "Do these scenarios fully capture the expected behavior? Are there missing cases?"
 
 Iterate until the user explicitly approves.
+
+**Commit after approval**
+
+```bash
+git add doc/features/
+git commit -m "docs(phase3): add BDD feature files"
+```
 
 ---
 
@@ -223,6 +249,13 @@ Structure:
 1. Drive the **full stack** (API/UI → DB) — no mocking at the system boundary
 2. Use property-based generation for varied but valid inputs
 3. Assert system-level invariants: data consistency, API contract, idempotency
+
+**Commit after Phase 4**
+
+```bash
+git add doc/properties.md test/integration/ test/e2e/
+git commit -m "test(phase4): add property-based integration and e2e tests"
+```
 
 ---
 
@@ -287,6 +320,13 @@ After all unit tests pass:
 2. Run the e2e tests from Phase 4c
 3. Fix any failures with additional TDD cycles (add test to the list, loop)
 
+**Commit after integration gate passes**
+
+```bash
+git add src/ test/unit/ doc/test-list.md
+git commit -m "feat(<scope>): implement <new-feature-name>"
+```
+
 ---
 
 ## Architecture Decision Records (ADR)
@@ -324,6 +364,25 @@ Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
 ```
 
 Create the ADR immediately when the decision is made — do not batch them at the end of a phase. If the user later changes a decision, update the old ADR's `Status` to `Superseded by ADR-NNNN` and create a new one.
+
+---
+
+## Git Workflow
+
+All development happens on a `feature/<new-feature-name>` branch created at the end of Phase 1. Commit at every phase boundary so that history mirrors the flow.
+
+| Phase | Trigger | Commit message |
+|---|---|---|
+| 1 — Requirements | After `doc/requirements.md` saved | `docs(phase1): add requirements for <name>` |
+| 2 — SUDO Model | After user explicitly approves | `docs(phase2): add SUDO domain model` |
+| 3 — BDD Features | After user explicitly approves | `docs(phase3): add BDD feature files` |
+| 4 — Property Tests | After 4b + 4c test files generated | `test(phase4): add property-based integration and e2e tests` |
+| 5 — Implementation | After integration gate passes (5d) | `feat(<scope>): implement <name>` |
+
+**Rules:**
+- Include ADR files (`doc/ADR/`) in the Phase 2 commit if any were created during modeling.
+- Never commit in the middle of a Red-Green-Refactor cycle; always commit only after the Refactor step of the *last* item in the test list.
+- Do not push until the user asks; the branch is local until then.
 
 ---
 
