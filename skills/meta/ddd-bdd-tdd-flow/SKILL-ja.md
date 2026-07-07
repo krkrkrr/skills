@@ -37,11 +37,11 @@ description: >
 
 **ブランチ作成 & 初回コミット**
 
-フェーズ 1 の回答からフィーチャー名を kebab-case で導出する（例: 「ユーザー認証」 → `user-authentication`）。ブランチを作成してから要件をコミットする:
+フェーズ 1 の回答からフィーチャー名を kebab-case で導出する（例: 「ユーザー認証」 → `user-authentication`）。下記 **README.md ライフサイクル** のテンプレートを使って `README.md` を作成し、フィーチャー名・概要・ Overview セクションを埋め、Status を `Phase 1 complete` にする。その後:
 
 ```bash
 git checkout -b feature/<new-feature-name>
-git add doc/requirements.md
+git add doc/requirements.md README.md
 git commit -m "docs(phase1): add requirements for <new-feature-name>"
 ```
 
@@ -126,8 +126,10 @@ sequenceDiagram
 
 **承認後にコミット**
 
+`README.md` の **Domain Model** セクションを埋める: `doc/sudo-model.md` へのリンクと各 SUDO ダイアグラムの一行要約を追記する。Status を `Phase 2 complete` に更新する。
+
 ```bash
-git add doc/sudo-model.md doc/ADR/
+git add doc/sudo-model.md doc/ADR/ README.md
 git commit -m "docs(phase2): add SUDO domain model"
 ```
 
@@ -185,8 +187,10 @@ Feature: <Use case name>
 
 **承認後にコミット**
 
+`README.md` の **Features / Behavior** セクションを埋める: `.feature` ファイルの一覧表と各ファイルの説明を追記する。Status を `Phase 3 complete` に更新する。
+
 ```bash
-git add doc/features/
+git add doc/features/ README.md
 git commit -m "docs(phase3): add BDD feature files"
 ```
 
@@ -252,8 +256,10 @@ test("balance invariant: never negative after valid deposit", () => {
 
 **フェーズ 4 完了後にコミット**
 
+`README.md` の **Testing** セクションを埋める: 使用する PBT ライブラリと `test/integration/`・`test/e2e/` へのリンクを追記する。Status を `Phase 4 complete` に更新する。
+
 ```bash
-git add doc/properties.md test/integration/ test/e2e/
+git add doc/properties.md test/integration/ test/e2e/ README.md
 git commit -m "test(phase4): add property-based integration and e2e tests"
 ```
 
@@ -322,8 +328,10 @@ git commit -m "test(phase4): add property-based integration and e2e tests"
 
 **インテグレーションゲート通過後にコミット**
 
+`README.md` の **Usage** と **Development** セクションを埋める（アプリの実行方法とテスト実行方法）。Status を `Phase 5 complete` に更新する。残っているプレースホルダーコメントをすべて削除する。
+
 ```bash
-git add src/ test/unit/ doc/test-list.md
+git add src/ test/unit/ doc/test-list.md README.md
 git commit -m "feat(<scope>): implement <new-feature-name>"
 ```
 
@@ -371,18 +379,67 @@ ADR はフェーズの終わりにまとめて作成するのではなく、決�
 
 すべての開発はフェーズ 1 終了時に作成した `feature/<new-feature-name>` ブランチで行う。フェーズの区切りごとにコミットし、履歴がフローを正確に反映するようにする。
 
-| フェーズ | コミットのタイミング | コミットメッセージ |
-|---|---|---|
-| 1 — 要件ヒアリング | `doc/requirements.md` 保存後 | `docs(phase1): add requirements for <name>` |
-| 2 — SUDO モデル | ユーザーが明示的に承認後 | `docs(phase2): add SUDO domain model` |
-| 3 — BDD フィーチャー | ユーザーが明示的に承認後 | `docs(phase3): add BDD feature files` |
-| 4 — プロパティテスト | 4b + 4c のテストファイル生成後 | `test(phase4): add property-based integration and e2e tests` |
-| 5 — 実装 | インテグレーションゲート通過後（5d） | `feat(<scope>): implement <name>` |
+| フェーズ | コミットのタイミング | README.md の更新内容 | コミットメッセージ |
+|---|---|---|---|
+| 1 — 要件ヒアリング | `doc/requirements.md` 保存後 | 作成: 名前・説明・Overview・Status | `docs(phase1): add requirements for <name>` |
+| 2 — SUDO モデル | ユーザーが明示的に承認後 | 追記: Domain Model セクション | `docs(phase2): add SUDO domain model` |
+| 3 — BDD フィーチャー | ユーザーが明示的に承認後 | 追記: Features / Behavior セクション | `docs(phase3): add BDD feature files` |
+| 4 — プロパティテスト | 4b + 4c のテストファイル生成後 | 追記: Testing セクション | `test(phase4): add property-based integration and e2e tests` |
+| 5 — 実装 | インテグレーションゲート通過後（5d） | 追記: Usage + Development セクション、プレースホルダー削除 | `feat(<scope>): implement <name>` |
 
 **ルール:**
+- `README.md` はすべてのフェーズ境界で必ずステージングしてコミットする — スキップ禁止。
 - モデリング中に ADR を作成した場合は、フェーズ 2 のコミットに `doc/ADR/` を含める。
 - Red-Green-Refactor サイクルの途中でコミットしない。テストリストの最後の項目の Refactor ステップが完了してからコミットする。
 - ユーザーから指示があるまでプッシュしない。ブランチはそれまでローカルに留める。
+
+### README.md ライフサイクル
+
+`README.md` はリポジトリルートに置く。フェーズ 1 で作成し、以降のフェーズごとに新しいセクションを追記する。以下のプログレッシブテンプレートを使用する — 各フェーズが完了するまで、そのフェーズのセクションはコメントのまま残す:
+
+````markdown
+# <フィーチャー名>
+
+> <フェーズ 1 で得た一行説明>
+
+## Status
+
+Phase N complete — <フェーズ名>
+
+## Overview
+
+<課題説明と受け入れ基準 — フェーズ 1 で記入>
+
+## Domain Model
+
+<!-- フェーズ 2 で追記 -->
+[SUDO model](doc/sudo-model.md) — <S/U/D/O ダイアグラムの一行要約>
+
+## Features / Behavior
+
+<!-- フェーズ 3 で追記 -->
+| フィーチャーファイル | 説明 |
+|---|---|
+| [name.feature](doc/features/name.feature) | ... |
+
+## Testing
+
+<!-- フェーズ 4 で追記 -->
+- **プロパティテスト（インテグレーション）:** `test/integration/` — <PBT ライブラリ> を使用
+- **プロパティテスト（E2E）:** `test/e2e/` — フルスタック、モックなし
+
+## Usage
+
+<!-- フェーズ 5 で追記 -->
+<アプリ/フィーチャーの実行方法>
+
+## Development
+
+<!-- フェーズ 5 で追記 -->
+<ビルドとテスト実行の方法>
+````
+
+各セクションを記入したらプレースホルダーコメントを削除する。フェーズ 5 完了時点で README にコメントプレースホルダーが残っていてはならない。
 
 ---
 

@@ -37,11 +37,11 @@ Save the collected answers to `doc/requirements.md`.
 
 **Branch Creation & First Commit**
 
-Derive a kebab-case feature name from the Phase 1 answers (e.g., "User Authentication" → `user-authentication`). Then create the working branch and commit the requirements:
+Derive a kebab-case feature name from the Phase 1 answers (e.g., "User Authentication" → `user-authentication`). Create `README.md` using the template from the **README.md Lifecycle** section below — fill in the feature name, one-line description, Overview, and set Status to `Phase 1 complete`. Then:
 
 ```bash
 git checkout -b feature/<new-feature-name>
-git add doc/requirements.md
+git add doc/requirements.md README.md
 git commit -m "docs(phase1): add requirements for <new-feature-name>"
 ```
 
@@ -126,8 +126,10 @@ Iterate until the user explicitly approves. Append a `## Review Notes` section w
 
 **Commit after approval**
 
+Update `README.md`: fill in the **Domain Model** section with a link to `doc/sudo-model.md` and a one-line summary per SUDO diagram. Set Status to `Phase 2 complete`.
+
 ```bash
-git add doc/sudo-model.md doc/ADR/
+git add doc/sudo-model.md doc/ADR/ README.md
 git commit -m "docs(phase2): add SUDO domain model"
 ```
 
@@ -185,8 +187,10 @@ Iterate until the user explicitly approves.
 
 **Commit after approval**
 
+Update `README.md`: fill in the **Features / Behavior** section with a table of `.feature` files and their descriptions. Set Status to `Phase 3 complete`.
+
 ```bash
-git add doc/features/
+git add doc/features/ README.md
 git commit -m "docs(phase3): add BDD feature files"
 ```
 
@@ -252,8 +256,10 @@ Structure:
 
 **Commit after Phase 4**
 
+Update `README.md`: fill in the **Testing** section with the PBT library used and links to `test/integration/` and `test/e2e/`. Set Status to `Phase 4 complete`.
+
 ```bash
-git add doc/properties.md test/integration/ test/e2e/
+git add doc/properties.md test/integration/ test/e2e/ README.md
 git commit -m "test(phase4): add property-based integration and e2e tests"
 ```
 
@@ -322,8 +328,10 @@ After all unit tests pass:
 
 **Commit after integration gate passes**
 
+Update `README.md`: fill in the **Usage** and **Development** sections (how to run the app and tests). Set Status to `Phase 5 complete`. Remove any placeholder comments left in earlier phases.
+
 ```bash
-git add src/ test/unit/ doc/test-list.md
+git add src/ test/unit/ doc/test-list.md README.md
 git commit -m "feat(<scope>): implement <new-feature-name>"
 ```
 
@@ -371,18 +379,67 @@ Create the ADR immediately when the decision is made — do not batch them at th
 
 All development happens on a `feature/<new-feature-name>` branch created at the end of Phase 1. Commit at every phase boundary so that history mirrors the flow.
 
-| Phase | Trigger | Commit message |
-|---|---|---|
-| 1 — Requirements | After `doc/requirements.md` saved | `docs(phase1): add requirements for <name>` |
-| 2 — SUDO Model | After user explicitly approves | `docs(phase2): add SUDO domain model` |
-| 3 — BDD Features | After user explicitly approves | `docs(phase3): add BDD feature files` |
-| 4 — Property Tests | After 4b + 4c test files generated | `test(phase4): add property-based integration and e2e tests` |
-| 5 — Implementation | After integration gate passes (5d) | `feat(<scope>): implement <name>` |
+| Phase | Trigger | README.md update | Commit message |
+|---|---|---|---|
+| 1 — Requirements | After `doc/requirements.md` saved | Create: name, description, Overview, Status | `docs(phase1): add requirements for <name>` |
+| 2 — SUDO Model | After user explicitly approves | Add: Domain Model section | `docs(phase2): add SUDO domain model` |
+| 3 — BDD Features | After user explicitly approves | Add: Features / Behavior section | `docs(phase3): add BDD feature files` |
+| 4 — Property Tests | After 4b + 4c test files generated | Add: Testing section | `test(phase4): add property-based integration and e2e tests` |
+| 5 — Implementation | After integration gate passes (5d) | Add: Usage + Development sections, remove placeholders | `feat(<scope>): implement <name>` |
 
 **Rules:**
+- `README.md` is always staged and committed at every phase boundary — never skip it.
 - Include ADR files (`doc/ADR/`) in the Phase 2 commit if any were created during modeling.
 - Never commit in the middle of a Red-Green-Refactor cycle; always commit only after the Refactor step of the *last* item in the test list.
 - Do not push until the user asks; the branch is local until then.
+
+### README.md Lifecycle
+
+`README.md` lives in the repo root. It is created in Phase 1 and gains a new section at each subsequent phase. Use this progressive template — fill in only what the current phase covers; leave the rest as comments until that phase is reached:
+
+````markdown
+# <Feature Name>
+
+> <one-line description from Phase 1>
+
+## Status
+
+Phase N complete — <phase name>
+
+## Overview
+
+<Problem statement and acceptance criteria — filled in Phase 1>
+
+## Domain Model
+
+<!-- Added in Phase 2 -->
+[SUDO model](doc/sudo-model.md) — <one-line summary of S/U/D/O diagrams>
+
+## Features / Behavior
+
+<!-- Added in Phase 3 -->
+| Feature file | Description |
+|---|---|
+| [name.feature](doc/features/name.feature) | ... |
+
+## Testing
+
+<!-- Added in Phase 4 -->
+- **Property tests (integration):** `test/integration/` — uses <PBT library>
+- **Property tests (e2e):** `test/e2e/` — full-stack, no mocks
+
+## Usage
+
+<!-- Added in Phase 5 -->
+<How to run the application or feature>
+
+## Development
+
+<!-- Added in Phase 5 -->
+<How to build and run all tests>
+````
+
+Remove placeholder comments as each section is filled in. By Phase 5 the README must have no remaining comment placeholders.
 
 ---
 
