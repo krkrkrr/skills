@@ -7,6 +7,8 @@ description: Templates and policies for README.md files. Use when creating a new
 
 Rules for creating and maintaining README.md files. A README is the front door of a project: within 30 seconds of opening it, a reader should know what the project is and how to use it. This skill defines which template to start from, what every README must satisfy, and how to keep an existing README in sync with the code.
 
+[日本語版 (Japanese)](SKILL-ja.md)
+
 ## When to use
 
 - Creating a README.md for a new project or a project that lacks one

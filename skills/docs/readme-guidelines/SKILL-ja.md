@@ -1,0 +1,94 @@
+---
+name: readme-guidelines
+description: Templates and policies for README.md files. Use when creating a new README.md, updating an existing one after code changes, or creating/syncing the Japanese version README-ja.md. Covers template selection by project type, section-level writing rules, and which sections to update for which kind of change.
+---
+
+# README ガイドライン
+
+README.md の作成と維持の規則を定める。
+README はプロジェクトの入口であり、開いてから30秒以内に、それが何で、どう使うのかが読者に伝わらなければならない。
+このスキルは、どのテンプレートから始めるか、すべての README が満たすべき規則、既存の README をコードと同期させ続ける手順を定める。
+
+[English](SKILL.md)
+
+## 使用する場面
+
+- 新規プロジェクト、または README を持たないプロジェクトに README.md を作成するとき
+- コード変更(機能追加、セットアップ手順の変更、API 変更)の後に README.md を更新するとき
+- 日本語版 README-ja.md を作成または同期するとき
+- 既存の README を本ポリシーに照らして点検するとき
+
+使用しない場面:
+
+- このスキルリポジトリの `SKILL.md` の執筆(`skills/CLAUDE.md` に従う)
+- CHANGELOG や CONTRIBUTING など README 以外の文書
+- `ddd-bdd-tdd-flow` で生成中のプロジェクトの漸進型 README(そのフェーズ中は同スキルの README ライフサイクルが優先する)
+
+## テンプレートの選択
+
+プロジェクト種別でテンプレートを選ぶ。
+各リファレンスには、コピーして使える骨子と、節ごとの記述ガイドが含まれる。
+
+| プロジェクト種別 | 判定の手がかり | テンプレート |
+|---|---|---|
+| CLI や小規模ツール | 単一目的でコマンドが少なく、個人用途か限られた用途 | [references/minimal.md](references/minimal.md) |
+| 公開ライブラリ | npm や PyPI や crates.io などで配布され、公開 API を持つ | [references/oss-library.md](references/oss-library.md) |
+| アプリケーションやサービス | デプロイして運用される(内部ツールを含む)。環境、セットアップ、チームがある | [references/application.md](references/application.md) |
+
+迷ったらミニマル型から始めて、後から昇格させる。
+正確な小さい README は、水増しされた大きい README に勝る。
+公開 API 面ができたら `oss-library.md` へ、デプロイと運用の関心事ができたら `application.md` へ昇格させる。
+
+## 共通ポリシー(全テンプレート)
+
+- 1行目はプロジェクト名、2行目はそれが何をするかの一行説明。これらより前に文章を置かない。
+- コマンドとコード例は、動作を確認したものだけを書く。もっともらしく見えるコマンドを創作しない。
+- コードや生成ファイルから自明な情報(全オプション一覧、ディレクトリツリー、依存一覧)を重複して書かない。重複した詳細は陳腐化し、誤情報になる。
+- 節は書く内容ができてから追加する。空のプレースホルダ節(「TBD」「Coming soon」)を残さない。
+- 骨子の節順を保つ。読者は慣習に沿って README を流し読みする(何であるか → インストール → 使い方 → 詳細)。
+- License 節は最後に置く。プロジェクトを公開するときのみ。
+
+## 言語ポリシー
+
+- **README.md が正であり、英語で書く。**
+- **README-ja.md は日本語版**であり、README.md と同期を保つ。
+- 両ファイルは一行説明の直後で相互にリンクする。
+  - README.md: `[日本語版 (Japanese)](README-ja.md)`
+  - README-ja.md: `[English](README.md)`
+- README.md を変更したら、同じ変更の中で README-ja.md も更新する。古くなった README-ja.md は無いより悪い。同期を保てないなら削除する。
+- README-ja.md は翻訳であり、独立した文書ではない。節構成は同じにし、コードブロックはそのまま保つ(コードとコマンドは原文どおりにし、訳すのは地の文だけ)。
+- 日本語の文章は [../japanese-tech-writing/SKILL.md](../japanese-tech-writing/SKILL.md) の規範に従う。
+
+## 更新ポリシー
+
+コードを変更したら、同じコミットまたは PR の中で README を更新する。
+変更の種類と更新する節の対応は次のとおり。
+
+| 変更 | 更新する節 |
+|---|---|
+| 機能追加、CLI フラグの追加 | Usage、Features、Quick Start |
+| 依存やセットアップ手順の変更 | Install、Prerequisites、Setup |
+| 公開 API の変更 | API |
+| アーキテクチャの変更 | Architecture、Overview |
+| 破壊的変更 | 該当する節に加え、冒頭近くに移行の注記 |
+| 機能の削除や非推奨化 | 該当する節を削除するか、その旨を明記する(削除も更新の一部である) |
+| プロジェクトの改名や目的の変更 | タイトル、一行説明、Why または Overview |
+
+更新時の規則:
+
+1. 触った節に書かれているコマンドを再実行し、動かなくなったものを直す。
+2. 同じ変更の中で README-ja.md を同期する。
+3. 古くなった内容の削除も更新に数える。「新しいバージョンでは動かない場合がある」のような逃げの表現より、削除を選ぶ。
+4. プロジェクトがテンプレートの器を超えたら(ツールに公開 API ができた、など)、古い構成に節を継ぎ足すのではなく、次のテンプレートへ移行する。
+
+## 落とし穴
+
+- **スクリーンショット頼みの README**：スクリーンショットは文章より早く陳腐化し、grep にもかからない。本当に視覚的な出力に限って使い、文章の使用例を正とする。
+- **内容より先に来るバッジ**：バッジは飾りである。一行説明がバッジに押し下げられる状態を作らない。oss-library テンプレートはバッジを1行までに制限している。
+- **自分向けの文章**：読者はコードを読んでいない。プロジェクト内部の用語は初出で説明するか、定義箇所へリンクする。
+- **設計文書と化した README**：判断の理由、検討した代替案、ロードマップは docs/ や ADR に置く。README は現にあるものを述べる文書であり、検討の経緯を述べる文書ではない。
+
+## 関連
+
+- `japanese-tech-writing`：README-ja.md の文章規範
+- `ddd-bdd-tdd-flow`：生成プロジェクトの漸進型 README ライフサイクルは同スキルが持つ。本スキルはそのフローの完了後に適用する
