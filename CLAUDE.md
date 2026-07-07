@@ -55,10 +55,10 @@ disable-model-invocation: true      # Prevent sub-model calls
 
 ## Local Sync
 
-When editing a skill in this repo, mirror the change immediately so the current session picks it up:
+When editing a skill in this repo, mirror the change immediately so the current session picks it up. Use `cp -rT` (not `cp -r`): when the target directory already exists, `cp -r` nests the source inside it instead of overwriting.
 
 ```bash
-cp -r skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
+cp -rT skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 Or sync all skills at once:
@@ -66,7 +66,7 @@ Or sync all skills at once:
 ```bash
 for d in skills/*/*/; do
   name=$(basename "$d")
-  cp -r "$d" ~/.claude/skills/"$name"/
+  cp -rT "$d" ~/.claude/skills/"$name"/
 done
 ```
 
@@ -78,7 +78,7 @@ done
 ## Install
 
 ```bash
-cp -r skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
+cp -rT skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 全スキルを一括同期:
@@ -86,7 +86,7 @@ cp -r skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```bash
 for d in skills/*/*/; do
   name=$(basename "$d")
-  cp -r "$d" ~/.claude/skills/"$name"/
+  cp -rT "$d" ~/.claude/skills/"$name"/
 done
 ```
 
