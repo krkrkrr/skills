@@ -108,6 +108,7 @@ A suite of skills for systematic frontend code reviews. `frontend-review-weekly`
 | [utels-project-bootstrap](./skills/docs/utels-project-bootstrap/) | Register a utels.dev project and write the ingest token into a Cloudflare Worker wrangler secret. | [mizchi/skills](https://github.com/mizchi/skills) |
 | [japanese-tech-writing](./skills/docs/japanese-tech-writing/) | Guidelines for writing and editing Japanese technical documentation with clear structure, rigorous reasoning, consistent formatting, and concise, readable prose. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d#file-skill-md) |
 | [argument-gap-edit](./skills/docs/argument-gap-edit/) | Detects and fixes weak arguments, structural gaps, and disruptive content in Japanese technical manuscripts. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d?permalink_comment_id=6201959#gistcomment-6201959) |
+| [readme-guidelines](./skills/docs/readme-guidelines/) | README.md templates and policies — template selection by project type, README-ja.md sync, and change-to-section update rules. | original |
 
 ---
 
