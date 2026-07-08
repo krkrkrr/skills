@@ -9,8 +9,6 @@ For deployed applications and services, including internal tools: anything with 
 
 One-line description of what this service does.
 
-[日本語版 (Japanese)](README-ja.md)
-
 ## Overview
 
 What this service does, who uses it, and how it fits among neighboring

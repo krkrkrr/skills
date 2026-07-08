@@ -48,11 +48,8 @@ README はプロジェクトの入口であり、開いてから30秒以内に�
 
 ## 言語ポリシー
 
-- **README.md が正であり、英語で書く。**
-- **README-ja.md は日本語版**であり、README.md と同期を保つ。
-- 両ファイルは一行説明の直後で相互にリンクする。
-  - README.md: `[日本語版 (Japanese)](README-ja.md)`
-  - README-ja.md: `[English](README.md)`
+- **README.md が正であり、英語で書く。** README.md 単体で完結させ、日本語版へのリンクは置かない。README.md だけを開いた読者にも全体像が伝わるようにする。
+- 作者が日本人の場合、**README-ja.md を README.md の完全なミラー**として維持する慣習がある。内容は同じで、地の文のみ翻訳する。ファイル名自体が日本語版であることを示しているため、それだけで発見可能であり、**README.md と README-ja.md の間に相互リンクを貼らない**。リンクを貼っても、内容が重複しているだけで無駄である。
 - README.md を変更したら、同じ変更の中で README-ja.md も更新する。古くなった README-ja.md は無いより悪い。同期を保てないなら削除する。
 - README-ja.md は翻訳であり、独立した文書ではない。節構成は同じにし、コードブロックはそのまま保つ(コードとコマンドは原文どおりにし、訳すのは地の文だけ)。
 - 日本語の文章は [../japanese-tech-writing/SKILL.md](../japanese-tech-writing/SKILL.md) の規範に従う。

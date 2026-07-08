@@ -9,8 +9,6 @@ For single-purpose tools and small repositories. Optimized so a reader knows *wh
 
 One-line description of what this does.
 
-[日本語版 (Japanese)](README-ja.md)
-
 ## Why
 
 What problem this solves and when you would reach for it (2-3 sentences).

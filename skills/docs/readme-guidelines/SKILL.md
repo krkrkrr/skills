@@ -42,11 +42,8 @@ When in doubt, start from the minimal template and promote later: a small README
 
 ## Language policy
 
-- **README.md is the source of truth and is written in English.**
-- **README-ja.md is the Japanese version**, kept in sync with README.md.
-- Both files link to each other at the top, immediately after the one-line description:
-  - README.md: `[日本語版 (Japanese)](README-ja.md)`
-  - README-ja.md: `[English](README.md)`
+- **README.md is the source of truth and is written in English.** It must stand on its own: no link to a Japanese version. A reader who only opens README.md gets the complete picture.
+- When the author is Japanese, the convention is to also maintain **README-ja.md as a full mirror** of README.md — same content, translated. Its filename alone identifies it as the Japanese version; that is sufficient discovery, so **do not add cross-links between README.md and README-ja.md**. A link would just point at duplicated content.
 - When README.md changes, update README-ja.md in the same change. A stale README-ja.md is worse than none; if it cannot be kept in sync, delete it.
 - README-ja.md is a translation, not a separate document: same section structure, same code blocks (code and commands stay in English/as-is; only prose is translated).
 - For Japanese prose quality, follow [../japanese-tech-writing/SKILL.md](../japanese-tech-writing/SKILL.md).

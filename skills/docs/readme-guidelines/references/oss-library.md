@@ -11,8 +11,6 @@ For libraries distributed via a package registry (npm, PyPI, crates.io, …) wit
 
 One-line description of what this library does.
 
-[日本語版 (Japanese)](README-ja.md)
-
 ## Features
 
 - Feature 1 — one line each, benefit-oriented
