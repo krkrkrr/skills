@@ -19,7 +19,7 @@ What problem this solves and when you would reach for it (2-3 sentences).
 npm install -g project-name
 ```
 
-## Usage
+## Quick Start
 
 ```bash
 project-name --input file.txt
@@ -51,7 +51,7 @@ MIT
 - One installation method, the recommended one. Alternatives go in a single trailing line, not parallel subsections.
 - State runtime prerequisites inline only if unusual (e.g. "Requires Node.js >= 22").
 
-### Usage
+### Quick Start
 
 - One real invocation that a reader can copy-paste, followed by its actual output (run it, paste the result).
 - Cover the single most common use case only. Do not enumerate all flags — point to `--help` for that.
@@ -63,6 +63,6 @@ MIT
 
 ## What NOT to include
 
-- Features list — at this size, Usage *is* the features list
+- Features list — at this size, Quick Start *is* the features list
 - Architecture, directory structure, contribution guide
 - Badges

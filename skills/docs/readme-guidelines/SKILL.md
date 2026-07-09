@@ -37,7 +37,8 @@ When in doubt, start from the minimal template and promote later: a small README
 - Every command and code example must be verified to work before it is written down. Do not invent plausible-looking commands.
 - Do not duplicate information that is obvious from the code or generated files (full option lists, directory trees, dependency lists). Duplicated detail drifts out of date and becomes misinformation.
 - Add sections only when there is content for them. Never leave empty placeholder sections ("TBD", "Coming soon").
-- Keep the skeleton's section order. Readers scan READMEs by convention: identity → install → usage → detail.
+- Do not include sections whose content grows without bound over the project's operational lifetime (Troubleshooting logs, accumulated FAQs). Unlike Architecture or API — bounded by the current shape of the code — these add one entry per incident and never shrink, eventually crowding out what a new reader actually needs. Keep that knowledge in a separately maintained doc and link to it if truly necessary.
+- Keep the skeleton's section order. Readers scan READMEs by convention: identity → install → quick start → detail.
 - License section comes last, when the project is published.
 
 ## Language policy
@@ -54,10 +55,10 @@ When code changes, update the README in the same commit or PR. Map the change to
 
 | Change | Sections to update |
 |---|---|
-| New feature / new CLI flag | Usage, Features, Quick Start |
-| Dependency or setup procedure change | Install, Prerequisites, Setup |
+| New feature / new CLI flag | Quick Start, Features |
+| Dependency or setup procedure change | Install |
 | Public API change | API |
-| Architecture change | Architecture, Overview |
+| Architecture change | Overview |
 | Breaking change | The affected section, plus a migration note near the top |
 | Feature removal / deprecation | Delete or mark the affected section — removal is part of updating |
 | Project renamed / repurposed | Title, one-line description, Why/Overview |
