@@ -1,6 +1,8 @@
 # skills
 
-Personal Claude Code agent skills library.
+Personal Claude Code agent skills library. There is no single repository-wide
+license: each skill carries its own, listed in the License column of the
+tables below (see `skills/<category>/<skill-name>/LICENSE`).
 
 ## Install
 
