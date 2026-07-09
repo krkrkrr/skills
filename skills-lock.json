@@ -121,12 +121,6 @@
       "skillPath": "skills/testing/playwright-test/SKILL.md",
       "computedHash": "8dfd6ca18ba07a932de883f36c18b3216cdd12dcfa064069bda00f6fdd826f43"
     },
-    "prompt-review": {
-      "source": "git@github.com:krkrkrr/skills.git",
-      "sourceType": "git",
-      "skillPath": "skills/meta/prompt-review/SKILL.md",
-      "computedHash": "75861a2173028c19a534a08cf3cfc608708784a3cb4bae51708ce0c6e94e2ffe"
-    },
     "react-expert": {
       "source": "git@github.com:krkrkrr/skills.git",
       "sourceType": "git",

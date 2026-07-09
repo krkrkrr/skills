@@ -73,7 +73,7 @@ done
 ## Language
 
 - `SKILL.md` files are written in **English** as the primary source.
-- Japanese is acceptable in `description` and body when the skill is specifically designed for Japanese-language tasks (e.g., `prompt-review`).
+- Japanese is acceptable in `description` and body when the skill is specifically designed for Japanese-language tasks (e.g., `japanese-tech-writing`).
 
 ## Install
 
