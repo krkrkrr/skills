@@ -4,6 +4,18 @@ Personal Claude Code agent skills library.
 
 ## Install
 
+**gh skill** (recommended):
+
+```bash
+gh skill add krkrkrr/skills
+```
+
+To update:
+
+```bash
+gh skill update krkrkrr/skills
+```
+
 **apm** (`apm.yml`):
 
 ```yaml
