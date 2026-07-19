@@ -1,0 +1,3 @@
+# Local install targets (mirrors of skills/, not source) — see CLAUDE.md "Local Sync"
+.agents/
+.claude/
