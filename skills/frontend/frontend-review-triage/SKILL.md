@@ -1,6 +1,7 @@
 ---
 name: frontend-review-triage
 description: Use when starting a frontend review engagement or when the user asks for an initial assessment ("triage", "day 0", "what's the state of this repo"). Reads package.json, README, gh issues, and produces a scorecard covering lockfiles, TypeScript strictness, testing, CI, and known issues. Runs `scripts/audit-triage.sh`.
+license: MIT
 ---
 
 # Frontend Review — Triage

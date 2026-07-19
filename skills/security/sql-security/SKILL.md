@@ -7,6 +7,7 @@ metadata:
     tags: [sql, security, sqlite, d1, dba, sqli, secrets]
     related_skills: [sql-plan-audit, sql-lint, sql-schema-audit]
     engines: [sqlite, postgres, mysql]
+license: MIT
 ---
 
 # SQL Security

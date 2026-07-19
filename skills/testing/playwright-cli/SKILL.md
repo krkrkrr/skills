@@ -2,6 +2,7 @@
 name: playwright-cli
 description: Automate browser interactions, test web pages and work with Playwright tests.
 allowed-tools: Bash(playwright-cli:*) Bash(npx:*) Bash(npm:*)
+license: Apache-2.0
 ---
 
 # Browser Automation with playwright-cli

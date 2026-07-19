@@ -1,6 +1,7 @@
 ---
 name: conventional-changelog
 description: Reference for Conventional Commits and automatic CHANGELOG generation. Compares release-please / changesets / git-cliff / towncrier and covers commit format, Keep a Changelog, and semver tag practices. Use when setting up or unifying a release flow.
+license: MIT
 ---
 
 # Conventional Changelog

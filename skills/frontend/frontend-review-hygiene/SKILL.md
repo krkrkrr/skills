@@ -1,6 +1,7 @@
 ---
 name: frontend-review-hygiene
 description: Use when assessing code quality hygiene — TypeScript strictness, lint violations, dead code, and duplication. Runs `audit-typescript.sh`, `audit-lint.sh`, `audit-similarity.sh`. Does NOT cover dependency freshness or CVE audit — use `frontend-review-deps` for that.
+license: MIT
 ---
 
 # Frontend Review — Hygiene

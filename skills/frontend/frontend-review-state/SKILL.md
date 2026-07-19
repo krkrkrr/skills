@@ -1,6 +1,7 @@
 ---
 name: frontend-review-state
 description: Use when reviewing state management architecture — classifying state types (server/URL/form/UI), checking for over-globalization, Jotai/Zustand/Redux patterns, derived state, and logout/cache invalidation. Covers checklist 23-state-management.md.
+license: MIT
 ---
 
 # Frontend Review — State Management

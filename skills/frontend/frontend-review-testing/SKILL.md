@@ -1,6 +1,7 @@
 ---
 name: frontend-review-testing
 description: Use when auditing test infrastructure — vitest coverage, playwright configuration, VRT setup, coverage merging. Produces recommendations for Week 2 testing phase. Runs `scripts/audit-coverage.sh`.
+license: MIT
 ---
 
 # Frontend Review — Testing

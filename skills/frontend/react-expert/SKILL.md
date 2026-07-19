@@ -1,6 +1,7 @@
 ---
 name: react-expert
 description: React specialist perspective for the weekly review. Focuses on hooks discipline, re-rendering, Suspense / RSC, and Context design. Opinionated on React idioms.
+license: MIT
 ---
 
 # Perspective — React Expert

@@ -1,6 +1,7 @@
 ---
 name: tech-article-reproducibility
 description: Evaluate the reproducibility of technical articles. Dispatch a subagent to simulate a first-time reader reproducing the work locally and list missing information. Use as the final check on a draft before publication.
+license: MIT
 ---
 
 # Tech Article Reproducibility

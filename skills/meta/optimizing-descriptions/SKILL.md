@@ -1,6 +1,7 @@
 ---
 name: optimizing-descriptions
 description: 'Meta-skill for auditing and rewriting SKILL.md `description` fields per the agentskills.io optimizing-descriptions framework, layered with mizchi''s two-track trigger policy (Meta = explicit-invoke-only, Project = pushy auto-trigger). Invoke ONLY when the user explicitly asks to "optimize a skill description," "audit descriptions," or "rewrite descriptions per agentskills." Do NOT auto-invoke after every SKILL.md edit; description tuning is a deliberate batch, not a per-edit reflex.'
+license: MIT
 ---
 
 # Optimizing Skill Descriptions

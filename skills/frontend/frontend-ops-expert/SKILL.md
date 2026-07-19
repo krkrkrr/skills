@@ -1,6 +1,7 @@
 ---
 name: frontend-ops-expert
 description: Frontend Ops specialist perspective for the weekly review. Focuses on CI/CD, Scheduler, KPI ratchet, release process, Renovate / Dependabot health.
+license: MIT
 ---
 
 # Perspective — Frontend Ops Expert

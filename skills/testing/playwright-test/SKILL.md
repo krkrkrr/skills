@@ -1,6 +1,7 @@
 ---
 name: playwright-test
 description: Best practices and reference for Playwright Test (E2E). Covers how to write tests, avoiding fixed waits, network triggers, DnD, shard/retry setup on GitHub Actions, and more. Use when writing, reviewing, or configuring CI for Playwright tests.
+license: MIT
 ---
 
 # Playwright Test

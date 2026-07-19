@@ -1,6 +1,7 @@
 ---
 name: frontend-review-performance
 description: Use when reviewing React rendering performance — profiler-first diagnosis, memo/useCallback/useMemo correctness, virtual scroll, useTransition/useDeferredValue, and canvas/WebGL separation for data-heavy UIs. Covers checklist 24-rendering-performance.md.
+license: MIT
 ---
 
 # Frontend Review — Rendering Performance

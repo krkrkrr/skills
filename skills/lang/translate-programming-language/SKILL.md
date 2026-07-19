@@ -1,6 +1,7 @@
 ---
 name: translate-programming-language
 description: Plan and execute language-to-language server or application migrations with behavior parity. Use when porting modules, services, APIs, or runtimes between programming languages; generating source-runtime oracles and fixtures; generating migrated parity tests; detecting runtime, standard-library, serialization, numeric, encoding, time, regex, or protocol differences; building temporary compatibility layers; accumulating migration knowledge; benchmarking; shadow testing; canarying; or planning cutover and rollback.
+license: MIT
 ---
 
 # Translate Programming Language

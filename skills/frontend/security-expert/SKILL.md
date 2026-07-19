@@ -1,6 +1,7 @@
 ---
 name: security-expert
 description: Security specialist perspective for the weekly review. Focuses on XSS/CSRF, authorization boundaries, input validation, secrets handling, and dependency CVEs.
+license: MIT
 ---
 
 # Perspective — Security Expert

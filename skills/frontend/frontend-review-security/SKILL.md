@@ -1,6 +1,7 @@
 ---
 name: frontend-review-security
 description: Use when conducting a frontend security review — static analysis (risky HTML patterns, env var exposure), authentication/authorization audit (token storage, route guards, logout), and AI self-penetration testing. Runs `scripts/audit-security.sh`. For CVE triage and deprecated library detection, use `frontend-review-deps`.
+license: MIT
 ---
 
 # Frontend Review — Security

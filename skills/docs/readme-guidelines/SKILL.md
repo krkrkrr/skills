@@ -1,6 +1,7 @@
 ---
 name: readme-guidelines
 description: Templates and policies for README.md files. Use when creating a new README.md, updating an existing one after code changes, or creating/syncing the Japanese version README-ja.md. Covers template selection by project type, section-level writing rules, and which sections to update for which kind of change.
+license: Unlicense
 ---
 
 # README Guidelines

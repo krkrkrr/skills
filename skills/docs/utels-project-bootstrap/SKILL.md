@@ -1,6 +1,7 @@
 ---
 name: utels-project-bootstrap
 description: One-shot helper for registering a utels.dev project and writing the returned ingest token straight into a wrangler secret. Use when wiring server-side error tracking for a Cloudflare Worker without leaking tokens through the shell.
+license: MIT
 ---
 
 # utels project bootstrap

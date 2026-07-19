@@ -1,6 +1,7 @@
 ---
 name: dotenvx
 description: dotenvx 環境変数管理ツールのリファレンス。暗号化、複数環境対応、GitHub Actions での使用例を提供。
+license: MIT
 ---
 
 # dotenvx Skill

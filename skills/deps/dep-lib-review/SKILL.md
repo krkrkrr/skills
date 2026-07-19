@@ -1,6 +1,7 @@
 ---
 name: dep-lib-review
 description: Periodic dependency review for Node.js/pnpm projects — outdated package triage, security audit, update batching strategy (patch/minor/major), validation checklist. Run monthly or before major releases. Use when asked to review or update dependencies in a repo.
+license: MIT
 ---
 
 # Dependency Review

@@ -1,6 +1,7 @@
 ---
 name: tech-article-reproducibility
 description: 技術記事の再現性 (読者が手元で再現できるか) を評価するスキル。subagent に「初見の読者として手元で再現を試みる」シミュレーションをさせ、足りない情報をリストアップさせる。記事ドラフトの最終チェック、または公開後フィードバック前の事前検証で使う。
+license: MIT
 ---
 
 # Tech Article Reproducibility

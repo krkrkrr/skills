@@ -1,6 +1,7 @@
 ---
 name: frontend-expert
 description: Frontend architect perspective for the weekly review. Focuses on component design, state management, DOM usage, developer experience, and build configuration. Reads raw JSON from other audit scripts and produces an opinionated perspective report.
+license: MIT
 ---
 
 # Perspective — Frontend Expert

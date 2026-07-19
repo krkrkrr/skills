@@ -1,6 +1,7 @@
 ---
 name: frontend-review-weekly
 description: Use for the weekly AI review. Orchestrates all frontend-review-* skills in order, dispatches the 5 perspective sub-skills in parallel, diffs against last week's KPIs, and produces a weekly report that feeds the ratchet.
+license: MIT
 ---
 
 # Frontend Review — Weekly Orchestrator

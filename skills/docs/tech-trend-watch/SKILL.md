@@ -1,6 +1,7 @@
 ---
 name: tech-trend-watch
 description: Long-term technology stack review using State of JS, State of CSS, and Thoughtworks Technology Radar — satisfaction×usage matrix, ADOPT/TRIAL/ASSESS/HOLD mapping, P0–P3 migration priority. Use for annual stack audits, planning major migrations (jest→vitest, webpack→Vite, etc.), or on-demand replacement decisions. Not for general architecture design.
+license: MIT
 ---
 
 # Long-Term Technology Watch

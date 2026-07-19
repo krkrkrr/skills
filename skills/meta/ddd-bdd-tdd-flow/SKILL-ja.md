@@ -9,6 +9,7 @@ description: >
   Red-Green-Refactor cycle. Outputs land in doc/ (models + features), test/ (all tests),
   src/ (implementation). When NOT to use: small incremental changes to an already-modeled
   feature; refactors with no behavioral change; hotfixes.
+license: Unlicense
 ---
 
 # DDD → BDD → TDD 開発フロー

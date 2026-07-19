@@ -1,6 +1,7 @@
 ---
 name: upstream-fix-and-pin
 description: 自分の依存ライブラリにバグや欠けている機能があり、上流に PR を出して取り込まれるまで下流プロジェクトを動かしたいときの運用。git ref pin（branch HEAD SHA → merge SHA）、`link:` への退避判断、SHA 取り扱い、pnpm v10 の build script gating まで含む。
+license: MIT
 ---
 
 # Upstream Fix and Pin

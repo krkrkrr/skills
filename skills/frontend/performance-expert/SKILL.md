@@ -1,6 +1,7 @@
 ---
 name: performance-expert
 description: Performance specialist perspective for the weekly review. Focuses on bundle size, LCP / CLS / INP, avoidable re-work, image and font optimization. Reads audit-bundle and audit-lighthouse raw output when available.
+license: MIT
 ---
 
 # Perspective — Performance Expert

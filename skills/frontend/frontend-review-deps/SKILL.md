@@ -1,6 +1,7 @@
 ---
 name: frontend-review-deps
 description: Use when auditing dependency health — outdated packages, CVE triage with attack-vector weighting, deprecated/declining library detection (trend-watch). Runs `audit-deps.sh` and `audit-trend-watch.sh`. Pairs with `frontend-review-security` for the full security picture.
+license: MIT
 ---
 
 # Frontend Review — Dependencies

@@ -1,6 +1,7 @@
 ---
 name: frontend-review-ci
 description: Use when CI is slow (>10 min), flaky, or the user asks to optimize GitHub Actions for a frontend project. Analyzes `gh run list` history, identifies bottleneck steps, proposes sharding / cache / concurrency improvements. Runs `scripts/audit-ci.sh`.
+license: MIT
 ---
 
 # Frontend Review — CI Optimization

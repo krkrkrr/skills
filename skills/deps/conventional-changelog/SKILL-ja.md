@@ -1,6 +1,7 @@
 ---
 name: conventional-changelog
 description: Conventional Commits 規約と CHANGELOG 自動生成の横断リファレンス。commit 書式、Keep a Changelog 形式、semver タグ運用、release-please / changesets / git-cliff / towncrier 等の生成ツール比較を含む。新規リポジトリで release フローを整備するとき、既存 repo の commit 規約を統一するとき、言語に合った changelog ツールを選ぶとき、release-please 以外の選択肢を検討するときに使う。
+license: MIT
 ---
 
 # Conventional Changelog

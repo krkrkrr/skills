@@ -1,6 +1,7 @@
 ---
 name: otel-node
 description: Node.js OpenTelemetry setup — SDK init, auto-instrumentation packages, and the esbuild ESM silent-failure gotcha (instrumentation-* packages produce no spans when bundled with esbuild --format=esm). Use when adding OTel to a Node.js/Hono/Express service or debugging missing spans after bundling. See devops/opentelemetry for signal design decisions.
+license: MIT
 ---
 
 # OpenTelemetry — Node.js
