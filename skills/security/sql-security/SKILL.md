@@ -1,12 +1,25 @@
 ---
 name: sql-security
 description: "SQL injection screening for host code (MoonBit / TS / Rust) plus secretlint setup notes. Flags single-line template-literal or string-concat SQL builders, regardless of value source — the scanner is line-based and does NOT trace data flow, so a clean scan is not proof of safety (multi-line template literals are missed) and every hit needs a manual review or an explicit `// sql-security: ok` opt-out."
-version: 0.1.0
 metadata:
+  version: "0.1.0"
   hermes:
-    tags: [sql, security, sqlite, d1, dba, sqli, secrets]
-    related_skills: [sql-plan-audit, sql-lint, sql-schema-audit]
-    engines: [sqlite, postgres, mysql]
+    tags:
+      - sql
+      - security
+      - sqlite
+      - d1
+      - dba
+      - sqli
+      - secrets
+    related_skills:
+      - sql-plan-audit
+      - sql-lint
+      - sql-schema-audit
+    engines:
+      - sqlite
+      - postgres
+      - mysql
 license: MIT
 ---
 
