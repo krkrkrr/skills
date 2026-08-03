@@ -4,18 +4,23 @@ Personal Claude Code agent skills library.
 
 ## Overview
 
-Skills are organized into category subdirectories. Each skill lives at `skills/<category>/<skill-name>/` and is installed individually into `~/.claude/skills/<skill-name>/`.
+Every skill lives at the top level of `skills/` — one directory per skill,
+`skills/<skill-name>/` — and is installed individually into
+`~/.claude/skills/<skill-name>/`.
 
-Categories: `skills/frontend/`, `skills/deps/`, `skills/testing/`, `skills/security/`, `skills/env/`, `skills/lang/`, `skills/docs/`, `skills/meta/`
+There are **no category subdirectories**. The directory tree is flat and mirrors
+the install layout, and carries **no categorization of its own**. Category
+grouping has no runtime meaning (skills install flat), so the only human-facing
+map of the library is [README.md](./README.md), which groups skills by **use
+case** derived from the skill-collaboration Markov model — not by directory.
 
 ## Repository Structure
 
 ```
 skills/
-  <category>/
-    <skill-name>/
-      SKILL.md          # Required. Frontmatter + body.
-      references/       # Optional. Static reference files loaded on demand.
+  <skill-name>/
+    SKILL.md          # Required. Frontmatter + body.
+    references/       # Optional. Static reference files loaded on demand.
 ```
 
 ## Naming Convention
@@ -25,7 +30,7 @@ skills/
 Verify with:
 
 ```bash
-for d in skills/*/*/; do
+for d in skills/*/; do
   name=$(basename "$d")
   fm=$(grep '^name:' "$d/SKILL.md" 2>/dev/null | head -1 | sed 's/name: //')
   [ "$name" != "$fm" ] && echo "MISMATCH: $name -> $fm"
@@ -42,6 +47,7 @@ name: skill-name         # Must match directory name
 description: >           # Triggering contract seen by the agent at startup.
   One-paragraph description shaped as a triggering condition:
   "Use when...", explicit "When NOT to use" cue if meta-skill.
+license: MIT             # Per-skill license (this repo has no single license)
 ---
 ```
 
@@ -53,18 +59,55 @@ context: fork                       # Isolate context
 disable-model-invocation: true      # Prevent sub-model calls
 ```
 
+## README Maintenance (REQUIRED — update in the same change as any skill change)
+
+Because the directory tree carries no categorization, [README.md](./README.md)
+is the **single source of truth** for how the library is organized. It has two
+views that must stay in sync:
+
+1. **Use-case map** — skills grouped by the Markov-cluster use cases (UC1–UC5).
+   This is a *cover*, not a partition: a bridge skill may appear under more than
+   one use case.
+2. **All skills (A–Z)** — the complete inventory table (description, reference,
+   license).
+
+**Whenever you add, remove, rename, or re-scope a skill, you MUST update
+README.md as part of the same commit:**
+
+- **Add** → add a row to the A–Z table (description / reference / license) **and**
+  place the skill under its primary use case in the use-case map. If it serves
+  more than one use case, tag the secondary one(s).
+- **Remove** → delete its A–Z row and every use-case entry.
+- **Rename** → update the directory name, the `name:` frontmatter, **and** every
+  link/label in both README views.
+- **Re-scope** (the skill's job changes) → re-evaluate its use-case placement and
+  move it if the primary use case changed.
+
+Invariant: every skill in the A–Z table appears under at least one use case, and
+every use-case entry exists in the A–Z table. Verify tree ⇄ README agreement:
+
+```bash
+ls -d skills/*/ | sed 's#skills/##;s#/##' | sort > /tmp/tree.txt
+grep -oE '\./skills/[a-z0-9-]+/' README.md | sed 's#\./skills/##;s#/##' | sort -u > /tmp/readme.txt
+diff /tmp/tree.txt /tmp/readme.txt && echo "OK: README matches tree"
+```
+
+When the use-case model itself needs rethinking (new workflow clusters emerge),
+re-derive the grouping from the skill-collaboration Markov chain rather than
+inventing ad-hoc buckets.
+
 ## Local Sync
 
 When editing a skill in this repo, mirror the change immediately so the current session picks it up. Use `cp -rT` (not `cp -r`): when the target directory already exists, `cp -r` nests the source inside it instead of overwriting.
 
 ```bash
-cp -rT skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
+cp -rT skills/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 Or sync all skills at once:
 
 ```bash
-for d in skills/*/*/; do
+for d in skills/*/; do
   name=$(basename "$d")
   cp -rT "$d" ~/.claude/skills/"$name"/
 done
@@ -78,13 +121,13 @@ done
 ## Install
 
 ```bash
-cp -rT skills/<category>/<skill-name>/ ~/.claude/skills/<skill-name>/
+cp -rT skills/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 全スキルを一括同期:
 
 ```bash
-for d in skills/*/*/; do
+for d in skills/*/; do
   name=$(basename "$d")
   cp -rT "$d" ~/.claude/skills/"$name"/
 done
