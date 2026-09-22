@@ -1,20 +1,85 @@
 ---
 name: ddd-bdd-tdd-flow
 description: >
-  Use when creating a new application or feature from scratch following a structured flow.
-  Executes five mandatory phases in order: (1) structured requirements interview,
-  (2) DDD SUDO modeling with Mermaid diagrams + user review, (3) comprehensive BDD
-  Gherkin feature writing + user review, (4) property derivation and property-based
-  integration/e2e test generation, (5) TDD implementation following t_wada's
-  Red-Green-Refactor cycle. Outputs land in doc/ (models + features), test/ (all tests),
-  src/ (implementation). When NOT to use: small incremental changes to an already-modeled
-  feature; refactors with no behavioral change; hotfixes.
+  Use when adding a feature or building an application through a structured
+  DDD -> BDD -> TDD flow. Five phases in order: (0) decide which existing bounded
+  context the work belongs to, (1) requirements interview, (2) SUDO modeling —
+  update the repository's single S and U, draw only D and O + user review,
+  (3) Gherkin feature files + user review, (4) property-based integration and e2e
+  tests, (5) t_wada-style Red-Green-Refactor. Use this whenever the user mentions
+  domain modeling, bounded contexts, a SUDO or context map, BDD or Gherkin
+  features, property-based tests, or wants a new feature designed before it is
+  coded — even if they do not name the flow. Also use it when documents have
+  drifted: duplicated models, per-feature silos, or IDs that collide.
+  When NOT to use: a hotfix, a pure refactor with no behavioral change, or a
+  one-line change to code that is already modeled and tested.
 license: Unlicense
 ---
 
 # DDD → BDD → TDD Development Flow
 
 Follow these phases strictly in order. **Never advance to the next phase without user approval.**
+
+---
+
+## Phase 0: Orient — decide which bounded context this belongs to
+
+**Do this before the interview.** Read, in this order:
+
+1. `doc/README.md` — the index
+2. `doc/system-context.md` — which bounded contexts exist and where the translators are
+3. `doc/glossary.md` — the ubiquitous language
+4. `doc/questions/open/` and `doc/questions/deferred/` — what is already
+   known to be unknown, and what was deliberately left alone
+
+Then answer one question: **which existing bounded context does this work belong to?**
+
+> **The default answer is "an existing one."**
+> Creating a new bounded context requires an ADR that shows **the ubiquitous
+> language actually differs** — that the same word means something else, or that
+> a translator (anti-corruption layer) has to sit at the boundary.
+> **"This is a new feature" is not a reason.** Features are increments of work,
+> not units of the domain.
+
+A feature usually touches **more than one** context. That is normal. Split the
+work by context and file each part in its own place. **Do not create a directory
+named after the feature.**
+
+Record the answer in the increment folder you create in Phase 1.
+
+---
+
+## Where everything lives
+
+**Read this once; every phase below assumes it.** The shape is not arbitrary —
+each file answers a different question, and things that answer the same question
+live together, so there is one place to look and one place to change.
+
+```
+doc/
+  system-context.md   S — the one system context diagram. **The contexts are counted from it**
+  use-cases.md        U — the one list of use cases. IDs carry a context prefix
+  glossary.md         the ubiquitous language, plus units and sentinels
+
+  context/<bounded-context>/       one directory per party the system talks to
+    domain-model.md   D — this context's language, aggregates, matching src
+    object-model.md   O — the use cases it carries, and the interactions
+    constraints.md    rules to obey + invariants, each linked to the test that holds it
+    features/*.feature
+```
+
+Two rules follow. Both are worth stating plainly, because breaking either one is
+the failure this layout exists to prevent.
+
+**S and U are singletons.** One system context diagram, one use-case list, for the
+whole repository. Phase 2 *updates* them; it never draws new ones.
+
+**D, O and constraints are per context, one each.** Not one per aggregate, not one
+per increment. A reader should open three files and have the whole design of a
+context — and be able to trust that no fourth file is hiding somewhere.
+
+Everything else is either not design, a record rather than a model, or material you
+were given. **That part of the tree is at the end of this file.**
 
 ---
 
@@ -34,7 +99,30 @@ Conduct a structured interview. Ask all questions before proceeding.
 - Are there existing systems to integrate with?
 - Non-functional requirements: performance, security, scale, availability
 
-Save the collected answers to `doc/requirements.md`.
+Save the collected answers to **`doc/increments/<date>-<name>/requirements.md`**.
+
+> **Do not overwrite **another increment's** `requirements.md`.** Each increment keeps its own record.
+>
+> Then **split the content four ways** and file each part where it belongs.
+>
+> | Content | Destination | Why |
+> |---|---|---|
+> | What you measured on the device | `doc/evidence/` | **Append only. Corrections go on a new line** |
+> | Rules to obey | **append** to `doc/context/<bc>/constraints.md` | Revised. Old versions become void |
+> | Acceptance criteria | the `.feature` files in Phase 3 | Fixed once implemented |
+> | Open questions | a new file under `doc/questions/open/<subject>/` | **The directory is the status** |
+> | New vocabulary | **append** to `doc/glossary.md` | **Everything goes through here** |
+
+### Recording what you could not resolve
+
+Anything you could not settle — an unknown, a number picked because one had to be
+picked, a parameter nobody dared touch — goes to `doc/questions/`, one file per
+question. **The `unresolved-questions` skill owns that workflow; use it rather
+than inventing a format here.**
+
+What matters for this phase: **do not carry an open question forward as a `TODO`
+in the code or a sentence in `requirements.md`.** The increment folder freezes, and
+a question frozen inside it stops being visible to anyone looking for open work.
 
 **Branch Creation & First Commit**
 
@@ -42,7 +130,7 @@ Derive a kebab-case feature name from the Phase 1 answers (e.g., "User Authentic
 
 ```bash
 git checkout -b feature/<new-feature-name>
-git add doc/requirements.md README.md
+git add doc/increments/ doc/glossary.md doc/questions/ README.md
 git commit -m "docs(phase1): add requirements for <new-feature-name>"
 ```
 
@@ -52,7 +140,45 @@ All subsequent work happens on this branch.
 
 ## Phase 2: SUDO Modeling (DDD)
 
-Create four Mermaid diagrams. Save all to `doc/sudo-model.md`.
+**Do not draw a new S or U diagram.** The repository has exactly one of each.
+**Update** `doc/system-context.md` and `doc/use-cases.md` instead.
+**A second System Context diagram is a defect.**
+
+Draw only D and O:
+
+| | Where |
+|---|---|
+| **D** | append to `doc/context/<bc>/domain-model.md` |
+| **O** | append to `doc/context/<bc>/object-model.md` |
+
+> **Five kinds of design document, and no others: S, U, D, O, constraints.**
+> S and U exist **once each** in the repository. D, O and constraints exist
+> **once per context**. **Do not create a sixth kind, and do not add a second
+> file of an existing kind.** One document answers one question.
+
+> **The number of contexts is read off the S diagram.** A context exists for
+> each party **the system itself** is connected to — no more. If your feature does not add
+> a line to the S diagram, **it does not add a context.**
+
+**Append under these headings.** A drift check reads them, so a document that
+invents its own headings fails `npm test` — but the real reason is that a reader
+should find the same thing in the same place in every context.
+
+| File | Headings |
+|---|---|
+| `domain-model.md` | `## <the language here>` · `## <aggregates and value objects>` · `## <matching src>` |
+| `object-model.md` | `## <the use cases this context carries>` · `## <interactions>` |
+| `constraints.md` | `## <rules to obey>` · `## <invariants>` |
+
+Each file links back to `system-context.md`; `object-model.md` also links to
+`use-cases.md`. **Those two are the canonical lists — restate only this
+context's rows, never redraw them.**
+
+> **Diagram size is a hard limit.**
+> **1 diagram = 1 aggregate (D) or 1 use case (O).**
+> **If it exceeds 40 lines or 7 classes, split it.**
+>
+> Measured: unsplit D diagrams reached 152 / 109 / 106 lines and became unreadable.
 
 SUDO stands for:
 - **S**ituation: bounded contexts, subdomains, and their relationships
@@ -60,29 +186,22 @@ SUDO stands for:
 - **D**omain model: aggregates, entities, value objects, domain events
 - **O**bject interaction: key sequence/collaboration for each core use case
 
-### S — Situation
+### S — Situation · U — Usecase — **update, do not draw**
 
-Visualize bounded contexts, subdomains, and external system boundaries.
+Both already exist, once each. **There is no template here on purpose:**
+a template invites a new diagram, and a new diagram is the defect.
 
-```mermaid
-C4Context
-  title System Context — <feature name>
-  Person(user, "User", "Primary actor")
-  System(system, "<System>", "Core bounded context")
-  System_Ext(ext, "<External>", "External dependency")
-  Rel(user, system, "uses")
-  Rel(system, ext, "integrates with")
-```
+| | File | What Phase 2 adds |
+|---|---|---|
+| **S** | `doc/system-context.md` | A new external party **only if the system genuinely talks to one.** That is also what would justify a new context |
+| **U** | `doc/use-cases.md` | New rows, with the context prefix (`DEV-` / `INT-` / …) |
 
-### U — Usecase
+Then restate **only this context's rows** inside `object-model.md`. The full list
+stays in `use-cases.md`. **Two copies of a list means one of them goes stale.**
 
-List every actor and use case derived from the interview.
-
-```mermaid
-graph LR
-  Actor -->|"register"| System
-  Actor -->|"query"| System
-```
+> Measured: when each increment drew its own S, the same external system appeared
+> under five names (`LLM` / `LM Studio`, `URX22` / `UR-22C`) and nobody noticed,
+> because no two of the five were ever read side by side.
 
 ### D — Domain Model
 
@@ -127,10 +246,10 @@ Iterate until the user explicitly approves. Append a `## Review Notes` section w
 
 **Commit after approval**
 
-Update `README.md`: fill in the **Domain Model** section with a link to `doc/sudo-model.md` and a one-line summary per SUDO diagram. Set Status to `Phase 2 complete`.
+Add one row to the timeline in `doc/README.md`. **Keep the root `README.md` under 100 lines.**
 
 ```bash
-git add doc/sudo-model.md doc/ADR/ README.md
+git add doc/context/ doc/system-context.md doc/use-cases.md doc/ADR/ README.md
 git commit -m "docs(phase2): add SUDO domain model"
 ```
 
@@ -138,7 +257,7 @@ git commit -m "docs(phase2): add SUDO domain model"
 
 ## Phase 3: BDD Feature Writing
 
-From the approved SUDO model, derive Gherkin feature files. One `.feature` file per major use case under `doc/features/`.
+From the approved SUDO model, derive Gherkin feature files. One `.feature` file per major use case under `doc/context/<bc>/features/`.
 
 ### Coverage Checklist (mandatory for every use case)
 
@@ -179,7 +298,7 @@ Feature: <Use case name>
       | ...   | ...      |
 ```
 
-Save to `doc/features/<use-case-name>.feature`.
+Save to `doc/context/<bc>/features/<use-case-name>.feature`.
 
 **→ Present all feature files to the user.**
 Ask: "Do these scenarios fully capture the expected behavior? Are there missing cases?"
@@ -191,7 +310,7 @@ Iterate until the user explicitly approves.
 Update `README.md`: fill in the **Features / Behavior** section with a table of `.feature` files and their descriptions. Set Status to `Phase 3 complete`.
 
 ```bash
-git add doc/features/ README.md
+git add doc/context/ README.md
 git commit -m "docs(phase3): add BDD feature files"
 ```
 
@@ -201,7 +320,7 @@ git commit -m "docs(phase3): add BDD feature files"
 
 ### 4a: Extract Properties
 
-From each approved feature, derive invariants and properties. Document in `doc/properties.md`.
+From each approved feature, derive invariants and properties. **Append** to the `## Invariants` section of `doc/context/<bc>/constraints.md`.
 
 For every scenario, ask:
 - **Post-condition invariant**: "After this operation, X must always hold"
@@ -211,7 +330,7 @@ For every scenario, ask:
 - **Idempotent**: "Applying the operation twice is the same as applying it once"
 - **Equivalence**: "Two different paths produce the same observable result"
 
-Format in `doc/properties.md`:
+Format:
 
 ```markdown
 ## <Use case name>
@@ -260,7 +379,7 @@ Structure:
 Update `README.md`: fill in the **Testing** section with the PBT library used and links to `test/integration/` and `test/e2e/`. Set Status to `Phase 4 complete`.
 
 ```bash
-git add doc/properties.md test/integration/ test/e2e/ README.md
+git add doc/context/ test/integration/ test/e2e/ README.md
 git commit -m "test(phase4): add property-based integration and e2e tests"
 ```
 
@@ -272,7 +391,7 @@ Follow **Red → Green → Refactor** strictly. One cycle at a time.
 
 ### 5a: Build the Test List
 
-Before writing any code, enumerate all unit tests needed. Save to `doc/test-list.md`:
+Before writing any code, enumerate all unit tests needed. Save to `doc/increments/<date>-<name>/test-list.md`:
 
 ```markdown
 ## Test List
@@ -325,14 +444,23 @@ Refactor:    implement `balance += amount`
 After all unit tests pass:
 1. Run the property-based integration tests from Phase 4b
 2. Run the e2e tests from Phase 4c
-3. Fix any failures with additional TDD cycles (add test to the list, loop)
+3. **Run the documentation check** (`test/unit/documentation.test.ts`) — it catches
+   the failure modes below mechanically: a stale premise still written as current
+   fact, a broken link, an ID without a context prefix, a diagram grown past 40 lines
+4. Fix any failures with additional TDD cycles (add test to the list, loop)
+
+**Then close out anything you answered.** Increments routinely settle questions
+on the way past without anyone noticing, so check `doc/questions/open/` against
+what you learned. **The `unresolved-questions` skill has the closing procedure** —
+do it in this commit, not later. A question left in `open/` after it has been
+answered is worse than no list at all: the next reader trusts it and re-investigates.
 
 **Commit after integration gate passes**
 
 Update `README.md`: fill in the **Usage** and **Development** sections (how to run the app and tests). Set Status to `Phase 5 complete`. Remove any placeholder comments left in earlier phases.
 
 ```bash
-git add src/ test/unit/ doc/test-list.md README.md
+git add src/ test/unit/ doc/increments/ README.md
 git commit -m "feat(<scope>): implement <new-feature-name>"
 ```
 
@@ -340,41 +468,14 @@ git commit -m "feat(<scope>): implement <new-feature-name>"
 
 ## Architecture Decision Records (ADR)
 
-Whenever a significant architectural or design decision is made during any phase, record it as an ADR.
+Whenever a significant decision is made **in any phase**, record it immediately —
+not batched at the end of the phase. A decision written a day later is a
+rationalisation; the forces you felt at the time are the part worth keeping.
 
-**When to create an ADR:**
-- A technology or framework is chosen (e.g., "use PostgreSQL over SQLite")
-- A design pattern or architectural style is adopted (e.g., "CQRS for the Order aggregate")
-- A trade-off is accepted with known consequences
-- A rejected alternative is worth preserving for future readers
-
-**File:** `doc/ADR/NNNN-<kebab-case-title>.md` (zero-padded four-digit number, e.g. `doc/ADR/0001-use-event-sourcing.md`)
-
-**Format (Nygard):**
-
-```markdown
-# ADR-NNNN: <title>
-
-## Status
-
-Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
-
-## Context
-
-<Describe the situation, forces, and constraints that led to this decision.>
-
-## Decision
-
-<State the decision in active voice: "We will…">
-
-## Consequences
-
-<List positive and negative consequences of this decision.>
-```
-
-Create the ADR immediately when the decision is made — do not batch them at the end of a phase. If the user later changes a decision, update the old ADR's `Status` to `Superseded by ADR-NNNN` and create a new one.
-
----
+**Format and the full list of triggers: `references/templates.md`.**
+File as `doc/ADR/NNNN-<kebab-case-title>.md`. When a decision is later overturned,
+**set the old ADR's `Status` to `Superseded by ADR-NNNN` rather than editing its
+body** — the chain is how a reader tells which version is current.
 
 ## Git Workflow
 
@@ -382,7 +483,7 @@ All development happens on a `feature/<new-feature-name>` branch created at the 
 
 | Phase | Trigger | README.md update | Commit message |
 |---|---|---|---|
-| 1 — Requirements | After `doc/requirements.md` saved | Create: name, description, Overview, Status | `docs(phase1): add requirements for <name>` |
+| 1 — Requirements | After the increment folder is written | Create: name, description, Overview, Status | `docs(phase1): add requirements for <name>` |
 | 2 — SUDO Model | After user explicitly approves | Add: Domain Model section | `docs(phase2): add SUDO domain model` |
 | 3 — BDD Features | After user explicitly approves | Add: Features / Behavior section | `docs(phase3): add BDD feature files` |
 | 4 — Property Tests | After 4b + 4c test files generated | Add: Testing section | `test(phase4): add property-based integration and e2e tests` |
@@ -396,78 +497,42 @@ All development happens on a `feature/<new-feature-name>` branch created at the 
 
 ### README.md Lifecycle
 
-`README.md` lives in the repo root. It is created in Phase 1 and gains a new section at each subsequent phase. Use this progressive template — fill in only what the current phase covers; leave the rest as comments until that phase is reached:
+`README.md` gains a section at each phase boundary and is committed every time.
+**Template and the per-phase table: `references/templates.md`.**
 
-````markdown
-# <Feature Name>
+Keep it short. **The root README is an entry point, not a record** — status
+history belongs in `doc/increments/`, and once it starts accumulating one section
+per feature it has stopped being readable (measured: it reached 722 lines).
 
-> <one-line description from Phase 1>
+## The rest of the tree
 
-## Status
-
-Phase N complete — <phase name>
-
-## Overview
-
-<Problem statement and acceptance criteria — filled in Phase 1>
-
-## Domain Model
-
-<!-- Added in Phase 2 -->
-[SUDO model](doc/sudo-model.md) — <one-line summary of S/U/D/O diagrams>
-
-## Features / Behavior
-
-<!-- Added in Phase 3 -->
-| Feature file | Description |
-|---|---|
-| [name.feature](doc/features/name.feature) | ... |
-
-## Testing
-
-<!-- Added in Phase 4 -->
-- **Property tests (integration):** `test/integration/` — uses <PBT library>
-- **Property tests (e2e):** `test/e2e/` — full-stack, no mocks
-
-## Usage
-
-<!-- Added in Phase 5 -->
-<How to run the application or feature>
-
-## Development
-
-<!-- Added in Phase 5 -->
-<How to build and run all tests>
-````
-
-Remove placeholder comments as each section is filled in. By Phase 5 the README must have no remaining comment placeholders.
-
----
-
-## File Structure
+**The design documents are in "Where everything lives" near the top; they are not
+repeated here.** What follows is everything that is *not* a model.
 
 ```
 doc/
-  requirements.md           # Phase 1
-  sudo-model.md             # Phase 2 (diagrams + review notes)
-  features/
-    <use-case>.feature      # Phase 3
-  properties.md             # Phase 4a
-  test-list.md              # Phase 5a
-  ADR/
-    0001-<decision>.md      # Any phase — created when a decision is made
+  README.md               index. one screen. everything reachable from here
+  testing-strategy.md     which layer is guarded by what. **repo-wide, not per context**
+  questions/              unresolved items that outlive a session.
+                          **see the `unresolved-questions` skill**
+  ADR/NNNN-<decision>.md  decisions and why. **superseded ones stay, with a pointer**
+  reference/              material you were given. **do not edit**
+  evidence/               what you measured. **append only; corrections on a new line**
+  increments/<date>-<name>/   requirements.md and the like. **frozen once the work lands**
+  environment/            **not the domain.** how it is run and checked (`ENV-`)
+    deployment.md   features/*.feature
 
-test/
-  unit/
-    <module>.test.<ext>     # Phase 5b
-  integration/
-    <feature>.test.<ext>    # Phase 4b
-  e2e/
-    <feature>.e2e.<ext>     # Phase 4c
-
-src/
-  <module>.<ext>            # Phase 5
+test/  unit/ integration/ e2e/
+src/   <module>.<ext>
 ```
+
+**`evidence/` and `reference/` are separate on purpose.** One says "we saw this",
+the other says "we were told this". Merged, a reader cannot tell how strong a claim
+is — and the two disagree often enough that it matters.
+
+**`increments/` is frozen, and that is the point.** It holds how the work went
+wrong and got fixed. `context/` says how things are *now*. Keeping them apart is
+what lets a reader trust that `context/` is current.
 
 ---
 
@@ -491,6 +556,12 @@ src/
 | Implementing without a failing test first | Loses TDD's design-feedback loop | Write the test, watch it fail, only then write code |
 | Writing all unit tests before any implementation | Waterfall in disguise; defeats TDD | One cycle at a time: test → code → refactor |
 | Skipping property-based tests | Missing entire classes of counterexamples | Phase 4 is mandatory; example tests alone are insufficient |
+| **Creating a directory per feature** | **Unrelated silos; the same fact frozen at different dates** | Phase 0: file the work in an existing bounded context |
+| **Redrawing the S and U diagrams each time** | **The same external system drawn 5 times under 5 names; `UC-1` meaning 3 different things** | S and U are repository-wide singletons |
+| **Writing `.feature` files nothing executes** | **Lines that look authoritative and are never checked** | Decide up front: make them executable, or add a drift check |
+| **Splitting one context's design across many files** | **A reviewer starts by deciding which file to open** — one context reached 9 | Split by *role* (D / O / constraints), never by aggregate or by increment |
+| **Naming a directory with a broad word** (`arch/`, `misc/`, `common/`) | **Things of different scope drift into it** — a repo-wide document sat under a context-specific prefix for weeks | Name it after the one role it holds. **Two lifetimes inside one directory is the signal to split** |
+| **The same table in two documents** | One copy goes stale and nothing notices | **One fact, one home.** Everywhere else links to it |
 
 ## Related Skills
 

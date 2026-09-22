@@ -78,7 +78,8 @@ Take a feature from requirements through modeling, tests, and implementation.
 
 - [skill-selector](./skills/skill-selector/) `↔ UC5` — pick which skills the project needs
 - [skill-finder](./skills/skill-finder/) `↔ UC5` — discover a skill outside the catalog
-- [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) — DDD modeling → BDD → property tests → TDD
+- [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) — orient into bounded contexts → DDD SUDO modeling → BDD → property tests → TDD
+- [unresolved-questions](./skills/unresolved-questions/) — file what a `ddd-bdd-tdd-flow` increment can't settle, as one question per file
 - [external-api-tos-check](./skills/external-api-tos-check/) — clear a third-party API's ToS before integrating
 - [playwright-test](./skills/playwright-test/) — write/structure E2E tests
 - [playwright-cli](./skills/playwright-cli/) — drive the browser interactively
@@ -133,7 +134,7 @@ The complete inventory. Every skill here appears under at least one use case abo
 |-------|-------------|-----------|---------|
 | [argument-gap-edit](./skills/argument-gap-edit/) | Detects and fixes weak arguments, structural gaps, and disruptive content in Japanese technical manuscripts. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d?permalink_comment_id=6201959#gistcomment-6201959) | Unlicense |
 | [conventional-changelog](./skills/conventional-changelog/) | Conventional Commits and automatic CHANGELOG generation. Compares release-please / changesets / git-cliff / towncrier. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
-| [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) | New application/feature creation flow — DDD SUDO modeling → BDD Gherkin features → property-based tests → t_wada TDD implementation. | original | Unlicense |
+| [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) | Structured DDD → BDD → TDD flow for a new feature or app — orient into the repo's bounded contexts (Phase 0), SUDO domain modeling, Gherkin features, property-based tests, and t_wada TDD implementation. | original | Unlicense |
 | [dep-lib-review](./skills/dep-lib-review/) | Periodic dependency review for Node.js/pnpm — outdated triage, security audit, patch/minor/major batching strategy. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [dotenvx](./skills/dotenvx/) | dotenvx env-var management — encrypting `.env` files, multi-environment juggling, committing encrypted secrets to git. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [external-api-tos-check](./skills/external-api-tos-check/) | Confirms a third-party API/SDK/service's Terms of Service allows the planned behavior before implementation, and records constraints as an ADR. | original | Unlicense |
@@ -150,6 +151,7 @@ The complete inventory. Every skill here appears under at least one use case abo
 | [sql-security](./skills/sql-security/) | SQL security review — injection risk, query analysis, schema audit. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [tech-article-reproducibility](./skills/tech-article-reproducibility/) | Evaluate reproducibility of technical articles — simulate a first-time reader and surface missing steps before publication. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [tech-trend-watch](./skills/tech-trend-watch/) | Long-term stack review using State of JS/CSS and Thoughtworks Technology Radar — ADOPT/TRIAL/ASSESS/HOLD mapping. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
+| [unresolved-questions](./skills/unresolved-questions/) | Files unknowns, provisional decisions, and deliberately-skipped work as one question per file under `doc/questions/<status>/`, where the directory is the status. | original | Unlicense |
 | [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) | Fix an upstream library bug, open a PR, and pin to the git SHA while waiting for it to merge. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [utels-project-bootstrap](./skills/utels-project-bootstrap/) | Register a utels.dev project and write the ingest token into a Cloudflare Worker wrangler secret. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 

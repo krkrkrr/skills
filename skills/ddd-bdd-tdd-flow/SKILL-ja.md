@@ -1,20 +1,82 @@
 ---
 name: ddd-bdd-tdd-flow
 description: >
-  Use when creating a new application or feature from scratch following a structured flow.
-  Executes five mandatory phases in order: (1) structured requirements interview,
-  (2) DDD SUDO modeling with Mermaid diagrams + user review, (3) comprehensive BDD
-  Gherkin feature writing + user review, (4) property derivation and property-based
-  integration/e2e test generation, (5) TDD implementation following t_wada's
-  Red-Green-Refactor cycle. Outputs land in doc/ (models + features), test/ (all tests),
-  src/ (implementation). When NOT to use: small incremental changes to an already-modeled
-  feature; refactors with no behavioral change; hotfixes.
+  Use when adding a feature or building an application through a structured
+  DDD -> BDD -> TDD flow. Five phases in order: (0) decide which existing bounded
+  context the work belongs to, (1) requirements interview, (2) SUDO modeling —
+  update the repository's single S and U, draw only D and O + user review,
+  (3) Gherkin feature files + user review, (4) property-based integration and e2e
+  tests, (5) t_wada-style Red-Green-Refactor. Use this whenever the user mentions
+  domain modeling, bounded contexts, a SUDO or context map, BDD or Gherkin
+  features, property-based tests, or wants a new feature designed before it is
+  coded — even if they do not name the flow. Also use it when documents have
+  drifted: duplicated models, per-feature silos, or IDs that collide.
+  When NOT to use: a hotfix, a pure refactor with no behavioral change, or a
+  one-line change to code that is already modeled and tested.
 license: Unlicense
 ---
 
 # DDD → BDD → TDD 開発フロー
 
 各フェーズを必ず順番通りに実施する。**ユーザーの承認なしに次のフェーズへ進んではならない。**
+
+---
+
+## フェーズ 0: どのコンテキストの話か決める
+
+**ヒアリングの前にやる。** 次の順に読む。
+
+1. `doc/README.md` — 索引
+2. `doc/system-context.md` — どのコンテキストが在り、翻訳器がどこに置かれているか
+3. `doc/glossary.md` — ユビキタス言語
+4. `doc/questions/open/` と `doc/questions/deferred/` — すでに「分からない」と
+   分かっていること、および**意図的に触っていない**こと
+
+そのうえで 1 つだけ答える。**この作業は既存のどのコンテキストに属するか。**
+
+> **既定の答えは「既存のどれか」である。**
+> 新しいコンテキストを作るには、**ユビキタス言語が実際に違うこと**を示す ADR が要る。
+> 同じ語が別の意味になるか、境界に翻訳器（腐敗防止層）を置く必要があるか。
+> **「新しい機能だから」は理由にならない。**
+> フィーチャーは仕事の増分であって、ドメインの単位ではない。
+
+1 つのフィーチャーは**たいてい複数のコンテキストに跨がる。** それが普通である。
+コンテキストごとに切って、それぞれの家へ入れる。
+**フィーチャーの名前を付けたディレクトリを作らない。**
+
+答えは、フェーズ 1 で作る増分フォルダに記録する。
+
+---
+
+## どこに何を置くか
+
+**ここを一度読めば、以降のフェーズはこれを前提にしている。** この形は恣意的ではない。
+**ファイルごとに答えている問いが違い、同じ問いに答えるものが同じ場所に居る。**
+だから見る場所が 1 つになり、直す場所も 1 つになる。
+
+```
+doc/
+  system-context.md   S — 唯一のシステムコンテキスト図。**コンテキストの数はここから数える**
+  use-cases.md        U — 唯一のユースケース一覧。ID は接頭辞を持つ
+  glossary.md         ユビキタス言語。単位と番兵もここ
+
+  context/<コンテキスト>/           システムが話す相手ごとに 1 つ
+    domain-model.md   D — この文脈の言語 / 集約 / 対応する src
+    object-model.md   O — 担うユースケースと、やりとり
+    constraints.md    守るべき規則 + 不変条件（担保するテストへのリンク付き）
+    features/*.feature
+```
+
+ここから 2 つの規則が出る。**どちらも、この構成が防ごうとしている失敗そのもの**なので、
+はっきり書いておく。
+
+**S と U はリポジトリに 1 枚ずつ。** フェーズ 2 はそれを**更新する**。新しくは描かない。
+
+**D・O・制約はコンテキストごとに 1 枚ずつ。** 集約ごとでも増分ごとでもない。
+**3 つ開けばその文脈の設計が全部そろい、4 つ目がどこかに隠れていないと信じられること。**
+
+これ以外は、設計ではないもの、モデルではなく記録、もらった資料のいずれかである。
+**その部分の木はこのファイルの末尾にある。**
 
 ---
 
@@ -34,7 +96,29 @@ license: Unlicense
 - 連携が必要な既存システムはあるか？
 - 非機能要件: パフォーマンス・セキュリティ・スケール・可用性
 
-収集した回答を `doc/requirements.md` に保存する。
+収集した回答を **`doc/increments/<日付>-<名前>/requirements.md`** に保存する。
+
+> ****他の増分の** `requirements.md` に上書きしない。** 増分の記録は増分ごとに残す。
+>
+> そのうえで、**中身を 4 つに割って本来の家へ配る。**
+>
+> | 中身 | 行き先 | なぜ |
+> |---|---|---|
+> | 実機で測ったこと | `doc/evidence/` | **追記のみ。訂正は新しい行で** |
+> | 守るべき規則 | `doc/context/<bc>/constraints.md` へ**追記** | 改訂される。古い版は無効 |
+> | 受け入れ基準 | フェーズ 3 の `.feature` | 実装後は不変 |
+> | 未解決の問い | `doc/questions/open/<主題>/` に 1 問 1 ファイル | **状態はディレクトリが持つ** |
+> | 新しい用語 | `doc/glossary.md` へ**追記** | **必ずここを通す** |
+
+### 解けなかったことの記録
+
+その場で決着しなかったもの — 分からないこと、決めなければならないから決めた数、
+誰も触らなかったパラメータ — は `doc/questions/` へ、1 問 1 ファイルで置く。
+**その進め方は `unresolved-questions` スキルが持つ。ここで書式を発明しない。**
+
+このフェーズで大事なのは、**未解決をコードの `TODO` や `requirements.md` の
+一文として持ち越さないこと。** 増分のフォルダは凍結されるので、
+**その中に凍った問いは、未解決を探している人からは見えなくなる。**
 
 **ブランチ作成 & 初回コミット**
 
@@ -42,7 +126,7 @@ license: Unlicense
 
 ```bash
 git checkout -b feature/<new-feature-name>
-git add doc/requirements.md README.md
+git add doc/increments/ doc/glossary.md doc/questions/ README.md
 git commit -m "docs(phase1): add requirements for <new-feature-name>"
 ```
 
@@ -52,7 +136,43 @@ git commit -m "docs(phase1): add requirements for <new-feature-name>"
 
 ## フェーズ 2: SUDO モデリング（DDD）
 
-Mermaid ダイアグラムを 4 枚作成する。すべて `doc/sudo-model.md` に保存する。
+**S と U は新しく描かない。** リポジトリに 1 枚ずつしか無い。
+`doc/system-context.md` と `doc/use-cases.md` を**更新する**。
+**2 枚目のシステムコンテキスト図は欠陥である。**
+
+D と O だけを描く。
+
+| | どこへ |
+|---|---|
+| **D** | `doc/context/<bc>/domain-model.md` へ追記 |
+| **O** | `doc/context/<bc>/object-model.md` へ追記 |
+
+> **設計文書は S・U・D・O・制約 の 5 種類だけ。** S と U はリポジトリに 1 枚ずつ、
+> D・O・制約 はコンテキストごとに 1 枚ずつ。
+> **6 種類目を作らない。同じ種類の 2 枚目も作らない。**
+> **1 つの文書が 1 つの問いに答える。**
+
+> **コンテキストの数は S 図から読み取る。** **システム本体**に接している相手ごとに
+> 1 つ、それだけである。**S 図に線が増えないなら、コンテキストは増えない。**
+
+**次の見出しの下へ追記する。** 検査がこの見出しを読むので、独自の見出しを
+立てた文書は `npm test` で落ちる。**ただし本当の理由は、どのコンテキストでも
+同じものが同じ場所にある状態を保つためである。**
+
+| ファイル | 見出し |
+|---|---|
+| `domain-model.md` | `## この文脈の言語` · `## 集約と値オブジェクト` · `## 対応する src` |
+| `object-model.md` | `## この文脈が担うユースケース` · `## やりとり` |
+| `constraints.md` | `## 守るべき規則` · `## 不変条件` |
+
+どのファイルも `system-context.md` を指す。`object-model.md` は `use-cases.md` も指す。
+**この 2 つが正本である。この文脈のぶんだけ再掲し、描き直さない。**
+
+> **図のサイズは硬い制約である。**
+> **1 枚 = 1 集約（D）または 1 ユースケース（O）。**
+> **40 行または 7 クラスを超えたら割る。**
+>
+> 実測: 割らずに書いた D 図は 152 行 / 109 行 / 106 行になり、読めなくなった。
 
 SUDO の意味:
 - **S**ituation（状況・文脈）: 境界付きコンテキスト、サブドメイン、それらの関係
@@ -60,29 +180,22 @@ SUDO の意味:
 - **D**omain model（ドメインモデル）: 集約・エンティティ・値オブジェクト・ドメインイベント
 - **O**bject interaction（オブジェクト相互作用）: 各コアユースケースの主要なシーケンス/コラボレーション
 
-### S — Situation
+### S — 状況 ・ U — ユースケース — **描かない。更新する**
 
-境界付きコンテキスト、サブドメイン、外部システムの境界を可視化する。
+どちらも既にリポジトリに 1 枚ずつ在る。**ここに雛形を置かないのは意図的である。**
+雛形があると新しい図を描きたくなり、**新しい図こそが欠陥だからである。**
 
-```mermaid
-C4Context
-  title System Context — <feature name>
-  Person(user, "User", "Primary actor")
-  System(system, "<System>", "Core bounded context")
-  System_Ext(ext, "<External>", "External dependency")
-  Rel(user, system, "uses")
-  Rel(system, ext, "integrates with")
-```
+| | ファイル | フェーズ 2 で足すもの |
+|---|---|---|
+| **S** | `doc/system-context.md` | **本当に新しい外部の相手と話すようになったときだけ**、その線を足す。それは同時に、新しいコンテキストを立てる根拠でもある |
+| **U** | `doc/use-cases.md` | 行を足す。**接頭辞つきで**（`DEV-` / `INT-` …） |
 
-### U — Usecase
+そのうえで `object-model.md` には**この文脈のぶんだけ再掲する。**
+一覧の正本は `use-cases.md` に置いたままにする。**一覧が 2 つあれば、片方が古くなる。**
 
-ヒアリングから導いたすべてのアクターとユースケースを列挙する。
-
-```mermaid
-graph LR
-  Actor -->|"register"| System
-  Actor -->|"query"| System
-```
+> 実測: 増分ごとに S を描いていたとき、同じ外部システムが 5 通りの名前で
+> 現れていた（`LLM` / `LM Studio`、`URX22` / `UR-22C`）。**誰も気づかなかった。**
+> 5 枚のうち 2 枚が並べて読まれたことが、一度も無かったからである。
 
 ### D — Domain Model
 
@@ -127,10 +240,10 @@ sequenceDiagram
 
 **承認後にコミット**
 
-`README.md` の **Domain Model** セクションを埋める: `doc/sudo-model.md` へのリンクと各 SUDO ダイアグラムの一行要約を追記する。Status を `Phase 2 complete` に更新する。
+`doc/README.md` の年表に 1 行足す。**ルートの `README.md` は 100 行以下に保つ。**
 
 ```bash
-git add doc/sudo-model.md doc/ADR/ README.md
+git add doc/context/ doc/system-context.md doc/use-cases.md doc/ADR/ README.md
 git commit -m "docs(phase2): add SUDO domain model"
 ```
 
@@ -138,7 +251,7 @@ git commit -m "docs(phase2): add SUDO domain model"
 
 ## フェーズ 3: BDD フィーチャー記述
 
-承認済みの SUDO モデルから Gherkin フィーチャーファイルを導出する。主要なユースケースごとに `doc/features/` 配下に 1 つの `.feature` ファイルを作成する。
+承認済みの SUDO モデルから Gherkin フィーチャーファイルを導出する。主要なユースケースごとに `doc/context/<bc>/features/` 配下に 1 つの `.feature` ファイルを作成する。
 
 ### カバレッジチェックリスト（すべてのユースケースで必須）
 
@@ -179,7 +292,7 @@ Feature: <Use case name>
       | ...   | ...      |
 ```
 
-`doc/features/<use-case-name>.feature` に保存する。
+`doc/context/<bc>/features/<use-case-name>.feature` に保存する。
 
 **→ すべてのフィーチャーファイルをユーザーに提示する。**
 「これらのシナリオは期待される振る舞いを完全に捉えていますか？不足しているケースはありますか？」と確認する。
@@ -191,7 +304,7 @@ Feature: <Use case name>
 `README.md` の **Features / Behavior** セクションを埋める: `.feature` ファイルの一覧表と各ファイルの説明を追記する。Status を `Phase 3 complete` に更新する。
 
 ```bash
-git add doc/features/ README.md
+git add doc/context/ README.md
 git commit -m "docs(phase3): add BDD feature files"
 ```
 
@@ -201,7 +314,7 @@ git commit -m "docs(phase3): add BDD feature files"
 
 ### 4a: プロパティの抽出
 
-承認済みの各フィーチャーから不変条件とプロパティを導出する。`doc/properties.md` に文書化する。
+承認済みの各フィーチャーから不変条件とプロパティを導出する。`doc/context/<bc>/constraints.md` の `## 不変条件` へ**追記**する。
 
 各シナリオに対して以下を問う:
 - **事後条件不変量**: 「この操作の後、X は常に成立しなければならない」
@@ -211,7 +324,7 @@ git commit -m "docs(phase3): add BDD feature files"
 - **冪等性**: 「操作を 2 回適用しても 1 回と同じ結果になる」
 - **等価性**: 「2 つの異なるパスが同じ観測可能な結果を生む」
 
-`doc/properties.md` のフォーマット:
+フォーマット:
 
 ```markdown
 ## <Use case name>
@@ -260,7 +373,7 @@ test("balance invariant: never negative after valid deposit", () => {
 `README.md` の **Testing** セクションを埋める: 使用する PBT ライブラリと `test/integration/`・`test/e2e/` へのリンクを追記する。Status を `Phase 4 complete` に更新する。
 
 ```bash
-git add doc/properties.md test/integration/ test/e2e/ README.md
+git add doc/context/ test/integration/ test/e2e/ README.md
 git commit -m "test(phase4): add property-based integration and e2e tests"
 ```
 
@@ -272,7 +385,7 @@ git commit -m "test(phase4): add property-based integration and e2e tests"
 
 ### 5a: テストリストの作成
 
-コードを書く前に、必要なすべてのユニットテストを列挙する。`doc/test-list.md` に保存する:
+コードを書く前に、必要なすべてのユニットテストを列挙する。`doc/increments/<日付>-<名前>/test-list.md` に保存する:
 
 ```markdown
 ## テストリスト
@@ -325,14 +438,23 @@ git commit -m "test(phase4): add property-based integration and e2e tests"
 すべてのユニットテストが通ったら:
 1. フェーズ 4b のプロパティベースインテグレーションテストを実行する
 2. フェーズ 4c の E2E テストを実行する
-3. 失敗があれば追加の TDD サイクルで修正する（リストにテストを追加してループ）
+3. **文書の検査を実行する**（`test/unit/documentation.test.ts`）。下の「よくある失敗」を
+   機械的に捕まえる — 覆された前提が現行の事実として残っている、リンクが切れている、
+   ID に接頭辞が無い、図が 40 行を超えた
+4. 失敗があれば追加の TDD サイクルで修正する（リストにテストを追加してループ）
+
+**そして、解けたものを閉じる。** 増分は、**誰も気づかないうちに問いを片付けている**
+ことがよくある。`doc/questions/open/` を、今回分かったことと突き合わせる。
+**閉じ方は `unresolved-questions` スキルが持つ。** あとでではなく、このコミットでやる。
+解けたのに `open/` に残っている問いは、一覧が無いより悪い —
+次に読む人はそれを信じて、同じ調査をやり直す。
 
 **インテグレーションゲート通過後にコミット**
 
 `README.md` の **Usage** と **Development** セクションを埋める（アプリの実行方法とテスト実行方法）。Status を `Phase 5 complete` に更新する。残っているプレースホルダーコメントをすべて削除する。
 
 ```bash
-git add src/ test/unit/ doc/test-list.md README.md
+git add src/ test/unit/ doc/increments/ README.md
 git commit -m "feat(<scope>): implement <new-feature-name>"
 ```
 
@@ -340,41 +462,14 @@ git commit -m "feat(<scope>): implement <new-feature-name>"
 
 ## アーキテクチャ決定記録（ADR）
 
-いずれかのフェーズで重要なアーキテクチャ・設計上の決定が行われたときは、ADR として記録する。
+**どのフェーズであれ**、重要な判断をしたらその場で記録する。フェーズの終わりに
+まとめて書かない。**一日おいて書いた決定は後付けの理屈であり、**
+そのとき感じていた力（forces）こそが残す値打ちのある部分である。
 
-**ADR を作成するタイミング:**
-- 技術やフレームワークを選択したとき（例: 「SQLite より PostgreSQL を使う」）
-- 設計パターンやアーキテクチャスタイルを採用したとき（例: 「Order 集約に CQRS を使う」）
-- 既知のトレードオフを受け入れたとき
-- 将来の読者のために却下した代替案を残す価値があるとき
-
-**ファイル:** `doc/ADR/NNNN-<kebab-case-title>.md`（ゼロパディング 4 桁、例: `doc/ADR/0001-use-event-sourcing.md`）
-
-**フォーマット（Nygard）:**
-
-```markdown
-# ADR-NNNN: <title>
-
-## Status
-
-Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
-
-## Context
-
-<この決定に至った状況・力・制約を記述する。>
-
-## Decision
-
-<能動態で決定を述べる: "We will…">
-
-## Consequences
-
-<この決定の正と負の帰結を列挙する。>
-```
-
-ADR はフェーズの終わりにまとめて作成するのではなく、決定が行われたその場で即座に作成する。ユーザーが後で決定を変更した場合は、古い ADR の `Status` を `Superseded by ADR-NNNN` に更新し、新しい ADR を作成する。
-
----
+**書式と、記録すべき場面の一覧は `references/templates-ja.md`。**
+`doc/ADR/NNNN-<kebab-case-title>.md` に置く。後に覆されたときは、
+**本文を書き換えるのではなく、古い ADR の `Status` を `Superseded by ADR-NNNN` にする。**
+どれが現行かは、その連鎖でしか読み取れない。
 
 ## Git ワークフロー
 
@@ -382,7 +477,7 @@ ADR はフェーズの終わりにまとめて作成するのではなく、決�
 
 | フェーズ | コミットのタイミング | README.md の更新内容 | コミットメッセージ |
 |---|---|---|---|
-| 1 — 要件ヒアリング | `doc/requirements.md` 保存後 | 作成: 名前・説明・Overview・Status | `docs(phase1): add requirements for <name>` |
+| 1 — 要件ヒアリング | 増分フォルダを書いた後 | 作成: 名前・説明・Overview・Status | `docs(phase1): add requirements for <name>` |
 | 2 — SUDO モデル | ユーザーが明示的に承認後 | 追記: Domain Model セクション | `docs(phase2): add SUDO domain model` |
 | 3 — BDD フィーチャー | ユーザーが明示的に承認後 | 追記: Features / Behavior セクション | `docs(phase3): add BDD feature files` |
 | 4 — プロパティテスト | 4b + 4c のテストファイル生成後 | 追記: Testing セクション | `test(phase4): add property-based integration and e2e tests` |
@@ -396,78 +491,42 @@ ADR はフェーズの終わりにまとめて作成するのではなく、決�
 
 ### README.md ライフサイクル
 
-`README.md` はリポジトリルートに置く。フェーズ 1 で作成し、以降のフェーズごとに新しいセクションを追記する。以下のプログレッシブテンプレートを使用する — 各フェーズが完了するまで、そのフェーズのセクションはコメントのまま残す:
+`README.md` はフェーズの境界ごとに節が増え、毎回コミットされる。
+**テンプレートとフェーズ別の表は `references/templates-ja.md`。**
 
-````markdown
-# <フィーチャー名>
+短く保つ。**ルートの README は入口であって記録ではない。** 状態の履歴は
+`doc/increments/` が持つ。フィーチャーごとに 1 節ずつ溜まり始めた時点で、
+それはもう読めるものではなくなる（実測: 722 行に達した）。
 
-> <フェーズ 1 で得た一行説明>
+## 木の残り
 
-## Status
-
-Phase N complete — <フェーズ名>
-
-## Overview
-
-<課題説明と受け入れ基準 — フェーズ 1 で記入>
-
-## Domain Model
-
-<!-- フェーズ 2 で追記 -->
-[SUDO model](doc/sudo-model.md) — <S/U/D/O ダイアグラムの一行要約>
-
-## Features / Behavior
-
-<!-- フェーズ 3 で追記 -->
-| フィーチャーファイル | 説明 |
-|---|---|
-| [name.feature](doc/features/name.feature) | ... |
-
-## Testing
-
-<!-- フェーズ 4 で追記 -->
-- **プロパティテスト（インテグレーション）:** `test/integration/` — <PBT ライブラリ> を使用
-- **プロパティテスト（E2E）:** `test/e2e/` — フルスタック、モックなし
-
-## Usage
-
-<!-- フェーズ 5 で追記 -->
-<アプリ/フィーチャーの実行方法>
-
-## Development
-
-<!-- フェーズ 5 で追記 -->
-<ビルドとテスト実行の方法>
-````
-
-各セクションを記入したらプレースホルダーコメントを削除する。フェーズ 5 完了時点で README にコメントプレースホルダーが残っていてはならない。
-
----
-
-## ファイル構造
+**設計文書は冒頭の「どこに何を置くか」にある。ここには繰り返さない。**
+以下は、**モデルではないもの**すべて。
 
 ```
 doc/
-  requirements.md           # フェーズ 1
-  sudo-model.md             # フェーズ 2 (ダイアグラム + レビューノート)
-  features/
-    <use-case>.feature      # フェーズ 3
-  properties.md             # フェーズ 4a
-  test-list.md              # フェーズ 5a
-  ADR/
-    0001-<decision>.md      # 任意のフェーズ — 決定時に作成
+  README.md               索引。1 画面。ここから全部たどれる
+  testing-strategy.md     どの層を何で守るか。**全体に効く。コンテキスト別ではない**
+  questions/              セッションを跨いで残る未解決。
+                          **`unresolved-questions` スキルを見ること**
+  ADR/NNNN-<decision>.md  決定とその理由。**覆されたものも残す。指し先を付けて**
+  reference/              もらった資料。**書き換えない**
+  evidence/               測ったこと。**追記のみ。訂正は新しい行で**
+  increments/<日付>-<名前>/   requirements.md ほか。**作業が入ったら凍結**
+  environment/            **ドメインではない。** 動かし方と確かめ方（`ENV-`）
+    deployment.md   features/*.feature
 
-test/
-  unit/
-    <module>.test.<ext>     # フェーズ 5b
-  integration/
-    <feature>.test.<ext>    # フェーズ 4b
-  e2e/
-    <feature>.e2e.<ext>     # フェーズ 4c
-
-src/
-  <module>.<ext>            # フェーズ 5
+test/  unit/ integration/ e2e/
+src/   <module>.<ext>
 ```
+
+**`evidence/` と `reference/` を分けるのは意図的である。** 前者は「そう見えた」、
+後者は「そう書いてある」。混ぜると**根拠の強さが読めなくなる** —
+そして、この 2 つは食い違うことが実際にある。
+
+**`increments/` は凍結されており、それが値打ちである。** どう間違え、どう直したかが
+そこにある。`context/` が語るのは「いまどうなっているか」だけで、
+**両者を分けているからこそ、`context/` が現在だと信じられる。**
 
 ---
 
@@ -491,6 +550,12 @@ src/
 | 失敗するテストなしに実装する | TDD の設計フィードバックループを失う | テストを書き、失敗を確認し、それからコードを書く |
 | 実装前にすべてのユニットテストを書く | 擬似ウォーターフォール、TDD を無効化する | 1 サイクルずつ: テスト → コード → リファクタリング |
 | プロパティベーステストをスキップする | 反例のクラス全体を見落とす | フェーズ 4 は必須。サンプルテストだけでは不十分 |
+| **フィーチャーごとにディレクトリを作る** | **無関係なサイロ。同じ事実が別々の日付で凍る** | フェーズ 0: 既存のコンテキストへ振り分ける |
+| **S と U を毎回描き直す** | **同じ外部システムが 5 通りの名前で 5 回描かれる。`UC-1` が 3 つの別物を指す** | S と U はリポジトリに 1 枚ずつの単数形 |
+| **実行されない `.feature` を書く** | **権威ありげに見えて、一度も検証されない行** | 最初に決める。実行可能にするか、ずれの検査を足すか |
+| **1 つのコンテキストの設計を複数ファイルに割る** | **レビューが「どれを開くか」から始まる** — 1 文脈が 9 ファイルになった | 割るなら**役割**で（D / O / 制約）。集約ごと・増分ごとに割らない |
+| **広い語でディレクトリを名付ける**（`arch/` `misc/` `common/`） | **範囲の違うものが流れ込む** — 全体に効く文書が、コンテキスト固有の接頭辞の下に紛れていた | そのディレクトリが持つ 1 つの役割で名付ける。**中身の寿命が 2 種類あるなら、それが割る合図** |
+| **同じ表が 2 つの文書にある** | 片方が古くなり、誰も気づかない | **1 つの事実に家は 1 つ。** 他はそこへリンクする |
 
 ## 関連スキル
 
