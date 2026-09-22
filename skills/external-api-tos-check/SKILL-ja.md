@@ -45,7 +45,7 @@ license: Unlicense
    - **抵触の可能性あり / 条項が曖昧** — 実装前にユーザーに提示し、判断を仰ぐ。自己判断で「たぶん大丈夫」として進めない。
    - **明確な抵触** — 実装を止め、規約に適合する代替設計をユーザーと相談する。
 
-5. **アーキテクチャに影響する制約はADRに記録する**: 制約が原因でドメインモデルやUI設計を変える場合（例: 「同時に使えるプロバイダは1枠まで」という不変条件を追加する）は、規約の該当箇所を引用したうえで decision と consequences を書き、プロジェクトのADRとして残す。プロジェクトに ADR 作成用のスキル（例: ADR-writing、または `ddd-bdd-tdd-flow` のADR運用フェーズ）があればそれに従い、なければ Nygard 形式で `doc/ADR/NNNN-<title>.md` に作成する。単なる確認で設計変更を伴わない場合はADRは不要。
+5. **アーキテクチャに影響する制約はADRに記録する**: 制約が原因でドメインモデルやUI設計を変える場合（例: 「同時に使えるプロバイダは1枠まで」という不変条件を追加する）は、規約の該当箇所を引用したうえで decision と consequences を書き、プロジェクトのADRとして残す。`adr-writing-ja` スキルがあればそれに従って書き（`ddd-bdd-tdd-flow` を使うプロジェクトでは、そのADR運用フェーズの規約にも合わせる）、なければ Nygard 形式で `doc/ADR/NNNN-<title>.md` に作成する。単なる確認で設計変更を伴わない場合はADRは不要。
 
 ## Not in scope
 
@@ -54,5 +54,5 @@ license: Unlicense
 
 ## Related
 
-- ADR-writing（プロジェクトにADR作成専用のスキルがある場合）— Step 5 で記録するADRの書式・運用はそちらに委ねる。
-- `ddd-bdd-tdd-flow` — 新規アプリ/機能構築フローの一部としてADRの作成・運用（Nygard形式, `doc/ADR/NNNN-<title>.md`）を定義している。専用のADR-writingスキルがないプロジェクトでは、この規約に従う。
+- `adr-writing-ja` — Step 5 で記録するADRの書式・置き場所・論証の点検はそちらに委ねる。
+- `ddd-bdd-tdd-flow` — 新規アプリ/機能構築フローの一部としてADRの作成・運用（Nygard形式, `doc/ADR/NNNN-<title>.md`）を定義している。`adr-writing-ja` が入っていない環境では、この規約に従う。

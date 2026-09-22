@@ -45,7 +45,7 @@ Out of scope:
    - **Possible conflict / ambiguous clause** — surface it to the user before implementing and get a decision. Don't guess "probably fine" and move on.
    - **Clear conflict** — stop implementation and work out a compliant alternative design with the user.
 
-5. **Record constraints that affect the architecture as an ADR**: If a constraint forces a change to the domain model or UI design (e.g., adding the invariant "only one provider slot can be active at a time"), cite the relevant clause, write the decision and consequences, and record it as a project ADR. If the project has a dedicated ADR-writing skill (or the `ddd-bdd-tdd-flow` skill's ADR phase), follow that; otherwise use the Nygard format at `doc/ADR/NNNN-<title>.md`. A plain confirmation with no design change doesn't need an ADR.
+5. **Record constraints that affect the architecture as an ADR**: If a constraint forces a change to the domain model or UI design (e.g., adding the invariant "only one provider slot can be active at a time"), cite the relevant clause, write the decision and consequences, and record it as a project ADR. If the `adr-writing-ja` skill is available, follow it (and, in projects using `ddd-bdd-tdd-flow`, match that skill's ADR phase conventions too); otherwise use the Nygard format at `doc/ADR/NNNN-<title>.md`. A plain confirmation with no design change doesn't need an ADR.
 
 ## Not in scope
 
@@ -54,5 +54,5 @@ Out of scope:
 
 ## Related
 
-- ADR-writing (if the project has a dedicated ADR-writing skill) — defer to it for the format and workflow of the ADR recorded in Step 5.
-- `ddd-bdd-tdd-flow` — defines ADR creation/workflow (Nygard format, `doc/ADR/NNNN-<title>.md`) as part of its new app/feature flow. Projects without a dedicated ADR-writing skill should follow this convention.
+- `adr-writing-ja` — defer to it for the format, placement, and argument check of the ADR recorded in Step 5.
+- `ddd-bdd-tdd-flow` — defines ADR creation/workflow (Nygard format, `doc/ADR/NNNN-<title>.md`) as part of its new app/feature flow. Environments without `adr-writing-ja` should follow this convention.

@@ -81,6 +81,7 @@ Take a feature from requirements through modeling, tests, and implementation.
 - [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) — orient into bounded contexts → DDD SUDO modeling → BDD → property tests → TDD
 - [unresolved-questions](./skills/unresolved-questions/) — file what a `ddd-bdd-tdd-flow` increment can't settle, as one question per file
 - [external-api-tos-check](./skills/external-api-tos-check/) — clear a third-party API's ToS before integrating
+- [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC2` — record a design decision as a Japanese ADR
 - [playwright-test](./skills/playwright-test/) — write/structure E2E tests
 - [playwright-cli](./skills/playwright-cli/) — drive the browser interactively
 - [sql-security](./skills/sql-security/) — screen SQL builders for injection
@@ -92,6 +93,7 @@ Draft an article or book manuscript, tighten its reasoning, and check it is repr
 
 - [japanese-tech-writing](./skills/japanese-tech-writing/) — Japanese technical-writing norms
 - [argument-gap-edit](./skills/argument-gap-edit/) — fix weak arguments and structural gaps
+- [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC1` — Japanese ADRs, argument-checked with `argument-gap-edit`
 - [tech-article-reproducibility](./skills/tech-article-reproducibility/) — simulate a first-time reader
 - [extract-glossary](./skills/extract-glossary/) — build a domain glossary / onboarding map from a repo
 - [readme-guidelines](./skills/readme-guidelines/) `↔ UC1` — README templates and update policy
@@ -133,6 +135,7 @@ The complete inventory. Every skill here appears under at least one use case abo
 
 | Skill | Description | Reference | License |
 |-------|-------------|-----------|---------|
+| [adr-writing-ja](./skills/adr-writing-ja/) | Write Japanese ADRs — whether one is needed, placement and naming, eleven templates, and an argument check via `argument-gap-edit`. | [architecture-decision-record](https://github.com/architecture-decision-record/architecture-decision-record#claude-code-skills-for-adrs) | CC BY-NC-SA 4.0 |
 | [argument-gap-edit](./skills/argument-gap-edit/) | Detects and fixes weak arguments, structural gaps, and disruptive content in Japanese technical manuscripts. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d?permalink_comment_id=6201959#gistcomment-6201959) | Unlicense |
 | [conventional-changelog](./skills/conventional-changelog/) | Conventional Commits and automatic CHANGELOG generation. Compares release-please / changesets / git-cliff / towncrier. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) | Structured DDD → BDD → TDD flow for a new feature or app — orient into the repo's bounded contexts (Phase 0), SUDO domain modeling, Gherkin features, property-based tests, and t_wada TDD implementation. | original | Unlicense |

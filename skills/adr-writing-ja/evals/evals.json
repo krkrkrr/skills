@@ -1,0 +1,23 @@
+{
+  "skill_name": "adr-writing-ja",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "社内の在庫管理APIで、キャッシュに Redis を入れることにした。理由は、読み取りが書き込みの20倍くらいあって、商品マスタの参照でDBが詰まってるから。Memcached も候補だったけど、在庫数の減算を原子的にやりたいので Redis にした。運用はインフラチームの2人だけ。これをADRにして。リポジトリにはまだADRはない。",
+      "expected_output": "doc/ADR/0001-<kebab>.md に Nygard 形式の日本語 ADR。タイトルが決定を述べ、ステータスは Proposed、日付あり。背景の力（読み取り負荷、原子的減算、運用2名）が決定と影響に対応づいており、Memcached の却下理由が背景の力に結びつく。不明な数値は要確認の印で残す。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "doc/ADR/0003-use-rest-api.md で REST にするって決めてたけど、モバイルアプリの画面ごとに必要なフィールドがバラバラで過剰取得がひどいので GraphQL に切り替えたい。ADR書いといて。",
+      "expected_output": "新しい ADR（0004 以降）を作り、古い 0003 のステータスを Superseded by に変える（本文は書き換えない）。新しい ADR から Supersedes で 0003 へ戻れる。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "ロガーを console.log から pino に変えた。PRの説明に書けば十分かな？それとも決定記録残したほうがいい？",
+      "expected_output": "ADR にすべきかを判断する。小さく閉じた決定であれば ADR は不要と答え、PR 説明で足りる理由を述べる。ファイルは作らない。",
+      "files": []
+    }
+  ]
+}
