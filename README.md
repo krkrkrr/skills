@@ -121,6 +121,7 @@ This is the self-improvement loop the chain folds back into.
 
 - [skill-selector](./skills/skill-selector/) `↔ UC1` — select project skills via APM
 - [skill-finder](./skills/skill-finder/) `↔ UC1` — evaluate candidate skills across registries
+- [skill-creator](./skills/skill-creator/) — draft a new skill, then iterate on it with evals and benchmarks
 - [retrospective-codify](./skills/retrospective-codify/) — turn trial-and-error into ast-grep rules / skills / CLAUDE.md
 - [optimizing-descriptions](./skills/optimizing-descriptions/) — audit & rewrite `SKILL.md` descriptions
 
@@ -146,6 +147,7 @@ The complete inventory. Every skill here appears under at least one use case abo
 | [playwright-test](./skills/playwright-test/) | Best practices for Playwright Test — avoiding fixed waits, network triggers, DnD, shard/retry on GitHub Actions. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [readme-guidelines](./skills/readme-guidelines/) | README.md templates and policies — template selection by project type, README-ja.md sync, and change-to-section update rules. | original | Unlicense |
 | [retrospective-codify](./skills/retrospective-codify/) | Codify trial-and-error lessons into ast-grep rules, skills, or CLAUDE.md rules after a fix lands. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
+| [skill-creator](./skills/skill-creator/) | Create new skills, iterate on them with evals/benchmarks, and optimize a skill's description for triggering accuracy. | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | Apache-2.0 |
 | [skill-finder](./skills/skill-finder/) | Discover and evaluate skills from outside the curated catalog across multiple registries. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [skill-selector](./skills/skill-selector/) | Pick project skills via APM — two-phase: curated catalog first, broader search only when needed. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [sql-security](./skills/sql-security/) | SQL security review — injection risk, query analysis, schema audit. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
