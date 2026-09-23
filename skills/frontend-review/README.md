@@ -6,7 +6,7 @@ Part of the [skills](https://github.com/krkrkrr/skills) library — see the repo
 
 ## Source
 
-Condensed from the `frontend-review-*` skills in [mizchi/skills](https://github.com/mizchi/skills/tree/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc) (pinned at `a3f2f1b`).
+Derived from the `frontend-review-*` and perspective skills in [mizchi/skills](https://github.com/mizchi/skills/tree/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc) (`a3f2f1b`) by mizchi, licensed under the MIT License. Modified: fourteen skills condensed into one, the unpublished audit scripts replaced with inline commands, and evals added. It is not an official version of the original and is maintained separately in this library. The original copyright notice and the MIT permission notice are retained in [LICENSE](./LICENSE).
 
 ## License
 
