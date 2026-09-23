@@ -1,0 +1,9 @@
+openapi: 3.1.0
+info: { title: adserver admin API, version: 1.0.0 }
+paths:
+  /campaigns:
+    get: { summary: キャンペーン一覧 }
+  /creatives:
+    post: { summary: クリエイティブを入稿する }
+  /placements/{id}/floor:
+    put: { summary: 枠のフロア価格を更新する }

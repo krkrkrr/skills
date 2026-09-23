@@ -48,6 +48,19 @@ license: Unlicense
 
 5. **アーキテクチャに影響する制約はADRに記録する**: 制約が原因でドメインモデルやUI設計を変える場合（例: 「同時に使えるプロバイダは1枠まで」という不変条件を追加する）は、規約の該当箇所を、文書の URL、版または最終更新日、読んだ日とともに引用したうえで decision と consequences を書き、プロジェクトのADRとして残す。`adr-writing-ja` スキルがあればそれに従って書き（`ddd-bdd-tdd-flow` を使うプロジェクトでは、そのADR運用フェーズの規約にも合わせる）、なければ Nygard 形式で `doc/ADR/NNNN-<title>.md` に作成する。単なる確認で設計変更を伴わない場合はADRは不要。
 
+   ADR に [OKF](https://okf.md/spec/) の frontmatter が付く場合（ADR の慣習がまだないリポジトリでの `adr-writing-ja` の既定）は、規約文書を本文だけでなく `sources` にも挙げ、本文で条項を引くときはその `id` を脚注で参照する。
+
+   ```yaml
+   sources:
+     - id: video-api-policies
+       resource: https://developer.example.com/video-api/policies
+       title: Example Video API - Developer Policies
+       last_modified: 2026-03-12T00:00:00Z   # ページに記載された最終更新日
+       accessed: 2026-09-23T10:00:00Z        # 読んだ日
+   ```
+
+   `last_modified` は、情報源が最後に変わった日時を表す OKF の項目で、手順 2 で控える版の記録そのものにあたる。`accessed` は読んだ日のための拡張キーである（OKF は独自のキーの追加を認めている）。こうしておくと、規約の記録は OKF を読める道具やエージェントが出典を探す場所に置かれる。「どの版の規約に照らして確認したのか」と後で問われても、ADR の本文を読まずに答えられる。OKF の形式そのものは `okf-open-knowledge-format` にある。
+
 ## Not in scope
 
 - 規約文の法的解釈の最終判断（弁護士判断が必要な曖昧なケースは、リスクをユーザーに明示した上で委ねる。このスキルはリスクの発見と可視化までを担う）
@@ -55,5 +68,6 @@ license: Unlicense
 
 ## Related
 
-- `adr-writing-ja` — Step 5 で記録するADRの書式・置き場所・論証の点検はそちらに委ねる。
+- `adr-writing-ja` — Step 5 で記録するADRの書式・置き場所・論証の点検・OKF frontmatter はそちらに委ねる。
+- `okf-open-knowledge-format` — Step 5 の `sources` 記録の元になる OKF 形式。
 - `ddd-bdd-tdd-flow` — 新規アプリ/機能構築フローの一部としてADRの作成・運用（Nygard形式, `doc/ADR/NNNN-<title>.md`）を定義している。`adr-writing-ja` が入っていない環境では、この規約に従う。

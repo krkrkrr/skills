@@ -30,7 +30,7 @@ the reasoning with them.
 
 ```
 doc/questions/
-  README.md                     the index — every question listed once
+  index.md                      the index — every question listed once
   open/<subject>/NNNN-slug.md       not known
   deferred/<subject>/NNNN-slug.md   deliberately not touched
   answered/<subject>/NNNN-slug.md   settled
@@ -62,6 +62,13 @@ is not lost: a single line near the top naming the current directory. Keep it in
 step with the path — if you move the file, fix the line in the same commit.
 
 ```markdown
+---
+type: Question
+title: "Q-<N>: <the question, phrased as a question>"
+description: <one sentence: what is unknown and what it blocks>
+generated: { by: <actor>, at: <ISO 8601 UTC> }
+---
+
 # Q-<N>: <the question, phrased as a question>
 
 **Status: `open`** — the directory this file sits in is the status.
@@ -71,6 +78,36 @@ step with the path — if you move the file, fix the line in the same commit.
 ## What it would take
 ## What is known          <- including every candidate already ruled out
 ```
+
+## Each question is an OKF concept
+
+Questions are read by people and agents who were not there when they were filed —
+the next session, another skill (`ddd-bdd-tdd-flow` reads `open/` and `deferred/`
+before it starts), a reviewer deciding whether something is safe to touch. So
+`doc/questions/` is written as an [OKF](https://okf.md/spec/) bundle: a directory
+of markdown files, each opening with YAML frontmatter whose `type` says what it
+is. Any OKF-aware agent or tool can then list, filter, and link the questions
+without learning this skill's conventions first. The format itself is in
+`../okf-open-knowledge-format/SKILL.md`.
+
+- **`type: Question`** — always, in every directory. The type says what the
+  document is, not how far along it is.
+- **`title`** — the same text as the `#` heading, `Q-<N>:` included, so the number
+  a code comment cites is what every listing shows. Quote it: `Q-12: …` contains
+  `: `, which YAML would otherwise read as a nested key. The question as posed
+  never changes, so the heading and the title never drift apart.
+- **`description`** — one sentence. The index shows it next to the title, which
+  is what makes a review of fifty questions possible without opening fifty files.
+- **`generated`** — who filed it: `human:<id>` for a person, `<tool>/<model>`
+  (e.g. `claude-code/claude-opus-5-5`) for an agent. `at` is when it was filed.
+
+**Do not add OKF's `status` or `stale_after` keys.** OKF's `status` describes the
+document (`draft`, `stable`, `deprecated`), not the question; a question file is a
+stable, accurate record whether it sits in `open/` or `answered/`, so the default
+is already right. The question's state is the path — which OKF also exposes, since
+a concept's ID *is* its path (`open/routing/0012-retry-count`). Writing the state
+into frontmatter as well would be the second source of truth the rule above
+forbids.
 
 ## The four states
 
@@ -123,22 +160,32 @@ find what is blocked on it. Without the link both sides know, and neither can ac
 
 ## Reviewing what is outstanding
 
-`doc/questions/README.md` lists every question once, with its status and subject.
-Regenerate it whenever a file is added or moved — a stale index is the same defect
-as a stale answer. Generate it from the paths rather than editing it by hand, so
-the index cannot disagree with the directories:
+`doc/questions/index.md` lists every question once, one section per status. It
+is OKF's reserved index file, so an agent reads it first to see what exists
+before opening anything. Regenerate it whenever a file is added or moved — a
+stale index is the same defect as a stale answer. Generate it from the paths and
+frontmatter rather than editing it by hand, so the index cannot disagree with the
+directories:
 
 ```bash
-{
-  echo '| Q | Status | Subject | Question |'
-  echo '|---|---|---|---|'
-  find doc/questions -mindepth 3 -name '[0-9][0-9][0-9][0-9]-*.md' | sort -t/ -k5 |
-    while IFS=/ read -r _ _ status subject file; do
-      title=$(sed -n '1s/^# Q-[0-9]*: //p' "doc/questions/$status/$subject/$file")
-      echo "| ${file%%-*} | $status | $subject | [$title]($status/$subject/$file) |"
-    done
-} > doc/questions/README.md
+fm() { sed -n "2,/^---\$/{s/^$1: *//p}" "$2" | head -1 | sed 's/^"\(.*\)"$/\1/'; }
+for status in open deferred answered abandoned; do
+  files=$(find "doc/questions/$status" -name '[0-9][0-9][0-9][0-9]-*.md' 2>/dev/null | sort -t/ -k5)
+  [ -n "$files" ] || continue
+  printf '# %s\n\n' "$status"
+  for f in $files; do
+    rel=${f#doc/questions/}; subject=${rel#*/}; subject=${subject%%/*}
+    echo "* [$(fm title "$f")]($rel) - $subject: $(fm description "$f")"
+  done
+  echo
+done > doc/questions/index.md
 ```
+
+A repository that still has the older `doc/questions/README.md` table: `git rm` it
+in the same commit that first generates `index.md`, and add frontmatter to the
+existing question files then too. Under OKF every non-index markdown file in the
+bundle needs a `type`, so a `README.md` left behind would make the bundle
+non-conformant — and two indexes is one too many anyway.
 
 Commit the regenerated index in the same commit as the move or addition.
 
@@ -158,3 +205,4 @@ the index.
 | Copying the answer into the question | One copy goes stale | Link to where the answer lives |
 | `deferred/` with no unblocking condition | An unknown wearing a decision's clothes | State what would let you touch it |
 | One file per *topic* instead of per question | Two questions close at different times; the file can only have one status | One question, one file |
+| Writing `status:` into the frontmatter | A second source of truth that goes stale on the next `git mv` | The path is the status; OKF readers get it from the concept ID |

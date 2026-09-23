@@ -48,8 +48,8 @@ argument-gap-edit がインストールされていない場合は、手順 6 �
 git ls-files | grep -iE '(^|/)(adr|adrs|decisions?)(/|$)'
 ```
 
-- 見つかれば、その置き場所、書式、番号付け、見出しの言語にそのまま合わせる。既存の ADR が英語見出しなら、新しい ADR も英語見出しにして本文だけ日本語で書く。一つのディレクトリに二つの書式が混ざると、読み手が毎回書式を読み替えることになるからだ。
-- 見つからなければ、`doc/ADR/NNNN-<kebab-case>.md` を既定にする。このライブラリの external-api-tos-check と ddd-bdd-tdd-flow もこの場所を前提にしているため、同じ場所にしておけば各スキルが同じ連鎖を読める。
+- 見つかれば、その置き場所、書式、番号付け、見出しの言語、frontmatter の有無にそのまま合わせる。既存の ADR が英語見出しなら、新しい ADR も英語見出しにして本文だけ日本語で書く。一つのディレクトリに二つの書式が混ざると、読み手が毎回書式を読み替えることになるからだ。既存の ADR に frontmatter がないなら、新しい ADR にも手順 5 の OKF frontmatter を付けない。付けたい場合は、既存の ADR 全部に付ける変更として別に提案する。
+- 見つからなければ、`doc/ADR/NNNN-<kebab-case>.md` を既定にし、手順 5 の OKF frontmatter を付ける。このライブラリの external-api-tos-check と ddd-bdd-tdd-flow もこの場所を前提にしているため、同じ場所にしておけば各スキルが同じ連鎖を読める。
 - ユーザーが「アーキテクチャ」という語に抵抗を示すなら、`decisions/` を提案してよい。「決定」という語のほうが、ベンダー選定やスケジュールなどアーキテクチャ以外の決定も記録しやすいからだ。
 
 ## 3. ファイル名とタイトルを決める
@@ -103,6 +103,52 @@ git ls-files | grep -iE '(^|/)(adr|adrs|decisions?)(/|$)'
 - **ステータスを付ける。** 値は `Proposed | Accepted | Rejected | Deprecated | Superseded by ADR-NNNN` のいずれかにする。見出しや本文は日本語でも、ステータス値は英語のまま固定する。grep や ADR ガードのような道具、このライブラリの他のスキルが、この語で連鎖をたどるからだ。
 - **新しい ADR は `Proposed` で書く。** `Accepted` を付けるのは、ユーザーが「この ADR を承認する」と明示したときだけにする。「切り替えたい」「〜にすることにした」のような意図や背景の説明は、承認の指示ではない。`Accepted` は、チームがこの本文で合意したという記録だ。まだ誰も読んでいない下書きに付ければ、その記録が偽りになる。承認するかどうかは、下書きを渡すときに尋ねる。既存の ADR のステータスを `Accepted` や `Superseded by` に変えるときも、同じように明示的な確認を取る。
 
+### OKF frontmatter
+
+ADR は、その場にいなかった人やエージェントが後から読むナレッジである。
+そこで、既存の慣習がない場合は、ファイルの先頭に [OKF](https://okf.md/spec/)（Open Knowledge Format）の frontmatter を付ける。
+OKF は、Markdown に YAML frontmatter を付けてナレッジを交換するための最小限の形式で、`type` だけが必須になる。
+これがあると、OKF を読める道具やエージェントが、ADR の一覧、要約、現役かどうかを本文を読まずに判断できる。
+形式の詳細は `../okf-open-knowledge-format/SKILL.md` にある。
+
+```yaml
+---
+type: Architecture Decision Record
+title: "ADR-0007: 業務データの永続化に PostgreSQL を採用する"
+description: 運用人員 2 名で保守できることを優先し、業務データの永続化に PostgreSQL を採用する。
+status: draft
+generated: { by: claude-code/<model-id>, at: 2026-09-23T10:00:00Z }
+sources:
+  - id: db-benchmark
+    resource: https://wiki.example.com/db-benchmark-2026-08
+    title: DB 候補のベンチマーク結果（2026-08）
+    last_modified: 2026-08-20T00:00:00Z
+---
+```
+
+- `title` は本文の `#` 見出しと同じ文字列にする。`ADR-0007:` のように `: ` を含むので、引用符で囲む。
+- `description` は決定を一文で述べる。一覧に並べたときに、この一文だけで何を決めたかがわかるようにする。
+- `generated` には書いた主体を入れる。エージェントなら `<ツール>/<モデル>`、人なら `human:<id>` にする。
+- `sources` には、背景や決定の根拠にした外部文書（規約、ベンチマーク、公式ドキュメント）を挙げる。本文の該当箇所には `[^db-benchmark]` の脚注を付けて対応づける。根拠にした外部文書がなければ省く。
+- `status` は、本文のステータスから次の表で決める。
+
+| 本文のステータス | frontmatter の `status` |
+|---|---|
+| `Proposed` | `draft` |
+| `Accepted` | `stable` |
+| `Rejected`、`Deprecated`、`Superseded by ADR-NNNN` | `deprecated` |
+
+ステータスの正本は本文のほうである。
+grep や ADR ガードのような道具は本文のステータス行を読むからだ。
+それでも frontmatter の `status` を省かないのは、OKF では `status` がないと `stable`（現役）とみなされるからである。
+置き換えられた ADR に `status` がなければ、OKF の読み手は古い決定を現役として扱ってしまう。
+本文のステータスを変えるときは、同じ編集で frontmatter の `status` も変える。
+
+承認されたときは、`status: stable` にするのと同じ編集で、`verified: { by: human:<承認者>, at: <承認日時> }` を加える。
+OKF では、`verified` に `human:` の主体があることが「人が確認した」という信頼の印になる。
+承認者の id がわからなければ、ユーザーに尋ねるか `git config user.name` を使う。
+承認されていない ADR に `verified` を付けてはならない。
+
 下書きは、ユーザーから聞いた事実だけで書く。
 背景にある制約や数値をユーザーから得ていない場合は、もっともらしい値で埋めずに `<!-- 要確認：月間リクエスト数 -->` のように印を残し、何が足りないかをユーザーに伝える。
 推測で埋めた背景は、決定を支えているように見えて、実は何も支えていないからだ。
@@ -144,7 +190,7 @@ ADR では、argument-gap-edit の検出項目が次の形で現れやすい。
 新しい決定が古い決定を置き換えるときは、次の二段階で進める。
 
 1. **下書きの段階。** 新しい決定を `Proposed` の新しい ADR として書く。そのステータス欄またはリンク欄に `Supersedes [ADR-MMMM](MMMM-<slug>.md)` と書き、古い ADR へ戻れるようにする。古い ADR にはまだ触れない。新しい ADR が承認されるまでは、古い決定が有効なままだからだ。
-2. **承認の段階。** ユーザーが新しい ADR の承認を明示したら（手順 5）、同じ変更で二つを行う。新しい ADR のステータスを `Accepted` にする。古い ADR のステータスを `Superseded by [ADR-NNNN](NNNN-<slug>.md)` に変える。古い ADR の本文には触れない。
+2. **承認の段階。** ユーザーが新しい ADR の承認を明示したら（手順 5）、同じ変更で二つを行う。新しい ADR のステータスを `Accepted` にする。古い ADR のステータスを `Superseded by [ADR-NNNN](NNNN-<slug>.md)` に変える。OKF frontmatter があれば、新しい ADR は `status: stable` と `verified`、古い ADR は `status: deprecated` にする。古い ADR の本文には、ステータス行以外触れない。
 
 下書きを渡すときは、承認するかどうかと、承認すれば古い ADR のステータスも変わることをユーザーに伝える。
 
@@ -165,6 +211,7 @@ ADR を渡す前に、次を確かめる。
 
 - タイトルが話題ではなく決定を述べている。
 - ステータスと日付がある。
+- OKF frontmatter を付けた場合、`type`、`title`、`description` があり、`status` が本文のステータスと表のとおりに対応している。
 - 手順 6 の点検で、書き出せない「受ける」「役割」「渡す」が残っていない。
 - `<!-- 要確認 -->` の印が残っているなら、何を確認すべきかをユーザーへの返答にまとめた。
 - ユーザーが承認を明示していない ADR は `Proposed` のままにし、承認するかを返答で尋ねた。

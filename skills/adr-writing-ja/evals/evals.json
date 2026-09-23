@@ -14,7 +14,8 @@
         "背景に 読み取り負荷・在庫数の原子的減算・運用2名 の3つの力がすべて書かれている",
         "Memcached の却下理由が原子的減算の要求に結びつけて書かれている",
         "影響に、難しくなること（運用負荷など）が書かれている",
-        "ユーザーが与えていない具体的な数値（QPS、メモリ量、レイテンシ等）を事実として書いていない（要確認の印や質問で残している）"
+        "ユーザーが与えていない具体的な数値（QPS、メモリ量、レイテンシ等）を事実として書いていない（要確認の印や質問で残している）",
+        "先頭に OKF frontmatter があり、type が Architecture Decision Record、status が draft で、verified が付いていない"
       ]
     },
     {
@@ -31,7 +32,8 @@
         "新しい ADR のステータスが Proposed である（Accepted ではない）",
         "0003 は変更されていない（ステータスも本文もそのまま）",
         "返答で、承認するかどうかと、承認すれば 0003 が Superseded になることを尋ねている",
-        "新しい ADR の背景が画面ごとのフィールド差による過剰取得に触れている"
+        "新しい ADR の背景が画面ごとのフィールド差による過剰取得に触れている",
+        "既存の ADR に frontmatter が無いので、新しい ADR にも OKF frontmatter を付けていない"
       ]
     },
     {
@@ -57,6 +59,24 @@
       "assertions": [
         "0004 のステータスが Accepted になっている",
         "0003 のステータスが Superseded by ADR-0004（リンク付き）になっている",
+        "0003 と 0004 のステータス以外の本文は変更されていない",
+        "新しい ADR ファイルを作っていない"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "doc/ADR/0004-use-graphql-for-mobile-api.md、チームでレビューして承認になったので Accepted にしておいて。承認したのは私（yamada）です。",
+      "expected_output": "0004 の本文ステータスを Accepted、frontmatter の status を stable にし、verified に human:yamada を加える。0003 の本文ステータスを Superseded by ADR-0004（リンク付き）、frontmatter の status を deprecated にする。ステータス以外の本文は変えず、新しい ADR は作らない。",
+      "files": [
+        "evals/files/accept-okf/doc/ADR/0001-record-architecture-decisions.md",
+        "evals/files/accept-okf/doc/ADR/0003-use-rest-api.md",
+        "evals/files/accept-okf/doc/ADR/0004-use-graphql-for-mobile-api.md"
+      ],
+      "assertions": [
+        "0004 の本文のステータスが Accepted、frontmatter の status が stable になっている",
+        "0004 の frontmatter に verified として human:yamada が加わっている",
+        "0003 の本文のステータスが Superseded by ADR-0004（リンク付き）、frontmatter の status が deprecated になっている",
+        "0003 の frontmatter の verified（human:tanaka）は残っている",
         "0003 と 0004 のステータス以外の本文は変更されていない",
         "新しい ADR ファイルを作っていない"
       ]

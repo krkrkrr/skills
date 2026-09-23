@@ -78,6 +78,14 @@ doc/
 これ以外は、設計ではないもの、モデルではなく記録、もらった資料のいずれかである。
 **その部分の木は `references/layout-ja.md` にある。**
 
+**`doc/` の Markdown はすべて OKF の概念である。** `doc/` は
+[OKF](https://okf.md/spec/) のナレッジバンドルとして書く。各 `.md` の先頭に YAML
+frontmatter を置き、`type` でその役割（`System Context`、`Domain Model`、`Evidence` など）を、
+`description` で中身を一文で示す。フェーズ 0 は、この木を前提知識なしに読むエージェントの仕事である。
+役割が frontmatter にあれば、そのエージェントも OKF を読める道具も、本文を読まずに
+各ファイルが何で、開くべきかを判断できる。**ファイルごとの `type` と、それに伴う規則は
+`references/layout-ja.md` にある。**
+
 ---
 
 ## フェーズ 1: 要件ヒアリング
@@ -379,7 +387,7 @@ git commit -m "test(phase4): add property-based integration and e2e tests"
 2. フェーズ 4c の E2E テストを実行する
 3. **文書の検査を実行する**（`test/unit/documentation.test.ts`）。下の「よくある失敗」を
    機械的に捕まえる — 覆された前提が現行の事実として残っている、リンクが切れている、
-   ID に接頭辞が無い、図が 40 行を超えた
+   ID に接頭辞が無い、図が 40 行を超えた、`doc/` の Markdown に OKF の `type` が無い
 4. 失敗があれば追加の TDD サイクルで修正する（リストにテストを追加してループ）
 
 **そして、解けたものを閉じる。** 増分は、**誰も気づかないうちに問いを片付けている**
@@ -481,3 +489,4 @@ git commit -m "feat(<scope>): implement <new-feature-name>"
 - `retrospective-codify` — TDD サイクルから得た洞察を恒久的なルールとして記録
 - `adr-writing-ja` — 日本語の ADR を書き、置き換える
 - `unresolved-questions` — 増分で決着しなかったことを記録し、閉じる
+- `okf-open-knowledge-format` — `doc/` を書く OKF の形式と、その検証スクリプト

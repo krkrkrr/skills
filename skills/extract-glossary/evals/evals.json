@@ -1,0 +1,35 @@
+{
+  "skill_name": "extract-glossary",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "このリポジトリ（acme/adserver、main ブランチ）に来週から新メンバーが入るので、用語集とオンボーディング資料を docs/knowledge/ に作ってほしい。業界用語と社内の言い回しが混ざってて新人がいつも混乱するので。",
+      "expected_output": "docs/knowledge/ に OKF バンドル（index.md に okf_version と読む順番、terms/ に 1 用語 1 ファイル、repositories/、architecture/ に図入りの概念）を作る。分類と確度を frontmatter に持ち、推定には status: draft。出典は GitHub URL。",
+      "files": ["evals/files/adserver/"],
+      "assertions": [
+        "docs/knowledge/ 以下の index.md / log.md 以外のすべての .md が、空でない type を持つ frontmatter で始まる（OKF 適合）",
+        "用語が terms/ に 1 用語 1 ファイルで置かれ、terms/index.md が分類ごとの節で用語を一覧している",
+        "ルートの index.md に okf_version の宣言と、読む順番（入口）がある",
+        "業界用語（SSP、OpenRTB、CPM など）と組織内用語・実装固有名（入稿、枠、adv_ テーブル、hbx など）が別の分類になっている",
+        "hbx の名前の意味など、根拠に明記されていない推定が inferred / needs-check として扱われ、status: draft が付いている",
+        "出典が https://github.com/acme/adserver/ の URL で書かれ、ローカルの絶対パスを含まない",
+        "Mermaid 図が architecture/ の概念の中にあり、一枚の巨大図ではなく観点ごとに分かれている",
+        "verified を付けていない（人が確認していない）"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "adserver のドメイン知識を、AI エージェントが毎回コードを読み直さなくて済むように skill にしておいて。置き場所は .claude/skills/adserver-glossary/ で。",
+      "expected_output": "SKILL.md は薄く、references/ を OKF バンドルのルートにする。SKILL.md は references/index.md から読むよう指示する。",
+      "files": ["evals/files/adserver/"],
+      "assertions": [
+        ".claude/skills/adserver-glossary/SKILL.md があり、name と description の frontmatter を持つ",
+        "OKF バンドルが references/ 以下にあり、SKILL.md はバンドルの外にある",
+        "references/ 以下の index.md / log.md 以外のすべての .md が、空でない type を持つ frontmatter で始まる（OKF 適合）",
+        "SKILL.md が references/index.md（索引）から読み、必要な概念だけを開くよう指示している",
+        "用語が 1 用語 1 ファイルになっている",
+        "出典が https://github.com/acme/adserver/ の URL で書かれ、ローカルの絶対パスを含まない"
+      ]
+    }
+  ]
+}

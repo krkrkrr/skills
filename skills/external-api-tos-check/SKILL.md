@@ -48,6 +48,19 @@ Out of scope:
 
 5. **Record constraints that affect the architecture as an ADR**: If a constraint forces a change to the domain model or UI design (e.g., adding the invariant "only one provider slot can be active at a time"), cite the relevant clause together with the document URL, version or last-updated date, and the date you read it, write the decision and consequences, and record it as a project ADR. If the `adr-writing-ja` skill is available, follow it (and, in projects using `ddd-bdd-tdd-flow`, match that skill's ADR phase conventions too); otherwise use the Nygard format at `doc/ADR/NNNN-<title>.md`. A plain confirmation with no design change doesn't need an ADR.
 
+   When the ADR carries [OKF](https://okf.md/spec/) frontmatter (the `adr-writing-ja` default for a repository with no ADR convention yet), put each terms document in its `sources` list rather than only in the prose, and cite clauses in the body with footnotes keyed to the entry's `id`:
+
+   ```yaml
+   sources:
+     - id: video-api-policies
+       resource: https://developer.example.com/video-api/policies
+       title: Example Video API - Developer Policies
+       last_modified: 2026-03-12T00:00:00Z   # the date the page itself shows
+       accessed: 2026-09-23T10:00:00Z        # when you read it
+   ```
+
+   `last_modified` is OKF's own field for when a source last changed, which is exactly the version record Step 2 asks for; `accessed` is an extension key (OKF allows extra keys) for the read date. The terms record then sits where any OKF-aware agent or tool looks for provenance, so the next person who asks "which version of the terms was this checked against?" gets the answer without reading the ADR's prose. The OKF format itself: `okf-open-knowledge-format`.
+
 ## Not in scope
 
 - Final legal interpretation of terms text (for ambiguous cases needing a lawyer's judgment, surface the risk to the user and defer to them; this skill's job ends at discovering and surfacing the risk)
@@ -55,5 +68,6 @@ Out of scope:
 
 ## Related
 
-- `adr-writing-ja` — defer to it for the format, placement, and argument check of the ADR recorded in Step 5.
+- `adr-writing-ja` — defer to it for the format, placement, argument check, and OKF frontmatter of the ADR recorded in Step 5.
+- `okf-open-knowledge-format` — the OKF format behind the `sources` record in Step 5.
 - `ddd-bdd-tdd-flow` — defines ADR creation/workflow (Nygard format, `doc/ADR/NNNN-<title>.md`) as part of its new app/feature flow. Environments without `adr-writing-ja` should follow this convention.

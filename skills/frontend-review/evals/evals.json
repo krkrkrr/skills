@@ -11,7 +11,8 @@
         ".frontend-review/ 以下にレポートを書いている",
         "トップ3リスクを挙げ、それぞれ P0/P1 を付けている",
         ".frontend-review/kpi/baseline.json を作成している",
-        "src/ や設定ファイルなどアプリのコードを変更していない"
+        "src/ や設定ファイルなどアプリのコードを変更していない",
+        ".frontend-review/ 以下に書いた .md の先頭に、type を持つ OKF frontmatter がある"
       ]
     },
     {

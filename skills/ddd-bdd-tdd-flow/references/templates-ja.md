@@ -27,6 +27,13 @@
 **フォーマット（Nygard）:**
 
 ```markdown
+---
+type: Architecture Decision Record
+title: "ADR-NNNN: <title>"
+description: <決定を一文で>
+status: draft   # Proposed → draft、Accepted → stable、Rejected / Deprecated / Superseded → deprecated
+---
+
 # ADR-NNNN: <title>
 
 ## Status
@@ -50,6 +57,7 @@ ADR はフェーズの終わりにまとめず、決定したその場で `Propo
 `Accepted` にするのは、ユーザーが明示的に承認したときだけ。
 ユーザーが後で決定を変えた場合は、`Supersedes [ADR-MMMM](MMMM-<title>.md)` と書いた新しい ADR を `Proposed` で作成する。
 古い ADR の `Status` を `Superseded by ADR-NNNN` にするのは、新しい ADR が承認されたときで、同じコミットで行い、本文には触れない。
+frontmatter の `status` は、同じ編集で `Status` 行に合わせる。OKF の読み手は `status` の無いファイルを現役とみなすので、置き換えられた ADR が `stable` のままだと、生きた決定として読まれる。
 
 ---
 
@@ -80,6 +88,16 @@ ADR はフェーズの終わりにまとめず、決定したその場で `Propo
 
 **増分は `doc/README.md` の年表に 1 行ずつ記録する。** フェーズ 1 で行を足し、
 フェーズの境界ごとに Status を更新する:
+
+`doc/README.md` 自体も OKF の概念なので（`references/layout-ja.md`）、先頭に frontmatter を置く:
+
+```markdown
+---
+type: Documentation Index
+title: <アプリ名> — ドキュメント
+description: <アプリ名> の設計・決定・履歴の置き場所と、増分の年表。
+---
+```
 
 ```markdown
 ## 年表

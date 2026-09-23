@@ -28,6 +28,13 @@ If the `adr-writing-ja` skill is available, follow it instead of this section.
 **Format (Nygard):**
 
 ```markdown
+---
+type: Architecture Decision Record
+title: "ADR-NNNN: <title>"
+description: <the decision in one sentence>
+status: draft   # Proposed → draft, Accepted → stable, Rejected / Deprecated / Superseded → deprecated
+---
+
 # ADR-NNNN: <title>
 
 ## Status
@@ -51,6 +58,7 @@ Create the ADR as `Proposed` immediately when the decision is made — do not ba
 Set it to `Accepted` only when the user explicitly approves it.
 If the user later changes a decision, write a new `Proposed` ADR that says `Supersedes [ADR-MMMM](MMMM-<title>.md)`.
 Change the old ADR's `Status` to `Superseded by ADR-NNNN` only when the new one is accepted, in the same commit, without touching its body.
+The frontmatter `status` follows the `Status` line in the same edit: an OKF reader treats a file with no `status` as current, so a superseded ADR left at `stable` reads as a live decision.
 
 ---
 
@@ -81,6 +89,16 @@ Touch it again only when how to run the app or its tests changes.
 
 **Record each increment as one row in the timeline in `doc/README.md`.** Add the row
 in Phase 1 and update its Status at every phase boundary:
+
+`doc/README.md` is itself an OKF concept (see `references/layout.md`), so it opens with frontmatter:
+
+```markdown
+---
+type: Documentation Index
+title: <App name> — documentation
+description: Where the design, decisions, and history of <App name> live, and the increment timeline.
+---
+```
 
 ```markdown
 ## Timeline

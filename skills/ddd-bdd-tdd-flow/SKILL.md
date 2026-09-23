@@ -81,6 +81,14 @@ context — and be able to trust that no fourth file is hiding somewhere.
 Everything else is either not design, a record rather than a model, or material you
 were given. **That part of the tree is in `references/layout.md`.**
 
+**Every markdown file under `doc/` is an OKF concept.** `doc/` is written as an
+[OKF](https://okf.md/spec/) knowledge bundle: each `.md` opens with YAML frontmatter
+whose `type` names its role (`System Context`, `Domain Model`, `Evidence`, …) and
+whose `description` says in one sentence what it holds. Phase 0 is an agent reading
+this tree cold; with the role in frontmatter it — or any OKF-aware tool — can tell
+what each file is, and whether to open it, without reading the body. **The type for
+each file and the rules that go with it: `references/layout.md`.**
+
 ---
 
 ## Phase 1: Requirements Interview
@@ -385,7 +393,8 @@ After all unit tests pass:
 2. Run the e2e tests from Phase 4c
 3. **Run the documentation check** (`test/unit/documentation.test.ts`) — it catches
    the failure modes below mechanically: a stale premise still written as current
-   fact, a broken link, an ID without a context prefix, a diagram grown past 40 lines
+   fact, a broken link, an ID without a context prefix, a diagram grown past 40 lines,
+   a `doc/` markdown file with no OKF `type`
 4. Fix any failures with additional TDD cycles (add test to the list, loop)
 
 **Then close out anything you answered.** Increments routinely settle questions
@@ -490,3 +499,4 @@ Everything that is *not* a model — `doc/README.md`, `testing-strategy.md`, `qu
 - `retrospective-codify` — codify insights from the TDD cycle as permanent rules
 - `adr-writing-ja` — writing and superseding ADRs in Japanese
 - `unresolved-questions` — filing and closing what an increment cannot settle
+- `okf-open-knowledge-format` — the OKF format `doc/` is written in, and its validator

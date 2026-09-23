@@ -68,7 +68,7 @@ flowchart LR
   UC4["UC4 · Ship & operate<br/>sustainable-web-dev-loop (hub)"]
   UC5["UC5 · Improve toolkit<br/>skill-ops"]
 
-  UC2 -->|readme-guidelines| UC1
+  UC2 -->|readme-guidelines, okf-open-knowledge-format| UC1
   UC1 -->|adr-writing-ja| UC2
   UC3 -->|sustainable-web-dev-loop| UC4
   UC4 -->|upstream-fix-and-pin| UC3
@@ -89,6 +89,7 @@ Take a feature from requirements through modeling, tests, and implementation.
 - [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC2` — record a design decision as a Japanese ADR
 - [playwright-test](./skills/playwright-test/) `↔ UC3` — write and structure E2E tests
 - [playwright-cli](./skills/playwright-cli/) — drive the browser interactively
+- [okf-open-knowledge-format](./skills/okf-open-knowledge-format/) `↔ UC3` — the OKF format that `doc/`, questions, and ADRs are written in, so other agents and tools can read them; create and validate bundles
 
 ### UC2 — Author & polish technical writing
 
@@ -98,7 +99,7 @@ Draft an article, book manuscript, or design record, and tighten its reasoning b
 - [japanese-tech-writing](./skills/japanese-tech-writing/) — Japanese technical-writing norms
 - [argument-gap-edit](./skills/argument-gap-edit/) — fix weak arguments and structural gaps
 - [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC1` — Japanese ADRs, argument-checked with `argument-gap-edit`
-- [extract-glossary](./skills/extract-glossary/) `↔ UC3` — build a domain glossary / onboarding map from a repo
+- [extract-glossary](./skills/extract-glossary/) `↔ UC3` — build a domain glossary / onboarding map from a repo, as an OKF bundle
 - [readme-guidelines](./skills/readme-guidelines/) `↔ UC1` — README templates and update policy
 
 ### UC3 — Review & maintain an existing codebase
@@ -111,6 +112,7 @@ Audit a codebase you inherited or own, triage what matters, and keep its depende
 - [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) — PR upstream and pin to a git SHA meanwhile
 - [extract-glossary](./skills/extract-glossary/) `↔ UC2` — map the terms, repos, and architecture of an inherited codebase before reviewing it
 - [playwright-test](./skills/playwright-test/) `↔ UC1` — E2E structure, sharding, retries, and flaky handling in CI, as `frontend-review` recommends
+- [okf-open-knowledge-format](./skills/okf-open-knowledge-format/) `↔ UC1` — the format of the `extract-glossary` knowledge base and the committed review reports; validate a bundle
 
 ### UC4 — Ship & operate as the service grows
 
@@ -139,16 +141,17 @@ The complete inventory. Every skill here appears under at least one use case abo
 | [argument-gap-edit](./skills/argument-gap-edit/) | Detects and fixes weak arguments, structural gaps, and disruptive content in Japanese technical manuscripts. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d?permalink_comment_id=6201959#gistcomment-6201959) | Unlicense |
 | [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) | Structured DDD → BDD → TDD flow for a new feature or app — orient into the repo's bounded contexts (Phase 0), SUDO domain modeling, Gherkin features, property-based tests, and t_wada TDD implementation. | original | Unlicense |
 | [external-api-tos-check](./skills/external-api-tos-check/) | Confirms a third-party API/SDK/service's Terms of Service allows the planned behavior before implementation, and records constraints as an ADR. | original | Unlicense |
-| [extract-glossary](./skills/extract-glossary/) | Extract domain-specific terminology, tech stacks, and onboarding Mermaid diagrams from a repo or GitHub org. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
+| [extract-glossary](./skills/extract-glossary/) | Extract domain-specific terminology, tech stacks, and onboarding Mermaid diagrams from a repo or GitHub org, as an OKF knowledge bundle (one concept per term, repository, and architecture topic). | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [frontend-review](./skills/frontend-review/) | Audit an existing frontend repo — triage, CI, hygiene, dependencies/CVEs, testing, security, state management, rendering performance — with a KPI baseline that only ratchets tighter. | derivative — see the skill's README | MIT |
 | [japanese-tech-writing](./skills/japanese-tech-writing/) | Guidelines for writing and editing Japanese technical documentation with clear structure, rigorous reasoning, consistent formatting, and concise, readable prose. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d#file-skill-md) | Unlicense |
+| [okf-open-knowledge-format](./skills/okf-open-knowledge-format/) | Create, validate, and enrich Open Knowledge Format (OKF) bundles — markdown files with YAML frontmatter that humans and agents can exchange. The format this library's knowledge-producing skills write in. | [fabricioctelles/skills](https://github.com/fabricioctelles/skills/tree/3b8da2cc1d5d13da7142560433b46b7ec3fc6988/skills/okf-open-knowledge-format) | Apache-2.0 |
 | [playwright-cli](./skills/playwright-cli/) | Run Playwright CLI commands interactively. | [microsoft/playwright](https://github.com/microsoft/playwright/tree/e125b2ff24ad285b22e595f4e01a14f038b2c800/packages/playwright-core/src/tools/skills/playwright-cli) | Apache-2.0 |
 | [playwright-test](./skills/playwright-test/) | Best practices for Playwright Test — avoiding fixed waits, network triggers, DnD, shard/retry on GitHub Actions. | derivative — see the skill's README | MIT |
 | [readme-guidelines](./skills/readme-guidelines/) | README.md templates and policies — template selection by project type, README-ja.md sync, and change-to-section update rules. | original | Unlicense |
 | [retrospective-codify](./skills/retrospective-codify/) | Codify trial-and-error lessons into ast-grep rules, skills, or CLAUDE.md rules after a fix lands. | derivative — see the skill's README | MIT |
 | [skill-creator](./skills/skill-creator/) | Create new skills, iterate on them with evals/benchmarks, and optimize a skill's description for triggering accuracy. | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | Apache-2.0 |
 | [sustainable-web-dev-loop](./skills/sustainable-web-dev-loop/) | Principles and defaults for shipping and operating a growing web service — measure, ratchet baselines, promote repeated findings into mechanisms; deploy/rollback, CI, data layer, dependencies, OpenTelemetry. | derivative — see the skill's README | MIT |
-| [unresolved-questions](./skills/unresolved-questions/) | Files unknowns, provisional decisions, and deliberately-skipped work as one question per file under `doc/questions/<status>/`, where the directory is the status. | original | Unlicense |
+| [unresolved-questions](./skills/unresolved-questions/) | Files unknowns, provisional decisions, and deliberately-skipped work as one OKF concept per question under `doc/questions/<status>/`, where the directory is the status. | original | Unlicense |
 | [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) | Fix an upstream library bug, open a PR, and pin to the git SHA while waiting for it to merge. | derivative — see the skill's README | MIT |
 
 ---

@@ -52,6 +52,21 @@ Write everything under `.frontend-review/` in the target repo:
 
 Keep each area report under ~200 lines. Per-file detail stays in raw JSON; the report is for decisions.
 
+The markdown here is read later by someone who was not in this session: the next periodic review diffs against
+the last two reports, and anyone bumping a dependency needs to know why a CVE was ignored. Write every `.md` under
+`.frontend-review/` as an [OKF](https://okf.md/spec/) concept (format: `okf-open-knowledge-format`) — YAML
+frontmatter with a `type`, a one-sentence `description`, and `generated: { by: <tool>/<model>, at: <ISO 8601> }` —
+so an agent or tool can find, date, and filter them without parsing prose:
+
+| File | `type` | Also |
+|---|---|---|
+| `kpi/audit-triage.md` | `CVE Triage` | Each advisory in `sources` (`id`: the GHSA/CVE id, `resource`: the advisory URL), cited from the reason with a `[^id]` footnote. `stale_after`: the next monthly dependency review — an ignored CVE is a decision that expires, and a past `stale_after` makes every OKF reader flag it for re-triage. |
+| `report/<YYYY-wWW>.md` | `Frontend Review Report` | `resource`: the repository URL at the commit reviewed, so reports compare like with like. |
+| `report/latest/md/*.md` | `Frontend Review Area Report` | — |
+
+`kpi/baseline.json` stays JSON. It is the machine-checked ratchet, and OKF describes data rather than replacing
+data formats.
+
 ## Modes
 
 1. **Triage (first look).** Classify the app (admin / consumer / B2B SaaS / EC / fintech / healthcare /
@@ -163,6 +178,7 @@ bundle size and Lighthouse data if the repo produces them.
 - `retrospective-codify` — turning repeated findings into lint rules
 - `unresolved-questions` — owner questions the review cannot settle
 - `adr-writing-ja` — recording an architecture decision the review triggers
+- `okf-open-knowledge-format` — the OKF format of the committed review markdown
 
 Upstream source (pinned): [mizchi/skills @ a3f2f1b][root]. Its audit scripts, checklists, and data files are
 not published; the commands above replace them.
