@@ -10,7 +10,7 @@ license: MIT
 
 ## いつ使うか
 
-- タスク完了直前、またはユーザーから「学びを残して」「ルール化して」と指示されたとき
+- ユーザーから「学びを残して」「ルール化して」と明示的に頼まれたとき（試行錯誤を経たタスクの終わりなど）
 - 試行錯誤の末に解にたどり着いたとき（初手で詰まった、誤った仮説を立てた、ドキュメント不足で時間を溶かした 等）
 - 同種のタスクを将来また行う可能性があるとき
 
@@ -91,7 +91,7 @@ digraph classify {
 ## 出力テンプレート
 
 ### ast-grep ルール
-`ast-grep-practice` skill を参照。`rules/` ディレクトリに YAML を追加し、`rule-tests/` に valid / invalid ペアを必ず書く。
+[`ast-grep-practice`](https://github.com/mizchi/skills/blob/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc/ast-grep-practice/SKILL.md) (mizchi/skills) を参照。`rules/` ディレクトリに YAML を追加し、`rule-tests/` に valid / invalid ペアを必ず書く。
 
 ### CLAUDE.md への追記
 ```markdown
@@ -101,11 +101,12 @@ digraph classify {
 理由を括弧書きで必ず添える（将来の自分が edge case を判断できるように）。
 
 ### 新規 skill
-`writing-skills`（superpowers）の最小テンプレに従う:
+次の最小テンプレで書き、`skill-creator` スキルで仕上げてテストする:
 ```markdown
 ---
 name: <kebab-case>
 description: Use when <具体的な状況> / <症状>
+license: <SPDX 識別子。例: MIT>
 ---
 
 # <Title>
@@ -241,12 +242,12 @@ message: Set/Map のサイズは .size プロパティを使う。
 
 - **粒度が細かすぎる**: その一回限りの事情（特定の関数名、特定のバージョン）までルール化してしまう → 抽象化して「何を確認するか」レベルに引き上げる
 - **プロンプトで書きがち**: 静的に検出可能な規則を自然言語で CLAUDE.md に書く → `ast-grep` ルールに移す
-- **理由を書かない**: ルールの根拠が残らず、将来の自分がなぜそれを守るのか判断できなくなる → 必ず `Why:` を添える
+- **理由を書かない**: ルールの根拠が残らず、将来の自分がなぜそれを守るのか判断できなくなる → CLAUDE.md テンプレートのとおり、理由を括弧書きで必ず添える
 - **勝手に書き出す**: ユーザー承認なしに CLAUDE.md や skill を更新する → 必ず提案 → 承認 → 書き出し の順を守る
 - **失敗の言語化を省く**: 「最終解は X」だけ書いて、なぜ初手で詰まったかを残さない → 失敗側の記述が無いと、将来の自分は同じ落とし穴にまた落ちる
 
 ## 関連 skill
 
-- `superpowers:writing-skills` — 新規 skill を書くときのテンプレと TDD フロー
-- `ast-grep-practice` — lint ルール化する場合の書き方とテスト
+- `skill-creator` — 新規 skill を書き、evals でテストする
+- [`ast-grep-practice`](https://github.com/mizchi/skills/blob/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc/ast-grep-practice/SKILL.md) (mizchi/skills) — lint ルール化する場合の書き方とテスト
 - `update-config` — settings.json / permissions の変更が必要な場合

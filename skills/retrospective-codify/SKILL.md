@@ -10,7 +10,7 @@ Toward the end of a task, extract the insight of "if only I had known this first
 
 ## When to use
 
-- Right before task completion, or when the user says "leave the lesson behind" or "codify it"
+- When the user explicitly asks to "leave the lesson behind" or "codify it" — typically at the end of a task that took several attempts
 - When you arrived at the solution after trial and error (stuck on the first attempt, built a wrong hypothesis, burned time due to missing docs, etc.)
 - When you might perform a similar task again in the future
 
@@ -91,7 +91,7 @@ digraph classify {
 ## Output templates
 
 ### ast-grep rule
-See the `ast-grep-practice` skill. Add YAML under the `rules/` directory and always write a valid / invalid pair under `rule-tests/`.
+See [`ast-grep-practice`](https://github.com/mizchi/skills/blob/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc/ast-grep-practice/SKILL.md) (mizchi/skills). Add YAML under the `rules/` directory and always write a valid / invalid pair under `rule-tests/`.
 
 ### Append to CLAUDE.md
 ```markdown
@@ -101,11 +101,12 @@ See the `ast-grep-practice` skill. Add YAML under the `rules/` directory and alw
 Always attach the reason in parentheses (so that your future self can judge edge cases).
 
 ### New skill
-Follow the minimal template from `writing-skills` (superpowers):
+Use this minimal template, then refine and test it with the `skill-creator` skill:
 ```markdown
 ---
 name: <kebab-case>
 description: Use when <specific situation> / <symptom>
+license: <SPDX identifier, e.g. MIT>
 ---
 
 # <Title>
@@ -241,12 +242,12 @@ Duplicate detected (no proposal needed):
 
 - **Granularity too fine**: codifying the one-off specifics (a specific function name, a specific version) -> abstract it up to the level of "what to check"
 - **Tends to be written as a prompt**: writing a statically detectable rule in natural language in CLAUDE.md -> move it to an `ast-grep` rule
-- **Does not write the reason**: the rule's rationale is not left behind, and the future self cannot judge why to follow it -> always attach a `Why:`
+- **Does not write the reason**: the rule's rationale is not left behind, and the future self cannot judge why to follow it -> always attach the reason in parentheses, as in the CLAUDE.md template
 - **Writes out on its own**: updates CLAUDE.md or skills without user approval -> always follow propose -> approve -> write out in that order
 - **Omits verbalizing the failure**: writes only "the final solution is X" and does not leave why the first move got stuck -> without a description on the failure side, your future self will fall into the same pitfall again
 
 ## Related skills
 
-- `superpowers:writing-skills` — template and TDD flow for writing a new skill
-- `ast-grep-practice` — how to write and test when codifying as a lint rule
+- `skill-creator` — draft a new skill and test it with evals
+- [`ast-grep-practice`](https://github.com/mizchi/skills/blob/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc/ast-grep-practice/SKILL.md) (mizchi/skills) — how to write and test when codifying as a lint rule
 - `update-config` — when changes to settings.json / permissions are required

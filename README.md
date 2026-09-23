@@ -91,7 +91,7 @@ Draft an article, book manuscript, or design record, and tighten its reasoning b
 - [japanese-tech-writing](./skills/japanese-tech-writing/) — Japanese technical-writing norms
 - [argument-gap-edit](./skills/argument-gap-edit/) — fix weak arguments and structural gaps
 - [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC1` — Japanese ADRs, argument-checked with `argument-gap-edit`
-- [extract-glossary](./skills/extract-glossary/) — build a domain glossary / onboarding map from a repo
+- [extract-glossary](./skills/extract-glossary/) `↔ UC3` — build a domain glossary / onboarding map from a repo
 - [readme-guidelines](./skills/readme-guidelines/) `↔ UC1` — README templates and update policy
 
 ### UC3 — Review & maintain an existing codebase（既存コードを点検して保守する）
@@ -102,6 +102,7 @@ Audit a codebase you inherited or own, triage what matters, and keep its depende
 - [frontend-review](./skills/frontend-review/) — audit a frontend repo (CI, hygiene, deps, tests, security, state, perf) against a ratcheting KPI baseline
 - [sustainable-web-dev-loop](./skills/sustainable-web-dev-loop/) `↔ UC4` — dependency review, CVE triage, and library replacement (`references/dependencies.md`)
 - [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) — PR upstream and pin to a git SHA meanwhile
+- [extract-glossary](./skills/extract-glossary/) `↔ UC2` — map the terms, repos, and architecture of an inherited codebase before reviewing it
 
 ### UC4 — Ship & operate as the service grows（成長に耐えて出荷・運用する）
 
