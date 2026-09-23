@@ -40,7 +40,7 @@ mizchi's skills split into two categories and need **different** description sha
 | Track | Trigger policy | Description shape | Examples |
 |---|---|---|---|
 | **Project** | Pushy — auto-trigger desirable | `Use when ... — [symptom keywords]. Trigger on [file shapes] even if user does not name [domain].` | `playwright-test`, `cloudflare-deploy`, `gh-fix-ci`, `node-sqlite-vec`, `aws-vault-mfa-iam` |
-| **Meta** | Under-trigger — explicit invoke only | `Invoke ONLY when the user explicitly asks ... Do NOT auto-invoke on [common ambient signals].` | `skill-selector`, `skill-finder`, `waxa-eval`, `apm-usage`, `empirical-prompt-tuning`, `retrospective-codify`, `chezmoi-management`, this skill |
+| **Meta** | Under-trigger — explicit invoke only | `Invoke ONLY when the user explicitly asks ... Do NOT auto-invoke on [common ambient signals].` | `waxa-eval`, `apm-usage`, `empirical-prompt-tuning`, `retrospective-codify`, `chezmoi-management`, this skill |
 
 How to classify a skill you're auditing:
 
@@ -197,4 +197,3 @@ If you do run the empirical step by hand, follow agentskills.io's specifics:
 - `superpowers:writing-skills` — when creating a new skill from scratch; description is one of several components. Use this skill (`optimizing-descriptions`) only after the skill exists and has been observed.
 - `waxa-eval` — for measuring trigger accuracy empirically (when `waxa trigger` lands).
 - `waxa audit <skill>` — picks up the surface frontmatter issues (length, name shape, basic trigger-condition phrasing) that this audit also flags; useful as a fast pre-check.
-- `skill-finder` — the rubric there includes "frontmatter-health" which overlaps with this skill's universal checklist; skill-finder uses `optimizing-descriptions` patterns implicitly when evaluating an external skill candidate.

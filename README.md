@@ -61,10 +61,9 @@ flowchart LR
   UC1["UC1 · New build<br/>ddd-bdd-tdd-flow (hub)"]
   UC2["UC2 · Writing<br/>japanese-tech-writing (hub)"]
   UC3["UC3 · Deps & release<br/>dep-lib-review (hub)"]
-  UC4["UC4 · Operate<br/>observability & config"]
+  UC4["UC4 · Operate<br/>observability & error tracking"]
   UC5["UC5 · Improve toolkit<br/>skill-ops"]
 
-  UC5 -->|skill-selector / -finder| UC1
   UC2 -->|readme-guidelines| UC1
   UC2 -->|tech-trend-watch| UC3
   UC1 -->|retrospective-codify| UC5
@@ -74,27 +73,23 @@ flowchart LR
 ### UC1 — Build a new app or feature（新規開発を立ち上げる）
 
 Take a feature from requirements through modeling, tests, and implementation.
-**Entry:** `skill-selector` · **Hub:** `ddd-bdd-tdd-flow` · **Deliverable:** passing E2E tests.
+**Hub:** `ddd-bdd-tdd-flow` · **Deliverable:** passing E2E tests.
 
-- [skill-selector](./skills/skill-selector/) `↔ UC5` — pick which skills the project needs
-- [skill-finder](./skills/skill-finder/) `↔ UC5` — discover a skill outside the catalog
 - [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) — orient into bounded contexts → DDD SUDO modeling → BDD → property tests → TDD
 - [unresolved-questions](./skills/unresolved-questions/) — file what a `ddd-bdd-tdd-flow` increment can't settle, as one question per file
 - [external-api-tos-check](./skills/external-api-tos-check/) — clear a third-party API's ToS before integrating
 - [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC2` — record a design decision as a Japanese ADR
 - [playwright-test](./skills/playwright-test/) — write/structure E2E tests
 - [playwright-cli](./skills/playwright-cli/) — drive the browser interactively
-- [sql-security](./skills/sql-security/) — screen SQL builders for injection
 
 ### UC2 — Author & polish technical writing（技術文書を書いて仕上げる）
 
-Draft an article or book manuscript, tighten its reasoning, and check it is reproducible before publishing.
-**Hub:** `japanese-tech-writing` · **Deliverable:** a reproducibility-checked draft.
+Draft an article, book manuscript, or design record, and tighten its reasoning before publishing.
+**Hub:** `japanese-tech-writing` · **Deliverable:** an argument-checked draft.
 
 - [japanese-tech-writing](./skills/japanese-tech-writing/) — Japanese technical-writing norms
 - [argument-gap-edit](./skills/argument-gap-edit/) — fix weak arguments and structural gaps
 - [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC1` — Japanese ADRs, argument-checked with `argument-gap-edit`
-- [tech-article-reproducibility](./skills/tech-article-reproducibility/) — simulate a first-time reader
 - [extract-glossary](./skills/extract-glossary/) — build a domain glossary / onboarding map from a repo
 - [readme-guidelines](./skills/readme-guidelines/) `↔ UC1` — README templates and update policy
 
@@ -110,19 +105,16 @@ Keep dependencies healthy, land upstream fixes, and produce a changelog.
 
 ### UC4 — Instrument & configure production（本番の運用・可観測性を整える）
 
-Set up observability, secrets, and error tracking for a running service.
+Set up observability and error tracking for a running service.
 
 - [otel-node](./skills/otel-node/) — Node.js OpenTelemetry setup (incl. esbuild ESM gotcha)
-- [dotenvx](./skills/dotenvx/) — encrypted env-var / multi-environment management
 - [utels-project-bootstrap](./skills/utels-project-bootstrap/) — wire utels.dev error tracking into a Cloudflare Worker
 
 ### UC5 — Operate & improve the toolkit（スキル自体を運用・自己改善する）
 
-Choose which skills to use, feed lessons back, and keep skill descriptions sharp.
+Build new skills, feed lessons back, and keep skill descriptions sharp.
 This is the self-improvement loop the chain folds back into.
 
-- [skill-selector](./skills/skill-selector/) `↔ UC1` — select project skills via APM
-- [skill-finder](./skills/skill-finder/) `↔ UC1` — evaluate candidate skills across registries
 - [skill-creator](./skills/skill-creator/) — draft a new skill, then iterate on it with evals and benchmarks
 - [retrospective-codify](./skills/retrospective-codify/) — turn trial-and-error into ast-grep rules / skills / CLAUDE.md
 - [optimizing-descriptions](./skills/optimizing-descriptions/) — audit & rewrite `SKILL.md` descriptions
@@ -140,7 +132,6 @@ The complete inventory. Every skill here appears under at least one use case abo
 | [conventional-changelog](./skills/conventional-changelog/) | Conventional Commits and automatic CHANGELOG generation. Compares release-please / changesets / git-cliff / towncrier. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) | Structured DDD → BDD → TDD flow for a new feature or app — orient into the repo's bounded contexts (Phase 0), SUDO domain modeling, Gherkin features, property-based tests, and t_wada TDD implementation. | original | Unlicense |
 | [dep-lib-review](./skills/dep-lib-review/) | Periodic dependency review for Node.js/pnpm — outdated triage, security audit, patch/minor/major batching strategy. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
-| [dotenvx](./skills/dotenvx/) | dotenvx env-var management — encrypting `.env` files, multi-environment juggling, committing encrypted secrets to git. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [external-api-tos-check](./skills/external-api-tos-check/) | Confirms a third-party API/SDK/service's Terms of Service allows the planned behavior before implementation, and records constraints as an ADR. | original | Unlicense |
 | [extract-glossary](./skills/extract-glossary/) | Extract domain-specific terminology, tech stacks, and onboarding Mermaid diagrams from a repo or GitHub org. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [japanese-tech-writing](./skills/japanese-tech-writing/) | Guidelines for writing and editing Japanese technical documentation with clear structure, rigorous reasoning, consistent formatting, and concise, readable prose. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d#file-skill-md) | Unlicense |
@@ -151,10 +142,6 @@ The complete inventory. Every skill here appears under at least one use case abo
 | [readme-guidelines](./skills/readme-guidelines/) | README.md templates and policies — template selection by project type, README-ja.md sync, and change-to-section update rules. | original | Unlicense |
 | [retrospective-codify](./skills/retrospective-codify/) | Codify trial-and-error lessons into ast-grep rules, skills, or CLAUDE.md rules after a fix lands. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [skill-creator](./skills/skill-creator/) | Create new skills, iterate on them with evals/benchmarks, and optimize a skill's description for triggering accuracy. | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | Apache-2.0 |
-| [skill-finder](./skills/skill-finder/) | Discover and evaluate skills from outside the curated catalog across multiple registries. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
-| [skill-selector](./skills/skill-selector/) | Pick project skills via APM — two-phase: curated catalog first, broader search only when needed. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
-| [sql-security](./skills/sql-security/) | SQL security review — injection risk, query analysis, schema audit. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
-| [tech-article-reproducibility](./skills/tech-article-reproducibility/) | Evaluate reproducibility of technical articles — simulate a first-time reader and surface missing steps before publication. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [tech-trend-watch](./skills/tech-trend-watch/) | Long-term stack review using State of JS/CSS and Thoughtworks Technology Radar — ADOPT/TRIAL/ASSESS/HOLD mapping. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [unresolved-questions](./skills/unresolved-questions/) | Files unknowns, provisional decisions, and deliberately-skipped work as one question per file under `doc/questions/<status>/`, where the directory is the status. | original | Unlicense |
 | [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) | Fix an upstream library bug, open a PR, and pin to the git SHA while waiting for it to merge. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
