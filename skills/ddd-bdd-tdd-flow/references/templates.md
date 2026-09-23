@@ -1,15 +1,21 @@
-# Templates — ADR and README.md
+# Templates
 
-Read this when you are about to write an ADR (any phase) or update the root
-`README.md` at a phase boundary. **The workflow itself is in `SKILL.md`;
-this file is only the shapes.**
+Read this when you are about to write one of these shapes. **The workflow itself
+is in `SKILL.md`; this file is only the shapes.**
+
+- [Architecture Decision Records](#architecture-decision-records-adr)
+- [Root README.md and the doc/README.md timeline](#root-readmemd-and-the-docreadmemd-timeline)
+- [Feature file (Phase 3)](#feature-file-phase-3)
+- [Property table (Phase 4a)](#property-table-phase-4a)
+- [Property-based test (Phase 4b)](#property-based-test-phase-4b)
+- [Test list (Phase 5a)](#test-list-phase-5a)
 
 ---
-
 
 ## Architecture Decision Records (ADR)
 
 Whenever a significant architectural or design decision is made during any phase, record it as an ADR.
+If the `adr-writing-ja` skill is available, follow it instead of this section.
 
 **When to create an ADR:**
 - A technology or framework is chosen (e.g., "use PostgreSQL over SQLite")
@@ -26,7 +32,7 @@ Whenever a significant architectural or design decision is made during any phase
 
 ## Status
 
-Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
+Proposed | Accepted | Rejected | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
 
 ## Context
 
@@ -41,64 +47,126 @@ Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
 <List positive and negative consequences of this decision.>
 ```
 
-Create the ADR immediately when the decision is made — do not batch them at the end of a phase. If the user later changes a decision, update the old ADR's `Status` to `Superseded by ADR-NNNN` and create a new one.
+Create the ADR as `Proposed` immediately when the decision is made — do not batch them at the end of a phase.
+Set it to `Accepted` only when the user explicitly approves it.
+If the user later changes a decision, write a new `Proposed` ADR that says `Supersedes [ADR-MMMM](MMMM-<title>.md)`.
+Change the old ADR's `Status` to `Superseded by ADR-NNNN` only when the new one is accepted, in the same commit, without touching its body.
 
 ---
 
----
+## Root README.md and the doc/README.md timeline
 
+**Do not add a section to the root `README.md` per feature.** Create it once, when
+the repository has none, and keep it under **100 lines**:
 
-### README.md Lifecycle
+```markdown
+# <App name>
 
-**Do not recreate `README.md` per feature.**
-Keep the root `README.md` under **100 lines**: what the app is, how to run it,
-and one line pointing at `doc/README.md`.
+> <one-line description>
 
-**Record the increment by adding one row to the timeline in `doc/README.md`.**
-Design lives in `doc/context/`; history lives in `doc/increments/`. Use this progressive template — fill in only what the current phase covers; leave the rest as comments until that phase is reached:
+## Run
 
-````markdown
-# <Feature Name>
+<how to start the app>
 
-> <one-line description from Phase 1>
+## Test
 
-## Status
+<how to run all tests>
 
-Phase N complete — <phase name>
+## Documentation
 
-## Overview
+Design, decisions, and history: [doc/README.md](doc/README.md).
+```
 
-<Problem statement and acceptance criteria — filled in Phase 1>
+Touch it again only when how to run the app or its tests changes.
 
-## Domain Model
+**Record each increment as one row in the timeline in `doc/README.md`.** Add the row
+in Phase 1 and update its Status at every phase boundary:
 
-<!-- Added in Phase 2 -->
-[Context map](doc/system-context.md) / [Glossary](doc/glossary.md) — one line each
+```markdown
+## Timeline
 
-## Features / Behavior
-
-<!-- Added in Phase 3 -->
-| Feature file | Description |
-|---|---|
-| [name.feature](doc/context/<bc>/features/name.feature) | ... |
-
-## Testing
-
-<!-- Added in Phase 4 -->
-- **Property tests (integration):** `test/integration/` — uses <PBT library>
-- **Property tests (e2e):** `test/e2e/` — full-stack, no mocks
-
-## Usage
-
-<!-- Added in Phase 5 -->
-<How to run the application or feature>
-
-## Development
-
-<!-- Added in Phase 5 -->
-<How to build and run all tests>
-````
-
-Remove placeholder comments as each section is filled in. By Phase 5 the README must have no remaining comment placeholders.
+| Date | Increment | Contexts | Status |
+|---|---|---|---|
+| 2026-09-23 | [user-authentication](increments/2026-09-23-user-authentication/) | identity, billing | Phase 3 complete — features: [login](context/identity/features/login.feature) |
+```
 
 ---
+
+## Feature file (Phase 3)
+
+```gherkin
+Feature: <Use case name>
+  As a <actor>
+  I want to <action>
+  So that <business value>
+
+  Background:
+    Given <common precondition>
+
+  Scenario: Happy path — <name>
+    Given <precondition>
+    When <actor performs action>
+    Then <expected outcome>
+    And <additional assertion>
+
+  Scenario: Error — <name>
+    Given <invalid state>
+    When <actor performs action>
+    Then an error "<message>" is returned
+
+  Scenario Outline: Boundary — <name>
+    Given a <entity> with "<param>"
+    When <action>
+    Then the result is "<expected>"
+    Examples:
+      | param | expected |
+      | ...   | ...      |
+```
+
+---
+
+## Property table (Phase 4a)
+
+Append to the `## Invariants` section of `doc/context/<bc>/constraints.md`:
+
+```markdown
+## <Use case name>
+
+| Property | Type | Expression |
+|---|---|---|
+| Balance never goes negative | Invariant | `∀ deposit d: balance(after) ≥ 0` |
+| Roundtrip serialization | Roundtrip | `decode(encode(x)) == x` |
+```
+
+---
+
+## Property-based test (Phase 4b)
+
+```typescript
+// fast-check example
+import * as fc from "fast-check";
+
+test("balance invariant: never negative after valid deposit", () => {
+  fc.assert(
+    fc.property(fc.integer({ min: 1, max: 1_000_000 }), (amount) => {
+      const account = Account.empty();
+      account.deposit(amount);
+      expect(account.balance).toBeGreaterThanOrEqual(0);
+    })
+  );
+});
+```
+
+---
+
+## Test list (Phase 5a)
+
+```markdown
+## Test List
+
+- [ ] <scenario: happy path> — unit
+- [ ] <scenario: error case> — unit
+- [ ] <edge: boundary value> — unit
+- [ ] <edge: invalid input> — unit
+...
+```

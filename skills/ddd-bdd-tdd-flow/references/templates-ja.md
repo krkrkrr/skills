@@ -1,13 +1,20 @@
-# テンプレート — ADR と README.md
+# テンプレート
 
-ADR を書くとき（どのフェーズでも）、またはフェーズの境界でルートの `README.md` を
-更新するときに読む。**進め方そのものは `SKILL-ja.md` にある。ここにあるのは形だけ。**
+次の形を書く直前に読む。**進め方そのものは `SKILL-ja.md` にある。ここにあるのは形だけ。**
+
+- アーキテクチャ決定記録（ADR）
+- ルートの README.md と doc/README.md の年表
+- フィーチャーファイル（フェーズ 3）
+- プロパティ表（フェーズ 4a）
+- プロパティベーステスト（フェーズ 4b）
+- テストリスト（フェーズ 5a）
 
 ---
 
 ## アーキテクチャ決定記録（ADR）
 
 いずれかのフェーズで重要なアーキテクチャ・設計上の決定が行われたときは、ADR として記録する。
+`adr-writing-ja` スキルがあれば、この節ではなくそちらに従う。
 
 **ADR を作成するタイミング:**
 - 技術やフレームワークを選択したとき（例: 「SQLite より PostgreSQL を使う」）
@@ -24,7 +31,7 @@ ADR を書くとき（どのフェーズでも）、またはフェーズの境�
 
 ## Status
 
-Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
+Proposed | Accepted | Rejected | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
 
 ## Context
 
@@ -39,58 +46,126 @@ Proposed | Accepted | Deprecated | Superseded by [ADR-NNNN](NNNN-<title>.md)
 <この決定の正と負の帰結を列挙する。>
 ```
 
-ADR はフェーズの終わりにまとめて作成するのではなく、決定が行われたその場で即座に作成する。ユーザーが後で決定を変更した場合は、古い ADR の `Status` を `Superseded by ADR-NNNN` に更新し、新しい ADR を作成する。
+ADR はフェーズの終わりにまとめず、決定したその場で `Proposed` として作成する。
+`Accepted` にするのは、ユーザーが明示的に承認したときだけ。
+ユーザーが後で決定を変えた場合は、`Supersedes [ADR-MMMM](MMMM-<title>.md)` と書いた新しい ADR を `Proposed` で作成する。
+古い ADR の `Status` を `Superseded by ADR-NNNN` にするのは、新しい ADR が承認されたときで、同じコミットで行い、本文には触れない。
 
 ---
 
----
+## ルートの README.md と doc/README.md の年表
 
-### README.md ライフサイクル
+**フィーチャーごとにルートの `README.md` へ節を足さない。** リポジトリにまだないときに
+1 度だけ作り、**100 行以下**に保つ:
 
-`README.md` はリポジトリルートに置く。フェーズ 1 で作成し、以降のフェーズごとに新しいセクションを追記する。以下のプログレッシブテンプレートを使用する — 各フェーズが完了するまで、そのフェーズのセクションはコメントのまま残す:
+```markdown
+# <アプリ名>
 
-````markdown
-# <フィーチャー名>
+> <1 行の説明>
 
-> <フェーズ 1 で得た一行説明>
+## 実行
 
-## Status
+<アプリの起動方法>
 
-Phase N complete — <フェーズ名>
+## テスト
 
-## Overview
+<全テストの実行方法>
 
-<課題説明と受け入れ基準 — フェーズ 1 で記入>
+## ドキュメント
 
-## Domain Model
+設計・決定・履歴: [doc/README.md](doc/README.md)
+```
 
-<!-- フェーズ 2 で追記 -->
-[システムコンテキスト](doc/system-context.md) / [用語集](doc/glossary.md) — 1 行で
+以降は、アプリやテストの実行方法が変わったときだけ更新する。
 
-## Features / Behavior
+**増分は `doc/README.md` の年表に 1 行ずつ記録する。** フェーズ 1 で行を足し、
+フェーズの境界ごとに Status を更新する:
 
-<!-- フェーズ 3 で追記 -->
-| フィーチャーファイル | 説明 |
-|---|---|
-| [name.feature](doc/context/<bc>/features/name.feature) | ... |
+```markdown
+## 年表
 
-## Testing
-
-<!-- フェーズ 4 で追記 -->
-- **プロパティテスト（インテグレーション）:** `test/integration/` — <PBT ライブラリ> を使用
-- **プロパティテスト（E2E）:** `test/e2e/` — フルスタック、モックなし
-
-## Usage
-
-<!-- フェーズ 5 で追記 -->
-<アプリ/フィーチャーの実行方法>
-
-## Development
-
-<!-- フェーズ 5 で追記 -->
-<ビルドとテスト実行の方法>
-````
-
-各セクションを記入したらプレースホルダーコメントを削除する。フェーズ 5 完了時点で README にコメントプレースホルダーが残っていてはならない。
+| 日付 | 増分 | コンテキスト | Status |
+|---|---|---|---|
+| 2026-09-23 | [user-authentication](increments/2026-09-23-user-authentication/) | identity, billing | Phase 3 complete — features: [login](context/identity/features/login.feature) |
+```
 
 ---
+
+## フィーチャーファイル（フェーズ 3）
+
+```gherkin
+Feature: <Use case name>
+  As a <actor>
+  I want to <action>
+  So that <business value>
+
+  Background:
+    Given <common precondition>
+
+  Scenario: Happy path — <name>
+    Given <precondition>
+    When <actor performs action>
+    Then <expected outcome>
+    And <additional assertion>
+
+  Scenario: Error — <name>
+    Given <invalid state>
+    When <actor performs action>
+    Then an error "<message>" is returned
+
+  Scenario Outline: Boundary — <name>
+    Given a <entity> with "<param>"
+    When <action>
+    Then the result is "<expected>"
+    Examples:
+      | param | expected |
+      | ...   | ...      |
+```
+
+---
+
+## プロパティ表（フェーズ 4a）
+
+`doc/context/<bc>/constraints.md` の `## Invariants` 節に追記する:
+
+```markdown
+## <Use case name>
+
+| プロパティ | 種別 | 表現 |
+|---|---|---|
+| 残高が負にならない | 不変量 | `∀ deposit d: balance(after) ≥ 0` |
+| シリアライズのラウンドトリップ | ラウンドトリップ | `decode(encode(x)) == x` |
+```
+
+---
+
+## プロパティベーステスト（フェーズ 4b）
+
+```typescript
+// fast-check の例
+import * as fc from "fast-check";
+
+test("balance invariant: never negative after valid deposit", () => {
+  fc.assert(
+    fc.property(fc.integer({ min: 1, max: 1_000_000 }), (amount) => {
+      const account = Account.empty();
+      account.deposit(amount);
+      expect(account.balance).toBeGreaterThanOrEqual(0);
+    })
+  );
+});
+```
+
+---
+
+## テストリスト（フェーズ 5a）
+
+```markdown
+## テストリスト
+
+- [ ] <シナリオ: ハッピーパス> — unit
+- [ ] <シナリオ: エラーケース> — unit
+- [ ] <エッジ: 境界値> — unit
+- [ ] <エッジ: 不正入力> — unit
+...
+```

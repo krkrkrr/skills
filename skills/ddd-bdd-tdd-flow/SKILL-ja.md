@@ -76,7 +76,7 @@ doc/
 **3 つ開けばその文脈の設計が全部そろい、4 つ目がどこかに隠れていないと信じられること。**
 
 これ以外は、設計ではないもの、モデルではなく記録、もらった資料のいずれかである。
-**その部分の木はこのファイルの末尾にある。**
+**その部分の木は `references/layout-ja.md` にある。**
 
 ---
 
@@ -122,11 +122,11 @@ doc/
 
 **ブランチ作成 & 初回コミット**
 
-フェーズ 1 の回答からフィーチャー名を kebab-case で導出する（例: 「ユーザー認証」 → `user-authentication`）。下記 **README.md ライフサイクル** のテンプレートを使って `README.md` を作成し、フィーチャー名・概要・ Overview セクションを埋め、Status を `Phase 1 complete` にする。その後:
+フェーズ 1 の回答からフィーチャー名を kebab-case で導出する（例: 「ユーザー認証」 → `user-authentication`）。`doc/README.md` の年表に、この増分の行を足す（日付、名前、関わるコンテキスト、増分フォルダへのリンク、Status `Phase 1 complete`）。ルートの `README.md` は、リポジトリにまだないときだけ作る（下記 **README.md ライフサイクル**）。その後:
 
 ```bash
 git checkout -b feature/<new-feature-name>
-git add doc/increments/ doc/glossary.md doc/questions/ README.md
+git add doc/increments/ doc/glossary.md doc/questions/ doc/README.md
 git commit -m "docs(phase1): add requirements for <new-feature-name>"
 ```
 
@@ -240,10 +240,10 @@ sequenceDiagram
 
 **承認後にコミット**
 
-`doc/README.md` の年表に 1 行足す。**ルートの `README.md` は 100 行以下に保つ。**
+`doc/README.md` の年表で、この増分の行を `Phase 2 complete` にする。**ルートの `README.md` は 100 行以下に保つ。**
 
 ```bash
-git add doc/context/ doc/system-context.md doc/use-cases.md doc/ADR/ README.md
+git add doc/context/ doc/system-context.md doc/use-cases.md doc/ADR/ doc/README.md
 git commit -m "docs(phase2): add SUDO domain model"
 ```
 
@@ -263,36 +263,7 @@ git commit -m "docs(phase2): add SUDO domain model"
 
 ### フィーチャーファイルテンプレート
 
-```gherkin
-Feature: <Use case name>
-  As a <actor>
-  I want to <action>
-  So that <business value>
-
-  Background:
-    Given <common precondition>
-
-  Scenario: Happy path — <name>
-    Given <precondition>
-    When <actor performs action>
-    Then <expected outcome>
-    And <additional assertion>
-
-  Scenario: Error — <name>
-    Given <invalid state>
-    When <actor performs action>
-    Then an error "<message>" is returned
-
-  Scenario Outline: Boundary — <name>
-    Given a <entity> with "<param>"
-    When <action>
-    Then the result is "<expected>"
-    Examples:
-      | param | expected |
-      | ...   | ...      |
-```
-
-`doc/context/<bc>/features/<use-case-name>.feature` に保存する。
+`references/templates-ja.md` の Gherkin テンプレートを使う。`doc/context/<bc>/features/<use-case-name>.feature` に保存する。
 
 **→ すべてのフィーチャーファイルをユーザーに提示する。**
 「これらのシナリオは期待される振る舞いを完全に捉えていますか？不足しているケースはありますか？」と確認する。
@@ -301,10 +272,10 @@ Feature: <Use case name>
 
 **承認後にコミット**
 
-`README.md` の **Features / Behavior** セクションを埋める: `.feature` ファイルの一覧表と各ファイルの説明を追記する。Status を `Phase 3 complete` に更新する。
+`doc/README.md` の年表で、この増分の行を `Phase 3 complete` にし、追加・変更した `.feature` ファイルへのリンクを添える。
 
 ```bash
-git add doc/context/ README.md
+git add doc/context/ doc/README.md
 git commit -m "docs(phase3): add BDD feature files"
 ```
 
@@ -324,16 +295,7 @@ git commit -m "docs(phase3): add BDD feature files"
 - **冪等性**: 「操作を 2 回適用しても 1 回と同じ結果になる」
 - **等価性**: 「2 つの異なるパスが同じ観測可能な結果を生む」
 
-フォーマット:
-
-```markdown
-## <Use case name>
-
-| プロパティ | 種別 | 表現 |
-|---|---|---|
-| 残高が負にならない | 不変量 | `∀ deposit d: balance(after) ≥ 0` |
-| シリアライズのラウンドトリップ | ラウンドトリップ | `decode(encode(x)) == x` |
-```
+プロパティ表の書式は `references/templates-ja.md` にある。
 
 ### 4b: インテグレーションテスト（プロパティベース）
 
@@ -344,20 +306,7 @@ git commit -m "docs(phase3): add BDD feature files"
 2. 各プロパティに対して、シュリンキング有効のプロパティテストを記述する
 3. フィーチャーが可変状態を持つ場合は、**ステートフルプロパティ**（モデルベース）を少なくとも 1 つ含める
 
-```typescript
-// fast-check の例
-import * as fc from "fast-check";
-
-test("balance invariant: never negative after valid deposit", () => {
-  fc.assert(
-    fc.property(fc.integer({ min: 1, max: 1_000_000 }), (amount) => {
-      const account = Account.empty();
-      account.deposit(amount);
-      expect(account.balance).toBeGreaterThanOrEqual(0);
-    })
-  );
-});
-```
+fast-check の例は `references/templates-ja.md` にある。
 
 ### 4c: E2E テスト（プロパティベース）
 
@@ -370,10 +319,10 @@ test("balance invariant: never negative after valid deposit", () => {
 
 **フェーズ 4 完了後にコミット**
 
-`README.md` の **Testing** セクションを埋める: 使用する PBT ライブラリと `test/integration/`・`test/e2e/` へのリンクを追記する。Status を `Phase 4 complete` に更新する。
+`doc/README.md` の年表で、この増分の行を `Phase 4 complete` にする。リポジトリで初めてのプロパティテストなら、使う PBT ライブラリを `doc/testing-strategy.md` に記す。
 
 ```bash
-git add doc/context/ test/integration/ test/e2e/ README.md
+git add doc/context/ doc/testing-strategy.md test/integration/ test/e2e/ doc/README.md
 git commit -m "test(phase4): add property-based integration and e2e tests"
 ```
 
@@ -385,17 +334,7 @@ git commit -m "test(phase4): add property-based integration and e2e tests"
 
 ### 5a: テストリストの作成
 
-コードを書く前に、必要なすべてのユニットテストを列挙する。`doc/increments/<日付>-<名前>/test-list.md` に保存する:
-
-```markdown
-## テストリスト
-
-- [ ] <シナリオ: ハッピーパス> — unit
-- [ ] <シナリオ: エラーケース> — unit
-- [ ] <エッジ: 境界値> — unit
-- [ ] <エッジ: 不正入力> — unit
-...
-```
+コードを書く前に、必要なすべてのユニットテストを列挙する。`doc/increments/<日付>-<名前>/test-list.md` に保存する（テンプレートは `references/templates-ja.md`）。
 
 一気にリスト全体を書く。コーディングはまだ始めない。
 
@@ -451,10 +390,10 @@ git commit -m "test(phase4): add property-based integration and e2e tests"
 
 **インテグレーションゲート通過後にコミット**
 
-`README.md` の **Usage** と **Development** セクションを埋める（アプリの実行方法とテスト実行方法）。Status を `Phase 5 complete` に更新する。残っているプレースホルダーコメントをすべて削除する。
+`doc/README.md` の年表で、この増分の行を `Phase 5 complete` にする。ルートの `README.md` は、アプリやテストの実行方法が変わったときだけ更新する。
 
 ```bash
-git add src/ test/unit/ doc/increments/ README.md
+git add src/ test/unit/ doc/increments/ doc/README.md README.md
 git commit -m "feat(<scope>): implement <new-feature-name>"
 ```
 
@@ -466,67 +405,46 @@ git commit -m "feat(<scope>): implement <new-feature-name>"
 まとめて書かない。**一日おいて書いた決定は後付けの理屈であり、**
 そのとき感じていた力（forces）こそが残す値打ちのある部分である。
 
-**書式と、記録すべき場面の一覧は `references/templates-ja.md`。**
-`doc/ADR/NNNN-<kebab-case-title>.md` に置く。後に覆されたときは、
-**本文を書き換えるのではなく、古い ADR の `Status` を `Superseded by ADR-NNNN` にする。**
+ステータスは **`Proposed`** で書く。`Accepted` にするのは、ユーザーが明示的に承認したときだけで、
+フェーズ 2 と 3 の承認ゲートが確認の自然な場面になる。「X に切り替えたい」のような意向は承認ではない。
+
+**書式と、記録すべき場面の一覧は `references/templates-ja.md`。** `adr-writing-ja` スキルがあれば、
+置き場所・書式・論証の点検はそれに従う。`doc/ADR/NNNN-<kebab-case-title>.md` に置く。
+後に覆されたときは、新しい ADR を `Supersedes` 付きの `Proposed` で書き、**それが承認されたときに
+初めて、古い ADR の `Status` を `Superseded by ADR-NNNN` にする。** 本文は書き換えない。
 どれが現行かは、その連鎖でしか読み取れない。
 
 ## Git ワークフロー
 
 すべての開発はフェーズ 1 終了時に作成した `feature/<new-feature-name>` ブランチで行う。フェーズの区切りごとにコミットし、履歴がフローを正確に反映するようにする。
 
-| フェーズ | コミットのタイミング | README.md の更新内容 | コミットメッセージ |
+| フェーズ | コミットのタイミング | `doc/README.md` 年表の行 | コミットメッセージ |
 |---|---|---|---|
-| 1 — 要件ヒアリング | 増分フォルダを書いた後 | 作成: 名前・説明・Overview・Status | `docs(phase1): add requirements for <name>` |
-| 2 — SUDO モデル | ユーザーが明示的に承認後 | 追記: Domain Model セクション | `docs(phase2): add SUDO domain model` |
-| 3 — BDD フィーチャー | ユーザーが明示的に承認後 | 追記: Features / Behavior セクション | `docs(phase3): add BDD feature files` |
-| 4 — プロパティテスト | 4b + 4c のテストファイル生成後 | 追記: Testing セクション | `test(phase4): add property-based integration and e2e tests` |
-| 5 — 実装 | インテグレーションゲート通過後（5d） | 追記: Usage + Development セクション、プレースホルダー削除 | `feat(<scope>): implement <name>` |
+| 1 — 要件ヒアリング | 増分フォルダを書いた後 | 行を追加: 日付・名前・コンテキスト・リンク・Status | `docs(phase1): add requirements for <name>` |
+| 2 — SUDO モデル | ユーザーが明示的に承認後 | Status → Phase 2 | `docs(phase2): add SUDO domain model` |
+| 3 — BDD フィーチャー | ユーザーが明示的に承認後 | Status → Phase 3、`.feature` へのリンク | `docs(phase3): add BDD feature files` |
+| 4 — プロパティテスト | 4b + 4c のテストファイル生成後 | Status → Phase 4 | `test(phase4): add property-based integration and e2e tests` |
+| 5 — 実装 | インテグレーションゲート通過後（5d） | Status → Phase 5（実行方法が変わったときだけルートの `README.md` も） | `feat(<scope>): implement <name>` |
 
 **ルール:**
-- `README.md` はすべてのフェーズ境界で必ずステージングしてコミットする — スキップ禁止。
+- `doc/README.md` はすべてのフェーズ境界で必ずステージングしてコミットする — スキップ禁止。ルートの `README.md` は実際に変わったときだけコミットする。
 - モデリング中に ADR を作成した場合は、フェーズ 2 のコミットに `doc/ADR/` を含める。
 - Red-Green-Refactor サイクルの途中でコミットしない。テストリストの最後の項目の Refactor ステップが完了してからコミットする。
 - ユーザーから指示があるまでプッシュしない。ブランチはそれまでローカルに留める。
 
 ### README.md ライフサイクル
 
-`README.md` はフェーズの境界ごとに節が増え、毎回コミットされる。
-**テンプレートとフェーズ別の表は `references/templates-ja.md`。**
-
-短く保つ。**ルートの README は入口であって記録ではない。** 状態の履歴は
-`doc/increments/` が持つ。フィーチャーごとに 1 節ずつ溜まり始めた時点で、
-それはもう読めるものではなくなる（実測: 722 行に達した）。
+**ルートの `README.md` は入口であって記録ではない。** アプリが何か、アプリとテストの
+動かし方、`doc/README.md` への案内だけを書き、100 行以下に保つ。フィーチャーごとの節は
+作らない。溜まり始めた時点で、それはもう読めるものではなくなる（実測: 722 行に達した）。
+増分ごとの状態は `doc/README.md` の年表のその行に、履歴は `doc/increments/` に置く。
+**どちらのテンプレートも `references/templates-ja.md` にある。**
 
 ## 木の残り
 
-**設計文書は冒頭の「どこに何を置くか」にある。ここには繰り返さない。**
-以下は、**モデルではないもの**すべて。
-
-```
-doc/
-  README.md               索引。1 画面。ここから全部たどれる
-  testing-strategy.md     どの層を何で守るか。**全体に効く。コンテキスト別ではない**
-  questions/              セッションを跨いで残る未解決。
-                          **`unresolved-questions` スキルを見ること**
-  ADR/NNNN-<decision>.md  決定とその理由。**覆されたものも残す。指し先を付けて**
-  reference/              もらった資料。**書き換えない**
-  evidence/               測ったこと。**追記のみ。訂正は新しい行で**
-  increments/<日付>-<名前>/   requirements.md ほか。**作業が入ったら凍結**
-  environment/            **ドメインではない。** 動かし方と確かめ方（`ENV-`）
-    deployment.md   features/*.feature
-
-test/  unit/ integration/ e2e/
-src/   <module>.<ext>
-```
-
-**`evidence/` と `reference/` を分けるのは意図的である。** 前者は「そう見えた」、
-後者は「そう書いてある」。混ぜると**根拠の強さが読めなくなる** —
-そして、この 2 つは食い違うことが実際にある。
-
-**`increments/` は凍結されており、それが値打ちである。** どう間違え、どう直したかが
-そこにある。`context/` が語るのは「いまどうなっているか」だけで、
-**両者を分けているからこそ、`context/` が現在だと信じられる。**
+モデルではないもの（`doc/README.md`、`testing-strategy.md`、`questions/`、`ADR/`、
+`reference/`、`evidence/`、`increments/`、`environment/`）の置き場所と、`evidence/`・`reference/`・
+`increments/` を分けている理由は `references/layout-ja.md` にある。
 
 ---
 
@@ -538,7 +456,7 @@ src/   <module>.<ext>
 - **TDD は小さいステップで。** 各 Red-Green-Refactor サイクルは数分以内に完了すること。
 - **プロパティテストはサンプルテストが見落とすものを捕捉する。** 省略不可。
 - **すべてのダイアグラムは Mermaid を使用。** コードと並んでプレーンテキストとして管理する。
-- **決定はその場で ADR に記録。** 重要なアーキテクチャ上の選択はすべて、フェーズ終了後ではなく決定した瞬間に `doc/ADR/` に Nygard フォーマットで記録する。
+- **決定はその場で ADR に記録。** 重要なアーキテクチャ上の選択はすべて、フェーズ終了後ではなく決定した瞬間に `doc/ADR/` へ `Proposed` で記録し、ユーザーが明示的に承認したときだけ `Accepted` にする。
 
 ## よくある失敗
 
@@ -561,3 +479,5 @@ src/   <module>.<ext>
 
 - `playwright-test` — ブラウザ駆動プロジェクトの E2E テスト
 - `retrospective-codify` — TDD サイクルから得た洞察を恒久的なルールとして記録
+- `adr-writing-ja` — 日本語の ADR を書き、置き換える
+- `unresolved-questions` — 増分で決着しなかったことを記録し、閉じる

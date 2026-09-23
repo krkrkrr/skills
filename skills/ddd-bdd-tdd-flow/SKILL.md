@@ -79,7 +79,7 @@ per increment. A reader should open three files and have the whole design of a
 context — and be able to trust that no fourth file is hiding somewhere.
 
 Everything else is either not design, a record rather than a model, or material you
-were given. **That part of the tree is at the end of this file.**
+were given. **That part of the tree is in `references/layout.md`.**
 
 ---
 
@@ -126,11 +126,11 @@ a question frozen inside it stops being visible to anyone looking for open work.
 
 **Branch Creation & First Commit**
 
-Derive a kebab-case feature name from the Phase 1 answers (e.g., "User Authentication" → `user-authentication`). Create `README.md` using the template from the **README.md Lifecycle** section below — fill in the feature name, one-line description, Overview, and set Status to `Phase 1 complete`. Then:
+Derive a kebab-case feature name from the Phase 1 answers (e.g., "User Authentication" → `user-authentication`). Add a row for this increment to the timeline in `doc/README.md` (date, name, contexts touched, link to the increment folder, Status `Phase 1 complete`). Create the root `README.md` only if the repository has none yet — see **README.md Lifecycle** below. Then:
 
 ```bash
 git checkout -b feature/<new-feature-name>
-git add doc/increments/ doc/glossary.md doc/questions/ README.md
+git add doc/increments/ doc/glossary.md doc/questions/ doc/README.md
 git commit -m "docs(phase1): add requirements for <new-feature-name>"
 ```
 
@@ -246,10 +246,10 @@ Iterate until the user explicitly approves. Append a `## Review Notes` section w
 
 **Commit after approval**
 
-Add one row to the timeline in `doc/README.md`. **Keep the root `README.md` under 100 lines.**
+Set this increment's row in `doc/README.md` to `Phase 2 complete`. **Keep the root `README.md` under 100 lines.**
 
 ```bash
-git add doc/context/ doc/system-context.md doc/use-cases.md doc/ADR/ README.md
+git add doc/context/ doc/system-context.md doc/use-cases.md doc/ADR/ doc/README.md
 git commit -m "docs(phase2): add SUDO domain model"
 ```
 
@@ -269,36 +269,7 @@ From the approved SUDO model, derive Gherkin feature files. One `.feature` file 
 
 ### Feature File Template
 
-```gherkin
-Feature: <Use case name>
-  As a <actor>
-  I want to <action>
-  So that <business value>
-
-  Background:
-    Given <common precondition>
-
-  Scenario: Happy path — <name>
-    Given <precondition>
-    When <actor performs action>
-    Then <expected outcome>
-    And <additional assertion>
-
-  Scenario: Error — <name>
-    Given <invalid state>
-    When <actor performs action>
-    Then an error "<message>" is returned
-
-  Scenario Outline: Boundary — <name>
-    Given a <entity> with "<param>"
-    When <action>
-    Then the result is "<expected>"
-    Examples:
-      | param | expected |
-      | ...   | ...      |
-```
-
-Save to `doc/context/<bc>/features/<use-case-name>.feature`.
+Use the Gherkin template in `references/templates.md`. Save to `doc/context/<bc>/features/<use-case-name>.feature`.
 
 **→ Present all feature files to the user.**
 Ask: "Do these scenarios fully capture the expected behavior? Are there missing cases?"
@@ -307,10 +278,10 @@ Iterate until the user explicitly approves.
 
 **Commit after approval**
 
-Update `README.md`: fill in the **Features / Behavior** section with a table of `.feature` files and their descriptions. Set Status to `Phase 3 complete`.
+Set this increment's row in `doc/README.md` to `Phase 3 complete` and link the `.feature` files it added or changed.
 
 ```bash
-git add doc/context/ README.md
+git add doc/context/ doc/README.md
 git commit -m "docs(phase3): add BDD feature files"
 ```
 
@@ -330,16 +301,7 @@ For every scenario, ask:
 - **Idempotent**: "Applying the operation twice is the same as applying it once"
 - **Equivalence**: "Two different paths produce the same observable result"
 
-Format:
-
-```markdown
-## <Use case name>
-
-| Property | Type | Expression |
-|---|---|---|
-| Balance never goes negative | Invariant | `∀ deposit d: balance(after) ≥ 0` |
-| Roundtrip serialization | Roundtrip | `decode(encode(x)) == x` |
-```
+Use the property table format in `references/templates.md`.
 
 ### 4b: Integration Tests (Property-Based)
 
@@ -350,20 +312,7 @@ Structure:
 2. For each property, write a property test with shrinking enabled
 3. Include at least one **stateful property** (model-based) when the feature has mutable state
 
-```typescript
-// fast-check example
-import * as fc from "fast-check";
-
-test("balance invariant: never negative after valid deposit", () => {
-  fc.assert(
-    fc.property(fc.integer({ min: 1, max: 1_000_000 }), (amount) => {
-      const account = Account.empty();
-      account.deposit(amount);
-      expect(account.balance).toBeGreaterThanOrEqual(0);
-    })
-  );
-});
-```
+A fast-check example is in `references/templates.md`.
 
 ### 4c: E2E Tests (Property-Based)
 
@@ -376,10 +325,10 @@ Structure:
 
 **Commit after Phase 4**
 
-Update `README.md`: fill in the **Testing** section with the PBT library used and links to `test/integration/` and `test/e2e/`. Set Status to `Phase 4 complete`.
+Set this increment's row in `doc/README.md` to `Phase 4 complete`. If this is the first property-based test in the repo, record the PBT library in `doc/testing-strategy.md`.
 
 ```bash
-git add doc/context/ test/integration/ test/e2e/ README.md
+git add doc/context/ doc/testing-strategy.md test/integration/ test/e2e/ doc/README.md
 git commit -m "test(phase4): add property-based integration and e2e tests"
 ```
 
@@ -391,17 +340,7 @@ Follow **Red → Green → Refactor** strictly. One cycle at a time.
 
 ### 5a: Build the Test List
 
-Before writing any code, enumerate all unit tests needed. Save to `doc/increments/<date>-<name>/test-list.md`:
-
-```markdown
-## Test List
-
-- [ ] <scenario: happy path> — unit
-- [ ] <scenario: error case> — unit
-- [ ] <edge: boundary value> — unit
-- [ ] <edge: invalid input> — unit
-...
-```
+Before writing any code, enumerate all unit tests needed. Save to `doc/increments/<date>-<name>/test-list.md` (template in `references/templates.md`).
 
 Write the full list in one pass. Do not start coding yet.
 
@@ -457,10 +396,10 @@ answered is worse than no list at all: the next reader trusts it and re-investig
 
 **Commit after integration gate passes**
 
-Update `README.md`: fill in the **Usage** and **Development** sections (how to run the app and tests). Set Status to `Phase 5 complete`. Remove any placeholder comments left in earlier phases.
+Set this increment's row in `doc/README.md` to `Phase 5 complete`. Update the root `README.md` only if how to run the app or its tests changed.
 
 ```bash
-git add src/ test/unit/ doc/increments/ README.md
+git add src/ test/unit/ doc/increments/ doc/README.md README.md
 git commit -m "feat(<scope>): implement <new-feature-name>"
 ```
 
@@ -472,67 +411,49 @@ Whenever a significant decision is made **in any phase**, record it immediately 
 not batched at the end of the phase. A decision written a day later is a
 rationalisation; the forces you felt at the time are the part worth keeping.
 
-**Format and the full list of triggers: `references/templates.md`.**
-File as `doc/ADR/NNNN-<kebab-case-title>.md`. When a decision is later overturned,
-**set the old ADR's `Status` to `Superseded by ADR-NNNN` rather than editing its
-body** — the chain is how a reader tells which version is current.
+Write it as **`Proposed`**. It becomes `Accepted` only when the user explicitly
+approves it — the Phase 2 and Phase 3 approval gates are the natural place to ask.
+An intention such as "let's switch to X" is not approval.
+
+**Format and the full list of triggers: `references/templates.md`.** If the
+`adr-writing-ja` skill is available, follow it for placement, format, and the
+argument check. File as `doc/ADR/NNNN-<kebab-case-title>.md`. When a decision is
+later overturned, write the new ADR as `Proposed` with `Supersedes`; **only when it
+is accepted, set the old ADR's `Status` to `Superseded by ADR-NNNN`**, never editing
+its body — the chain is how a reader tells which version is current.
 
 ## Git Workflow
 
 All development happens on a `feature/<new-feature-name>` branch created at the end of Phase 1. Commit at every phase boundary so that history mirrors the flow.
 
-| Phase | Trigger | README.md update | Commit message |
+| Phase | Trigger | `doc/README.md` timeline row | Commit message |
 |---|---|---|---|
-| 1 — Requirements | After the increment folder is written | Create: name, description, Overview, Status | `docs(phase1): add requirements for <name>` |
-| 2 — SUDO Model | After user explicitly approves | Add: Domain Model section | `docs(phase2): add SUDO domain model` |
-| 3 — BDD Features | After user explicitly approves | Add: Features / Behavior section | `docs(phase3): add BDD feature files` |
-| 4 — Property Tests | After 4b + 4c test files generated | Add: Testing section | `test(phase4): add property-based integration and e2e tests` |
-| 5 — Implementation | After integration gate passes (5d) | Add: Usage + Development sections, remove placeholders | `feat(<scope>): implement <name>` |
+| 1 — Requirements | After the increment folder is written | Add the row: date, name, contexts, link, Status | `docs(phase1): add requirements for <name>` |
+| 2 — SUDO Model | After user explicitly approves | Status → Phase 2 | `docs(phase2): add SUDO domain model` |
+| 3 — BDD Features | After user explicitly approves | Status → Phase 3, link `.feature` files | `docs(phase3): add BDD feature files` |
+| 4 — Property Tests | After 4b + 4c test files generated | Status → Phase 4 | `test(phase4): add property-based integration and e2e tests` |
+| 5 — Implementation | After integration gate passes (5d) | Status → Phase 5 (root `README.md` only if run/test commands changed) | `feat(<scope>): implement <name>` |
 
 **Rules:**
-- `README.md` is always staged and committed at every phase boundary — never skip it.
+- `doc/README.md` is staged and committed at every phase boundary — never skip it. The root `README.md` is committed only when it actually changed.
 - Include ADR files (`doc/ADR/`) in the Phase 2 commit if any were created during modeling.
 - Never commit in the middle of a Red-Green-Refactor cycle; always commit only after the Refactor step of the *last* item in the test list.
 - Do not push until the user asks; the branch is local until then.
 
 ### README.md Lifecycle
 
-`README.md` gains a section at each phase boundary and is committed every time.
-**Template and the per-phase table: `references/templates.md`.**
-
-Keep it short. **The root README is an entry point, not a record** — status
-history belongs in `doc/increments/`, and once it starts accumulating one section
-per feature it has stopped being readable (measured: it reached 722 lines).
+**The root `README.md` is an entry point, not a record.** It says what the app is,
+how to run it and its tests, and points at `doc/README.md` — under 100 lines, and
+never a section per feature: once it accumulates those it stops being readable
+(measured: it reached 722 lines). Per-increment status lives in its row of the
+`doc/README.md` timeline; history lives in `doc/increments/`.
+**Templates for both: `references/templates.md`.**
 
 ## The rest of the tree
 
-**The design documents are in "Where everything lives" near the top; they are not
-repeated here.** What follows is everything that is *not* a model.
-
-```
-doc/
-  README.md               index. one screen. everything reachable from here
-  testing-strategy.md     which layer is guarded by what. **repo-wide, not per context**
-  questions/              unresolved items that outlive a session.
-                          **see the `unresolved-questions` skill**
-  ADR/NNNN-<decision>.md  decisions and why. **superseded ones stay, with a pointer**
-  reference/              material you were given. **do not edit**
-  evidence/               what you measured. **append only; corrections on a new line**
-  increments/<date>-<name>/   requirements.md and the like. **frozen once the work lands**
-  environment/            **not the domain.** how it is run and checked (`ENV-`)
-    deployment.md   features/*.feature
-
-test/  unit/ integration/ e2e/
-src/   <module>.<ext>
-```
-
-**`evidence/` and `reference/` are separate on purpose.** One says "we saw this",
-the other says "we were told this". Merged, a reader cannot tell how strong a claim
-is — and the two disagree often enough that it matters.
-
-**`increments/` is frozen, and that is the point.** It holds how the work went
-wrong and got fixed. `context/` says how things are *now*. Keeping them apart is
-what lets a reader trust that `context/` is current.
+Everything that is *not* a model — `doc/README.md`, `testing-strategy.md`, `questions/`,
+`ADR/`, `reference/`, `evidence/`, `increments/`, `environment/` — and why `evidence/`,
+`reference/`, and `increments/` are kept apart: `references/layout.md`.
 
 ---
 
@@ -544,7 +465,7 @@ what lets a reader trust that `context/` is current.
 - **Small steps in TDD.** Each Red-Green-Refactor cycle should take minutes.
 - **Property tests catch what example tests miss.** They are not optional.
 - **All diagrams use Mermaid** — keeps documentation as plain text alongside code.
-- **Decisions get an ADR immediately.** Every significant architectural choice is recorded in `doc/ADR/` in Nygard format at the moment it is made, not after the phase ends.
+- **Decisions get an ADR immediately.** Every significant architectural choice is recorded in `doc/ADR/` as `Proposed` at the moment it is made, not after the phase ends, and becomes `Accepted` only on the user's explicit approval.
 
 ## Common Failures to Avoid
 
@@ -567,3 +488,5 @@ what lets a reader trust that `context/` is current.
 
 - `playwright-test` — for e2e tests in browser-driven projects
 - `retrospective-codify` — codify insights from the TDD cycle as permanent rules
+- `adr-writing-ja` — writing and superseding ADRs in Japanese
+- `unresolved-questions` — filing and closing what an increment cannot settle
