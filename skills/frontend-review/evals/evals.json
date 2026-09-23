@@ -1,0 +1,61 @@
+{
+  "skill_name": "frontend-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "引き継いだ管理画面のリポジトリ（このディレクトリ）がどういう状態か、まずざっと見てほしい。",
+      "expected_output": "triage モード。アプリ種別（admin / EC）を分類し、スコアカードとトップ3リスク（各1文、P0/P1）、オーナーへの質問、次に見るべき領域を .frontend-review/ 以下に書く。基準値がなければ作る。アプリのコードは変更しない。",
+      "files": ["evals/files/app/"],
+      "assertions": [
+        "アプリ種別を分類している（admin または EC）",
+        ".frontend-review/ 以下にレポートを書いている",
+        "トップ3リスクを挙げ、それぞれ P0/P1 を付けている",
+        ".frontend-review/kpi/baseline.json を作成している",
+        "src/ や設定ファイルなどアプリのコードを変更していない"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "このアプリ、セキュリティ的に大丈夫か見てくれる？",
+      "expected_output": "security 領域のデスクレビュー。localStorage のトークン、VITE_ に入った秘密、未サニタイズの dangerouslySetInnerHTML、next パラメータのオープンリダイレクト、ロード状態のないルートガード、キャッシュを消さないログアウト、重複する token refresh、コミットされた .env を指摘する。コードは変更しない。",
+      "files": ["evals/files/app/"],
+      "assertions": [
+        "トークンを localStorage に置いていることを指摘している",
+        "VITE_STRIPE_SECRET_KEY がクライアントに露出することを指摘している",
+        "OrderNote の dangerouslySetInnerHTML が未サニタイズであることを指摘している",
+        "Login の next パラメータによるオープンリダイレクトを指摘している",
+        "token refresh が重複実行されうることを指摘している",
+        "ログアウトがサーバーセッション失効やストア・キャッシュのクリアをしていないことを指摘している",
+        "src/ などアプリのコードを変更していない"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "状態管理がまともか見てほしい。zustand に全部入れてるんだけど。",
+      "expected_output": "state 領域のレビュー。サーバー状態（orders）、URL 状態（filterQuery / page）、フォーム状態（checkoutForm）が global store にあることを誤分類として指摘し、ストア全体の購読を指摘する。推奨 PR は1つの論理変更ずつ。コードは変更しない。",
+      "files": ["evals/files/app/"],
+      "assertions": [
+        "orders（サーバー状態）を TanStack Query / SWR などに移すべきと指摘している",
+        "filterQuery / page を URL 状態として扱うべきと指摘している",
+        "checkoutForm をフォーム状態として扱うべきと指摘している",
+        "useAppStore() でストア全体を購読している箇所を指摘している",
+        "推奨 PR を1つの論理変更ずつに分けている",
+        "src/ などアプリのコードを変更していない"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "今週の定期レビューをお願い。前回の基準値は .frontend-review/kpi/baseline.json にある。",
+      "expected_output": "periodic モード。基準値と比べ、any の増加（2→5 前後）と HTML sink の増加（0→1）を悪化として挙げ、500行超ファイルの減少（1→0）を改善として挙げる。悪化した指標で基準値を緩めない。改善した指標だけ基準値を締める。レポートを .frontend-review/report/ に書く。",
+      "files": ["evals/files/app/", "evals/files/baseline/"],
+      "assertions": [
+        "any の件数増加を悪化（regression）として報告している",
+        "dangerouslySetInnerHTML（HTML sink）の増加を悪化として報告している",
+        "500行超ファイルの減少を改善として報告している",
+        "baseline.json の any_count と html_sink_count を悪化後の値に書き換えていない",
+        "定期レポートを .frontend-review/report/ 以下に書いている",
+        "src/ などアプリのコードを変更していない"
+      ]
+    }
+  ]
+}

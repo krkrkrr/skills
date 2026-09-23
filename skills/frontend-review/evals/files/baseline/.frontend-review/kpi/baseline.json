@@ -1,0 +1,6 @@
+{
+  "date": "2026-09-16",
+  "typescript": { "any_count": 2, "ts_ignore_count": 0, "strict": false },
+  "security": { "html_sink_count": 0, "localstorage_token_writes": 2 },
+  "size": { "files_over_500_lines": 1 }
+}

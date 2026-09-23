@@ -95,9 +95,10 @@ Draft an article, book manuscript, or design record, and tighten its reasoning b
 
 ### UC3 — Maintain dependencies & cut releases（依存を保守してリリースする）
 
-Keep dependencies healthy, land upstream fixes, and produce a changelog.
+Keep an existing codebase and its dependencies healthy, land upstream fixes, and produce a changelog.
 **Hub:** `dep-lib-review` · **Deliverable:** `conventional-changelog`.
 
+- [frontend-review](./skills/frontend-review/) — audit a frontend repo (CI, hygiene, deps, tests, security, state, perf) against a ratcheting KPI baseline
 - [dep-lib-review](./skills/dep-lib-review/) — periodic outdated / audit / update-batching review
 - [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) — PR upstream and pin to a git SHA meanwhile
 - [conventional-changelog](./skills/conventional-changelog/) — Conventional Commits + CHANGELOG generation
@@ -134,6 +135,7 @@ The complete inventory. Every skill here appears under at least one use case abo
 | [dep-lib-review](./skills/dep-lib-review/) | Periodic dependency review for Node.js/pnpm — outdated triage, security audit, patch/minor/major batching strategy. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [external-api-tos-check](./skills/external-api-tos-check/) | Confirms a third-party API/SDK/service's Terms of Service allows the planned behavior before implementation, and records constraints as an ADR. | original | Unlicense |
 | [extract-glossary](./skills/extract-glossary/) | Extract domain-specific terminology, tech stacks, and onboarding Mermaid diagrams from a repo or GitHub org. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
+| [frontend-review](./skills/frontend-review/) | Audit an existing frontend repo — triage, CI, hygiene, dependencies/CVEs, testing, security, state management, rendering performance — with a KPI baseline that only ratchets tighter. | [mizchi/skills](https://github.com/mizchi/skills/tree/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc) | MIT |
 | [japanese-tech-writing](./skills/japanese-tech-writing/) | Guidelines for writing and editing Japanese technical documentation with clear structure, rigorous reasoning, consistent formatting, and concise, readable prose. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d#file-skill-md) | Unlicense |
 | [optimizing-descriptions](./skills/optimizing-descriptions/) | Audit and rewrite `SKILL.md` description fields per the agentskills.io framework and mizchi's two-track trigger policy. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [otel-node](./skills/otel-node/) | Node.js OpenTelemetry setup — SDK init, auto-instrumentation, and the esbuild ESM silent-failure gotcha. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
