@@ -20,17 +20,17 @@
     {
       "id": 2,
       "prompt": "doc/ADR/0003-use-rest-api.md で REST にするって決めてたけど、モバイルアプリの画面ごとに必要なフィールドがバラバラで過剰取得がひどいので GraphQL に切り替えたい。ADR書いといて。",
-      "expected_output": "新しい ADR（0004 以降）を作り、古い 0003 のステータスを Superseded by に変える（本文は書き換えない）。新しい ADR から Supersedes で 0003 へ戻れる。",
+      "expected_output": "新しい ADR（0004）を Proposed で作り、Supersedes で 0003 へ戻れるようにする。ユーザーは承認を明示していないので Accepted にせず、0003 にも触れない。承認するかどうかと、承認すれば 0003 が Superseded になることを返答で尋ねる。",
       "files": [
-        "evals/files/doc/ADR/0001-record-architecture-decisions.md",
-        "evals/files/doc/ADR/0003-use-rest-api.md"
+        "evals/files/supersede/doc/ADR/0001-record-architecture-decisions.md",
+        "evals/files/supersede/doc/ADR/0003-use-rest-api.md"
       ],
       "assertions": [
         "新しい ADR が 0004 の番号で doc/ADR/ に作られている",
         "新しい ADR に Supersedes として ADR-0003 へのリンクがある",
-        "0003 のステータスが Superseded by ADR-0004（リンク付き）に変わっている",
-        "0003 のステータス以外の本文は変更されていない",
-        "新しい ADR のステータスが Proposed である",
+        "新しい ADR のステータスが Proposed である（Accepted ではない）",
+        "0003 は変更されていない（ステータスも本文もそのまま）",
+        "返答で、承認するかどうかと、承認すれば 0003 が Superseded になることを尋ねている",
         "新しい ADR の背景が画面ごとのフィールド差による過剰取得に触れている"
       ]
     },
@@ -43,6 +43,22 @@
         "ADR ファイルを作成していない",
         "PR の説明で足りる（ADR は不要）と判断している",
         "判断の理由（影響が閉じている、覆すコストが低い等）を述べている"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "doc/ADR/0004-use-graphql-for-mobile-api.md、チームでレビューして承認になったので Accepted にしておいて。",
+      "expected_output": "ユーザーが承認を明示しているので、0004 のステータスを Accepted にし、同じ変更で 0003 のステータスを Superseded by [ADR-0004](...) に変える。どちらの本文にも触れない。",
+      "files": [
+        "evals/files/accept/doc/ADR/0001-record-architecture-decisions.md",
+        "evals/files/accept/doc/ADR/0003-use-rest-api.md",
+        "evals/files/accept/doc/ADR/0004-use-graphql-for-mobile-api.md"
+      ],
+      "assertions": [
+        "0004 のステータスが Accepted になっている",
+        "0003 のステータスが Superseded by ADR-0004（リンク付き）になっている",
+        "0003 と 0004 のステータス以外の本文は変更されていない",
+        "新しい ADR ファイルを作っていない"
       ]
     }
   ]
