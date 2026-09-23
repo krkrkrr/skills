@@ -1,0 +1,56 @@
+{
+  "skill_name": "sustainable-web-dev-loop",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "lint の warning が毎月じわじわ増えていて、もう 300 件くらいある。一気に直す余裕はないけど、これ以上増えないようにしたい。CI をどう変えればいい？必要ならファイルも変更して。",
+      "expected_output": "現在の件数を基準値として repo にコミットし、増えたら CI を落とすラチェットを入れる。減ったら基準値を締め、意図した増加は同じ PR で基準値を更新する。同じ種類の警告が繰り返すならルール化・自動修正を提案する。",
+      "files": ["evals/files/api/"],
+      "assertions": [
+        "現在の警告件数を基準値として repo に保存（コミット）する仕組みを提案または実装している",
+        "件数が基準値を超えたら CI を失敗させるゲートを提案または実装している",
+        "件数が減ったら基準値を下げる（締める）運用を示している",
+        "基準値を緩めて CI を通すことを禁じるか、意図した増加は同じ PR で基準値を更新してレビューに見せると述べている",
+        "src/ のアプリコードを変更していない"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "main に push したら本番に出る今のデプロイ、壊れたときに戻す手段がなくて怖い。GitHub Actions のデプロイをもう少し安全にしたい。deploy.yml を直してほしい。",
+      "expected_output": "デプロイ前のバージョンを記録し、デプロイ後にスモークテスト、失敗したら自動ロールバックし、ロールバック後にジョブを失敗させる。staging と production を分ける（main→staging、release→production）。head_commit.message のシェル埋め込みをやめ github.sha を使う。Actions を SHA 固定、frozen lockfile。デプロイの concurrency は cancel しない。",
+      "files": ["evals/files/api/"],
+      "assertions": [
+        "デプロイ前のバージョン（イメージ/リビジョン）を記録している",
+        "デプロイ後にスモークテストを実行している",
+        "スモーク失敗時に自動で前のバージョンへロールバックし、その後ジョブを失敗させている",
+        "github.event.head_commit.message のシェルへの埋め込みを除去し、危険性を指摘している",
+        "本番とステージングを分ける（ブランチまたは環境）ことを実装または提案している",
+        "third-party Actions の SHA 固定または frozen lockfile を実装または提案している"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "OpenTelemetry を入れたのに本番でトレースが1件も届かない。エラーも出てない。何が悪い？直して。",
+      "expected_output": "esbuild の ESM バンドルで instrumentation が効かない（無言で span が出ない）ことを原因として特定し、external 化・CJS・非バンドル・手動 span/@hono/otel などの対処を示す。さらに dist/otel.js がビルドされていない（start が存在しないファイルを --import する）点、SDK 2.x で Resource/SEMRESATTRS が廃止された点に触れる。debug exporter などで送出を確認する方法を示す。",
+      "files": ["evals/files/api/"],
+      "assertions": [
+        "esbuild の ESM バンドルでは自動計装が効かず無言で span が出ないことを原因として挙げている",
+        "対処として external 化、CJS 出力、非バンドル実行、手動 span のいずれかを示している",
+        "build が dist/otel.js を生成しないのに start が --import している問題を指摘している",
+        "span が実際に送出されているかを確認する方法（debug exporter、ログなど）を示している"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Renovate の PR が溜まりがちなので、AI エージェントに依存更新 PR を自動マージさせようと思う。どこまで任せていい？ルールを決めたい。",
+      "expected_output": "AI に任せてよい範囲（全チェック通過の patch/minor のバッチ）と、人が決める範囲（major は1パッケージ1PRで人がレビュー、ライブラリ追加・削除、振る舞い変更）を分ける。CVE は到達可能性でトリアージ。自動マージの前提としてテスト・型・ビルド・E2E のゲートを要求する。",
+      "files": ["evals/files/api/"],
+      "assertions": [
+        "patch/minor は全チェック通過を条件に自動マージ可とし、major は人がレビューする（1パッケージ1PR）と分けている",
+        "ライブラリの追加・削除や振る舞いの変更は人が決めると明示している",
+        "自動マージの前提となるゲート（型、lint、テスト、ビルドなど）を列挙している",
+        "CVE を CVSS だけでなく実行時の到達可能性で判断することに触れている"
+      ]
+    }
+  ]
+}

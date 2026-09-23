@@ -104,8 +104,8 @@ Collect: `pnpm outdated --format json` (or npm/yarn equivalent), `pnpm audit --p
   Record every ignored CVE with a reason in `kpi/audit-triage.md`.
 - Prefer web standards before recommending a library: `fetch` + `AbortController`, `URL` / `URLSearchParams`,
   `crypto.randomUUID()`, `structuredClone`, `Intl.*`, `Temporal`.
-- Breaking upgrades go in standalone PRs; patch/minor updates can be batched (see `dep-lib-review`).
-  Long-horizon replacement decisions: `tech-trend-watch`.
+- Breaking upgrades go in standalone PRs; patch/minor updates can be batched. Update procedure and
+  long-horizon replacement decisions: `sustainable-web-dev-loop` (references/dependencies.md).
 
 ### Testing — [upstream][testing]
 
@@ -159,7 +159,7 @@ bundle size and Lighthouse data if the repo produces them.
 ## Related
 
 - `playwright-test` — E2E structure, sharding, flaky handling
-- `dep-lib-review`, `tech-trend-watch` — executing dependency updates and long-term stack decisions
+- `sustainable-web-dev-loop` — the principles behind this skill, plus dependency, deploy, and observability defaults
 - `retrospective-codify` — turning repeated findings into lint rules
 - `unresolved-questions` — owner questions the review cannot settle
 - `adr-writing-ja` — recording an architecture decision the review triggers

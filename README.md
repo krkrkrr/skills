@@ -60,14 +60,15 @@ case. Membership is assigned by the skill's dominant inbound transitions.
 flowchart LR
   UC1["UC1 · New build<br/>ddd-bdd-tdd-flow (hub)"]
   UC2["UC2 · Writing<br/>japanese-tech-writing (hub)"]
-  UC3["UC3 · Deps & release<br/>dep-lib-review (hub)"]
-  UC4["UC4 · Operate<br/>observability & error tracking"]
+  UC3["UC3 · Review & maintain<br/>frontend-review (hub)"]
+  UC4["UC4 · Ship & operate<br/>sustainable-web-dev-loop (hub)"]
   UC5["UC5 · Improve toolkit<br/>skill-ops"]
 
   UC2 -->|readme-guidelines| UC1
-  UC2 -->|tech-trend-watch| UC3
+  UC3 -->|sustainable-web-dev-loop| UC4
   UC1 -->|retrospective-codify| UC5
   UC2 -->|retrospective-codify| UC5
+  UC4 -->|retrospective-codify| UC5
 ```
 
 ### UC1 — Build a new app or feature（新規開発を立ち上げる）
@@ -93,32 +94,30 @@ Draft an article, book manuscript, or design record, and tighten its reasoning b
 - [extract-glossary](./skills/extract-glossary/) — build a domain glossary / onboarding map from a repo
 - [readme-guidelines](./skills/readme-guidelines/) `↔ UC1` — README templates and update policy
 
-### UC3 — Maintain dependencies & cut releases（依存を保守してリリースする）
+### UC3 — Review & maintain an existing codebase（既存コードを点検して保守する）
 
-Keep an existing codebase and its dependencies healthy, land upstream fixes, and produce a changelog.
-**Hub:** `dep-lib-review` · **Deliverable:** `conventional-changelog`.
+Audit a codebase you inherited or own, triage what matters, and keep its dependencies moving.
+**Hub:** `frontend-review` · **Deliverable:** a findings report plus a committed KPI baseline.
 
 - [frontend-review](./skills/frontend-review/) — audit a frontend repo (CI, hygiene, deps, tests, security, state, perf) against a ratcheting KPI baseline
-- [dep-lib-review](./skills/dep-lib-review/) — periodic outdated / audit / update-batching review
+- [sustainable-web-dev-loop](./skills/sustainable-web-dev-loop/) `↔ UC4` — dependency review, CVE triage, and library replacement (`references/dependencies.md`)
 - [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) — PR upstream and pin to a git SHA meanwhile
-- [conventional-changelog](./skills/conventional-changelog/) — Conventional Commits + CHANGELOG generation
-- [tech-trend-watch](./skills/tech-trend-watch/) `↔ UC2` — long-term stack review (ADOPT/TRIAL/ASSESS/HOLD)
 
-### UC4 — Instrument & configure production（本番の運用・可観測性を整える）
+### UC4 — Ship & operate as the service grows（成長に耐えて出荷・運用する）
 
-Set up observability and error tracking for a running service.
+Shape CI gates, deploys, observability, and migrations so quality ratchets up instead of eroding.
+**Hub:** `sustainable-web-dev-loop` · **Deliverable:** gates and baselines that fail on regression.
 
-- [otel-node](./skills/otel-node/) — Node.js OpenTelemetry setup (incl. esbuild ESM gotcha)
-- [utels-project-bootstrap](./skills/utels-project-bootstrap/) — wire utels.dev error tracking into a Cloudflare Worker
+- [sustainable-web-dev-loop](./skills/sustainable-web-dev-loop/) `↔ UC3` — measure → ratchet → promote repeats into mechanisms; deploy/rollback, CI, data-layer, and OpenTelemetry defaults
+- [playwright-test](./skills/playwright-test/) `↔ UC1` — E2E sharding, retries, and flaky handling in CI
 
 ### UC5 — Operate & improve the toolkit（スキル自体を運用・自己改善する）
 
-Build new skills, feed lessons back, and keep skill descriptions sharp.
+Build new skills, test them with evals, and feed lessons back as rules.
 This is the self-improvement loop the chain folds back into.
 
 - [skill-creator](./skills/skill-creator/) — draft a new skill, then iterate on it with evals and benchmarks
 - [retrospective-codify](./skills/retrospective-codify/) — turn trial-and-error into ast-grep rules / skills / CLAUDE.md
-- [optimizing-descriptions](./skills/optimizing-descriptions/) — audit & rewrite `SKILL.md` descriptions
 
 ---
 
@@ -130,24 +129,19 @@ The complete inventory. Every skill here appears under at least one use case abo
 |-------|-------------|-----------|---------|
 | [adr-writing-ja](./skills/adr-writing-ja/) | Write Japanese ADRs — whether one is needed, placement and naming, eleven templates, and an argument check via `argument-gap-edit`. | [architecture-decision-record](https://github.com/architecture-decision-record/architecture-decision-record#claude-code-skills-for-adrs) | CC BY-NC-SA 4.0 |
 | [argument-gap-edit](./skills/argument-gap-edit/) | Detects and fixes weak arguments, structural gaps, and disruptive content in Japanese technical manuscripts. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d?permalink_comment_id=6201959#gistcomment-6201959) | Unlicense |
-| [conventional-changelog](./skills/conventional-changelog/) | Conventional Commits and automatic CHANGELOG generation. Compares release-please / changesets / git-cliff / towncrier. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [ddd-bdd-tdd-flow](./skills/ddd-bdd-tdd-flow/) | Structured DDD → BDD → TDD flow for a new feature or app — orient into the repo's bounded contexts (Phase 0), SUDO domain modeling, Gherkin features, property-based tests, and t_wada TDD implementation. | original | Unlicense |
-| [dep-lib-review](./skills/dep-lib-review/) | Periodic dependency review for Node.js/pnpm — outdated triage, security audit, patch/minor/major batching strategy. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [external-api-tos-check](./skills/external-api-tos-check/) | Confirms a third-party API/SDK/service's Terms of Service allows the planned behavior before implementation, and records constraints as an ADR. | original | Unlicense |
 | [extract-glossary](./skills/extract-glossary/) | Extract domain-specific terminology, tech stacks, and onboarding Mermaid diagrams from a repo or GitHub org. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [frontend-review](./skills/frontend-review/) | Audit an existing frontend repo — triage, CI, hygiene, dependencies/CVEs, testing, security, state management, rendering performance — with a KPI baseline that only ratchets tighter. | [mizchi/skills](https://github.com/mizchi/skills/tree/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc) | MIT |
 | [japanese-tech-writing](./skills/japanese-tech-writing/) | Guidelines for writing and editing Japanese technical documentation with clear structure, rigorous reasoning, consistent formatting, and concise, readable prose. | [k16shikano/SKILL.md](https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d#file-skill-md) | Unlicense |
-| [optimizing-descriptions](./skills/optimizing-descriptions/) | Audit and rewrite `SKILL.md` description fields per the agentskills.io framework and mizchi's two-track trigger policy. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
-| [otel-node](./skills/otel-node/) | Node.js OpenTelemetry setup — SDK init, auto-instrumentation, and the esbuild ESM silent-failure gotcha. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [playwright-cli](./skills/playwright-cli/) | Run Playwright CLI commands interactively. | [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli) | Apache-2.0 |
 | [playwright-test](./skills/playwright-test/) | Best practices for Playwright Test — avoiding fixed waits, network triggers, DnD, shard/retry on GitHub Actions. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [readme-guidelines](./skills/readme-guidelines/) | README.md templates and policies — template selection by project type, README-ja.md sync, and change-to-section update rules. | original | Unlicense |
 | [retrospective-codify](./skills/retrospective-codify/) | Codify trial-and-error lessons into ast-grep rules, skills, or CLAUDE.md rules after a fix lands. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 | [skill-creator](./skills/skill-creator/) | Create new skills, iterate on them with evals/benchmarks, and optimize a skill's description for triggering accuracy. | [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | Apache-2.0 |
-| [tech-trend-watch](./skills/tech-trend-watch/) | Long-term stack review using State of JS/CSS and Thoughtworks Technology Radar — ADOPT/TRIAL/ASSESS/HOLD mapping. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
+| [sustainable-web-dev-loop](./skills/sustainable-web-dev-loop/) | Principles and defaults for shipping and operating a growing web service — measure, ratchet baselines, promote repeated findings into mechanisms; deploy/rollback, CI, data layer, dependencies, OpenTelemetry. | [mizchi/skills](https://github.com/mizchi/skills/tree/a3f2f1bac20fc500c2688ffe6ca4ce048d0cfedc) | MIT |
 | [unresolved-questions](./skills/unresolved-questions/) | Files unknowns, provisional decisions, and deliberately-skipped work as one question per file under `doc/questions/<status>/`, where the directory is the status. | original | Unlicense |
 | [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) | Fix an upstream library bug, open a PR, and pin to the git SHA while waiting for it to merge. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
-| [utels-project-bootstrap](./skills/utels-project-bootstrap/) | Register a utels.dev project and write the ingest token into a Cloudflare Worker wrangler secret. | [mizchi/skills](https://github.com/mizchi/skills) | MIT |
 
 ---
 
