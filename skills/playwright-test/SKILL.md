@@ -94,7 +94,7 @@ Cases where explicit waiting is necessary:
 
 ```ts
 await page.waitForURL('**/dashboard');          // After navigation
-await page.waitForLoadState('networkidle');      // Heavy initial load
+await expect(page.getByRole('main')).toBeVisible(); // Heavy initial load: wait for the content you need ('networkidle' is discouraged)
 await page.waitForResponse('**/api/data');       // Wait for API response
 ```
 
@@ -338,10 +338,16 @@ Keep it simple. Put assertions on the test side:
 
 ```ts
 class LoginPage {
-  constructor(private page: Page) {}
-  readonly email = this.page.getByLabel('Email');
-  readonly password = this.page.getByLabel('Password');
-  readonly submit = this.page.getByRole('button', { name: 'Sign in' });
+  readonly email: Locator;
+  readonly password: Locator;
+  readonly submit: Locator;
+
+  constructor(private readonly page: Page) {
+    // Assign here, not in field initializers: with useDefineForClassFields (the default for target ES2022+), initializers run before `page` is set.
+    this.email = page.getByLabel('Email');
+    this.password = page.getByLabel('Password');
+    this.submit = page.getByRole('button', { name: 'Sign in' });
+  }
 
   async login(email: string, pass: string) {
     await this.email.fill(email);

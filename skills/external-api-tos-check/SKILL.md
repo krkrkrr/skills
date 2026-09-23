@@ -31,6 +31,7 @@ Out of scope:
    - Pages formally titled Developer Policy / Terms of Service / Developer Agreement / Acceptable Use Policy
    - Constraint sections inside API references, such as "Required Minimum Functionality"
    - If you can't find or can't judge the terms, ask the user — don't proceed as if no terms exist.
+   - For each document, note its URL, the last-updated date or version shown on the page, and the date you read it. Terms are revised without notice; without this record nobody can later tell which version a decision was checked against.
 
 3. **Cross-check against the implementation plan**: Compare the concrete behavior the code is about to implement (simultaneous autoplay, hiding UI elements, storing/redistributing data, rendering in a custom player, caching, scraping, etc.) against the relevant clauses. Pay particular attention to:
    - Concurrency limits, rate limits, quota caps
@@ -41,11 +42,11 @@ Out of scope:
    - Domain declaration/allowlist requirements for embedding
 
 4. **Judge the conflict risk**:
-   - **No conflict** — proceed with implementation. Leave a brief note of what was checked and why it's fine (a commit message, PR description, or a nearby code comment is enough; no ADR needed).
+   - **No conflict** — proceed with implementation. Leave a brief note of what was checked and why it's fine, including the document URL, its version or last-updated date, and the date you read it (a commit message, PR description, or a nearby code comment is enough; no ADR needed).
    - **Possible conflict / ambiguous clause** — surface it to the user before implementing and get a decision. Don't guess "probably fine" and move on.
    - **Clear conflict** — stop implementation and work out a compliant alternative design with the user.
 
-5. **Record constraints that affect the architecture as an ADR**: If a constraint forces a change to the domain model or UI design (e.g., adding the invariant "only one provider slot can be active at a time"), cite the relevant clause, write the decision and consequences, and record it as a project ADR. If the `adr-writing-ja` skill is available, follow it (and, in projects using `ddd-bdd-tdd-flow`, match that skill's ADR phase conventions too); otherwise use the Nygard format at `doc/ADR/NNNN-<title>.md`. A plain confirmation with no design change doesn't need an ADR.
+5. **Record constraints that affect the architecture as an ADR**: If a constraint forces a change to the domain model or UI design (e.g., adding the invariant "only one provider slot can be active at a time"), cite the relevant clause together with the document URL, version or last-updated date, and the date you read it, write the decision and consequences, and record it as a project ADR. If the `adr-writing-ja` skill is available, follow it (and, in projects using `ddd-bdd-tdd-flow`, match that skill's ADR phase conventions too); otherwise use the Nygard format at `doc/ADR/NNNN-<title>.md`. A plain confirmation with no design change doesn't need an ADR.
 
 ## Not in scope
 

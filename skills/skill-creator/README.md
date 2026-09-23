@@ -2,7 +2,7 @@
 
 Create new skills, iterate on them with evals and benchmarks, and optimize a skill's description for triggering accuracy.
 
-Part of the [skills](https://github.com/krkrkrr/skills) library — see the repository's [README](../../../README.md) for installation.
+Part of the [skills](https://github.com/krkrkrr/skills) library — see the repository's [README](../../README.md) for installation.
 
 ## Source
 

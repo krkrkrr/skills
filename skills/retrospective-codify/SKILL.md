@@ -79,7 +79,7 @@ digraph classify {
 |---|---|---|
 | Detectable at the code/config syntax level | `ast-grep` rule or existing linter config | "Do not use `Array.from(set).length`, use `set.size`" |
 | Short, always-applied, no judgment involved | `CLAUDE.md` (user global / project) | "Use pnpm v10 or later" |
-| Requires procedure, contextual judgment, or templates | New skill or append to existing skill | "Steps to write a C binding for MoonBit" |
+| Requires procedure, contextual judgment, or templates | New skill or append to existing skill | "Steps to get OpenTelemetry spans out of a bundled Node service" |
 | Project-specific and one-off | Do not adopt (keep in commit message / PR description) | — |
 
 **Principle: prefer ast-grep**: For things that are statically detectable, do not write them in prompts or docs; always make them an `ast-grep` rule (as the user's global rule).
@@ -148,11 +148,11 @@ message: Set/Map のサイズは .size プロパティを使う。
 
 ### Example 3: Codify as a new skill (procedure + judgment involved)
 
-- First attempt: To call a C library from MoonBit, tried several approaches and got stuck on the placement of FFI declarations and stubs.
-- Final solution: The combination of an `extern "c"` declaration + a stub using `moonbit.h` + `native-stub` / `link.native` settings in `moon.pkg.json`.
-- Insight: It does not fit in a single step; you need to understand the three layers — declaration, stub, and build config — together.
+- First attempt: Added OpenTelemetry auto-instrumentation to a Node service bundled by esbuild as ESM; no spans arrived and nothing logged an error.
+- Final solution: Keep the instrumented libraries external to the bundle, register the loader hook before the app starts, and add a CI smoke check that runs with a console exporter and fails when no trace ID appears.
+- Insight: It does not fit in a single step; the bundler config, the loader hook, and the verification have to be understood together.
 
--> Carve out the procedure and templates as a new skill `moonbit-c-binding` (since it already exists, this example is the case of choosing "append to existing" via the dedup check).
+-> The procedure and judgment call for a skill, but the dedup check finds `sustainable-web-dev-loop` (`references/observability.md`) already covering the bundling pitfall, so the proposal is "append to existing" for the smoke-check part only.
 
 ## Red flags (watch out for rationalizations)
 

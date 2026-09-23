@@ -79,7 +79,7 @@ digraph classify {
 |---|---|---|
 | コード/設定の構文レベルで検出可能 | `ast-grep` ルール または既存 linter 設定 | "`Array.from(set).length` を使うな、`set.size` を使え" |
 | 短く、常時適用、判断を伴わない | `CLAUDE.md`（user global / project） | "pnpm は v10 以上を使う" |
-| 手順・文脈判断・テンプレが必要 | 新規 skill または既存 skill への追記 | "MoonBit の C binding を書く手順" |
+| 手順・文脈判断・テンプレが必要 | 新規 skill または既存 skill への追記 | "バンドルした Node サービスで OpenTelemetry のスパンを出す手順" |
 | プロジェクト固有で一回限り | 採用しない（コミットメッセージ / PR 説明に留める） | — |
 
 **ast-grep を優先する原則**: 静的に検出可能なものはプロンプトやドキュメントに書かず、必ず `ast-grep` ルールにする（ユーザーの global ルール）。
@@ -148,11 +148,11 @@ message: Set/Map のサイズは .size プロパティを使う。
 
 ### 例 3: 新規 skill 化（手順 + 判断を伴う）
 
-- 最初の試行: MoonBit から C ライブラリを呼ぶのに、いくつかの方法を試して FFI 宣言と stub の配置で詰まった。
-- 最終解: `extern "c"` 宣言 + `moonbit.h` を使った stub + `moon.pkg.json` の `native-stub` / `link.native` 設定の組み合わせ。
-- 気付き: 単一手順では収まらず、宣言・stub・ビルド設定の 3 層を一括して理解する必要がある。
+- 最初の試行: esbuild で ESM にバンドルする Node サービスに OpenTelemetry の自動計装を入れたが、スパンが 1 件も届かず、エラーも出なかった。
+- 最終解: 計装対象のライブラリをバンドルから外し、アプリより先に loader hook を登録し、console exporter で起動して trace ID が出なければ落ちるスモークチェックを CI に足した。
+- 気付き: 単一手順では収まらず、バンドラの設定、loader hook、送出の確認の 3 つを一括して理解する必要がある。
 
-→ 新規 skill `moonbit-c-binding` として手順とテンプレを切り出し（既に存在するため、本例は「重複チェックで既存への追記」を選ぶケース）。
+→ 手順と判断を伴うので skill 向きだが、重複チェックで `sustainable-web-dev-loop`（`references/observability.md`）がバンドルの落とし穴を既に扱っていると分かるので、スモークチェックの部分だけを「既存への追記」として提案する。
 
 ## Red flags（合理化に注意）
 

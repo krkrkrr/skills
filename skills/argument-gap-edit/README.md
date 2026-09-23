@@ -2,7 +2,7 @@
 
 Detects and fixes weak arguments, structural gaps, and disruptive content in Japanese technical manuscripts.
 
-Part of the [skills](https://github.com/krkrkrr/skills) library — see the repository's [README](../../../README.md) for installation.
+Part of the [skills](https://github.com/krkrkrr/skills) library — see the repository's [README](../../README.md) for installation.
 
 ## Source
 

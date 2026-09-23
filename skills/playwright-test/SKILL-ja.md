@@ -94,7 +94,7 @@ await expect(page.locator('.row')).not.toHaveCount(0);
 
 ```ts
 await page.waitForURL('**/dashboard');          // ナビゲーション後
-await page.waitForLoadState('networkidle');      // 重い初期ロード
+await expect(page.getByRole('main')).toBeVisible(); // 重い初期ロード: 必要な要素の表示を待つ（'networkidle' は非推奨）
 await page.waitForResponse('**/api/data');       // API レスポンス待ち
 ```
 
@@ -338,10 +338,16 @@ await download.saveAs('/tmp/file.pdf');
 
 ```ts
 class LoginPage {
-  constructor(private page: Page) {}
-  readonly email = this.page.getByLabel('Email');
-  readonly password = this.page.getByLabel('Password');
-  readonly submit = this.page.getByRole('button', { name: 'Sign in' });
+  readonly email: Locator;
+  readonly password: Locator;
+  readonly submit: Locator;
+
+  constructor(private readonly page: Page) {
+    // フィールド初期化子ではなくここで代入する。useDefineForClassFields（target ES2022 以上の既定）では、初期化子が `page` の設定より先に走る。
+    this.email = page.getByLabel('Email');
+    this.password = page.getByLabel('Password');
+    this.submit = page.getByRole('button', { name: 'Sign in' });
+  }
 
   async login(email: string, pass: string) {
     await this.email.fill(email);

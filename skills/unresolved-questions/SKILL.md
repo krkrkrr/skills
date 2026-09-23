@@ -41,6 +41,17 @@ doc/questions/
 `protocol/`). It is a filing aid, not an identifier — a question keeps its number
 when its subject or status changes.
 
+Numbers are unique across the whole of `doc/questions/`, never per subject or per
+status, because code comments cite them as `Q-<N>` and a citation must point at
+exactly one file. The next number is the highest one anywhere, plus one (the
+command prints nothing before the first question; start at `0001`):
+
+```bash
+find doc/questions -name '[0-9][0-9][0-9][0-9]-*.md' \
+  | sed -E 's#.*/([0-9]{4})-[^/]*$#\1#' | sort -n | tail -1 \
+  | awk '{printf "%04d\n", $1 + 1}'
+```
+
 ## The status is the directory
 
 **Write the status in exactly one place: the path.** When it changes, `git mv`
@@ -78,7 +89,7 @@ deferral with no unblocking condition is just an unknown that has been hidden.
 ## The answer does not live here
 
 When a question gets answered, the answer goes where answers go: a measurement to
-wherever the project keeps evidence, a judgement call to an ADR or equivalent.
+wherever the project keeps evidence, a judgement call to an ADR or equivalent (`adr-writing-ja` for Japanese ADRs).
 Then `git mv` the question file to `answered/`, fix its status line, and link to
 where the answer landed.
 
@@ -114,7 +125,22 @@ find what is blocked on it. Without the link both sides know, and neither can ac
 
 `doc/questions/README.md` lists every question once, with its status and subject.
 Regenerate it whenever a file is added or moved — a stale index is the same defect
-as a stale answer.
+as a stale answer. Generate it from the paths rather than editing it by hand, so
+the index cannot disagree with the directories:
+
+```bash
+{
+  echo '| Q | Status | Subject | Question |'
+  echo '|---|---|---|---|'
+  find doc/questions -mindepth 3 -name '[0-9][0-9][0-9][0-9]-*.md' | sort -t/ -k5 |
+    while IFS=/ read -r _ _ status subject file; do
+      title=$(sed -n '1s/^# Q-[0-9]*: //p' "doc/questions/$status/$subject/$file")
+      echo "| ${file%%-*} | $status | $subject | [$title]($status/$subject/$file) |"
+    done
+} > doc/questions/README.md
+```
+
+Commit the regenerated index in the same commit as the move or addition.
 
 When reviewing, look past the individual rows for **questions stuck on the same
 thing**. Three questions all waiting on one enum table is not three problems; it
