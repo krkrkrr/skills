@@ -43,7 +43,7 @@ npx skills add krkrkrr/skills
 **Manual (single skill):**
 
 ```bash
-cp -r skills/<skill-name>/ ~/.claude/skills/<skill-name>/
+cp -rT skills/<skill-name>/ ~/.claude/skills/<skill-name>/
 ```
 
 ---
@@ -57,6 +57,8 @@ model's connected clusters correspond to end-to-end use cases. Because some
 skills sit on the boundary between workflows, this map is a **cover, not a
 partition** — a *bridge* skill (tagged `↔ UCx`) appears under more than one use
 case. Membership is assigned by the skill's dominant inbound transitions.
+Transitions are read from the hand-offs each skill names in its `SKILL.md` and
+`references/` (Related sections and inline pointers to other skills).
 
 ```mermaid
 flowchart LR
@@ -67,13 +69,16 @@ flowchart LR
   UC5["UC5 · Improve toolkit<br/>skill-ops"]
 
   UC2 -->|readme-guidelines| UC1
+  UC1 -->|adr-writing-ja| UC2
   UC3 -->|sustainable-web-dev-loop| UC4
+  UC4 -->|upstream-fix-and-pin| UC3
+  UC3 -->|unresolved-questions, adr-writing-ja| UC1
   UC1 -->|retrospective-codify| UC5
-  UC2 -->|retrospective-codify| UC5
-  UC4 -->|retrospective-codify| UC5
+  UC3 -->|retrospective-codify| UC5
+  UC4 -->|retrospective-codify, skill-creator| UC5
 ```
 
-### UC1 — Build a new app or feature（新規開発を立ち上げる）
+### UC1 — Build a new app or feature
 
 Take a feature from requirements through modeling, tests, and implementation.
 **Hub:** `ddd-bdd-tdd-flow` · **Deliverable:** passing E2E tests.
@@ -82,10 +87,10 @@ Take a feature from requirements through modeling, tests, and implementation.
 - [unresolved-questions](./skills/unresolved-questions/) — file what a `ddd-bdd-tdd-flow` increment can't settle, as one question per file
 - [external-api-tos-check](./skills/external-api-tos-check/) — clear a third-party API's ToS before integrating
 - [adr-writing-ja](./skills/adr-writing-ja/) `↔ UC2` — record a design decision as a Japanese ADR
-- [playwright-test](./skills/playwright-test/) — write/structure E2E tests
+- [playwright-test](./skills/playwright-test/) `↔ UC3` — write and structure E2E tests
 - [playwright-cli](./skills/playwright-cli/) — drive the browser interactively
 
-### UC2 — Author & polish technical writing（技術文書を書いて仕上げる）
+### UC2 — Author & polish technical writing
 
 Draft an article, book manuscript, or design record, and tighten its reasoning before publishing.
 **Hub:** `japanese-tech-writing` · **Deliverable:** an argument-checked draft.
@@ -96,7 +101,7 @@ Draft an article, book manuscript, or design record, and tighten its reasoning b
 - [extract-glossary](./skills/extract-glossary/) `↔ UC3` — build a domain glossary / onboarding map from a repo
 - [readme-guidelines](./skills/readme-guidelines/) `↔ UC1` — README templates and update policy
 
-### UC3 — Review & maintain an existing codebase（既存コードを点検して保守する）
+### UC3 — Review & maintain an existing codebase
 
 Audit a codebase you inherited or own, triage what matters, and keep its dependencies moving.
 **Hub:** `frontend-review` · **Deliverable:** a findings report plus a committed KPI baseline.
@@ -105,16 +110,16 @@ Audit a codebase you inherited or own, triage what matters, and keep its depende
 - [sustainable-web-dev-loop](./skills/sustainable-web-dev-loop/) `↔ UC4` — dependency review, CVE triage, and library replacement (`references/dependencies.md`)
 - [upstream-fix-and-pin](./skills/upstream-fix-and-pin/) — PR upstream and pin to a git SHA meanwhile
 - [extract-glossary](./skills/extract-glossary/) `↔ UC2` — map the terms, repos, and architecture of an inherited codebase before reviewing it
+- [playwright-test](./skills/playwright-test/) `↔ UC1` — E2E structure, sharding, retries, and flaky handling in CI, as `frontend-review` recommends
 
-### UC4 — Ship & operate as the service grows（成長に耐えて出荷・運用する）
+### UC4 — Ship & operate as the service grows
 
 Shape CI gates, deploys, observability, and migrations so quality ratchets up instead of eroding.
 **Hub:** `sustainable-web-dev-loop` · **Deliverable:** gates and baselines that fail on regression.
 
 - [sustainable-web-dev-loop](./skills/sustainable-web-dev-loop/) `↔ UC3` — measure → ratchet → promote repeats into mechanisms; deploy/rollback, CI, data-layer, and OpenTelemetry defaults
-- [playwright-test](./skills/playwright-test/) `↔ UC1` — E2E sharding, retries, and flaky handling in CI
 
-### UC5 — Operate & improve the toolkit（スキル自体を運用・自己改善する）
+### UC5 — Operate & improve the toolkit
 
 Build new skills, test them with evals, and feed lessons back as rules.
 This is the self-improvement loop the chain folds back into.

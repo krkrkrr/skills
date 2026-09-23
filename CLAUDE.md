@@ -83,18 +83,28 @@ README.md as part of the same commit:**
 - **Re-scope** (the skill's job changes) → re-evaluate its use-case placement and
   move it if the primary use case changed.
 
+[README-ja.md](./README-ja.md) is a full Japanese mirror of README.md (same
+sections, same code blocks, prose translated per `japanese-tech-writing`).
+**Apply every README.md change to README-ja.md in the same commit.** README.md
+stays English-only, and neither file links to the other.
+
 Invariant: every skill in the A–Z table appears under at least one use case, and
 every use-case entry exists in the A–Z table. Verify tree ⇄ README agreement:
 
 ```bash
 ls -d skills/*/ | sed 's#skills/##;s#/##' | sort > /tmp/tree.txt
-grep -oE '\./skills/[a-z0-9-]+/' README.md | sed 's#\./skills/##;s#/##' | sort -u > /tmp/readme.txt
-diff /tmp/tree.txt /tmp/readme.txt && echo "OK: README matches tree"
+for f in README.md README-ja.md; do
+  grep -oE '\./skills/[a-z0-9-]+/' "$f" | sed 's#\./skills/##;s#/##' | sort -u > /tmp/readme.txt
+  diff /tmp/tree.txt /tmp/readme.txt && echo "OK: $f matches tree"
+done
 ```
 
 When the use-case model itself needs rethinking (new workflow clusters emerge),
 re-derive the grouping from the skill-collaboration Markov chain rather than
-inventing ad-hoc buckets.
+inventing ad-hoc buckets. Transitions are the hand-offs each skill names in its
+`SKILL.md` and `references/`; a skill's primary use case is where most of its
+inbound transitions come from, and the mermaid edges are the transitions that
+cross use-case boundaries.
 
 ## Local Sync
 
